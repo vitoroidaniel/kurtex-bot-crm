@@ -92,6 +92,19 @@ ROLE_COLORS = {
     "agent":       "#64748b",
 }
 
+telegram_otp_store = {}
+
+from telegram import Bot
+bot = Bot(token=os.environ.get("TELEGRAM_BOT_TOKEN", ""))
+
+def send_telegram_otp(telegram_id, code):
+    try:
+        bot.send_message(chat_id=telegram_id, text=f"Your login code: {code}")
+        return True
+    except Exception as e:
+        logger.error(f"Failed to send OTP to {telegram_id}: {e}")
+        return False
+
 def serialize_user(user: dict) -> dict:
     """Convert bytes/ObjectId fields to JSON-safe format"""
     new_user = {}
@@ -165,8 +178,6 @@ def role_required(*roles):
 # ── Routes: Auth ──────────────────────────────────────────────────────────────
 
 # 1️⃣ Telegram login
-telegram_otp_store = {}
-
 @app.route("/auth/telegram", methods=["POST"])
 def auth_telegram():
     data = request.json or {}
@@ -212,13 +223,14 @@ def verify_code():
     if not user:
         return jsonify({"error": "User not found"}), 403
 
+    # Log user in
     session["user_id"]   = telegram_id
     session["user_name"] = user.get("name", "User")
     session["user_role"] = user.get("role", "agent")
 
+    # Remove OTP
     telegram_otp_store.pop(telegram_id, None)
     return jsonify({"ok": True, "redirect": url_for("dashboard")})
-
 
 @app.route("/logout")
 def logout():
