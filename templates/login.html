@@ -1,276 +1,331 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kurtex CRM</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#f5f7fa;--surface:#ffffff;--surface2:#f0f3f8;--surface3:#e8ecf4;
-  --border:#d8dde8;--border-focus:#2563eb;
-  --text:#0f172a;--text-muted:#64748b;--text-light:#94a3b8;
-  --accent:#2563eb;--accent-hover:#1d4ed8;--accent-light:#eff6ff;--accent-subtle:#dbeafe;
-  --steel:#334155;--steel-light:#475569;
-  --success:#16a34a;--success-bg:#f0fdf4;
-  --error:#dc2626;--error-bg:#fef2f2;
-  --radius:22px;--radius-md:16px;--radius-sm:12px;--radius-xs:8px;
+  --accent:#3b82f6;--accent-hover:#2563eb;--accent-light:rgba(59,130,246,.15);
+  --success:#22c55e;--error:#f87171;--warning:#fbbf24;
   --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
-  --shadow:0 1px 8px rgba(15,23,42,.07),0 0 0 1px rgba(15,23,42,.04);
-  --shadow-md:0 4px 20px rgba(15,23,42,.1),0 0 0 1px rgba(15,23,42,.05);
+  --radius:18px;--radius-sm:12px;--radius-xs:8px;
+  --panel-bg:#ffffff;--panel-border:#e8ecf4;
+  /* text inside light panel */
+  --pt:#0f172a;--pt-muted:#64748b;--pt-light:#94a3b8;
+  --field-bg:#f5f7fa;--field-border:#e2e8f0;
 }
-[data-theme="dark"]{
-  --bg:#0b0f1a;--surface:#111827;--surface2:#161d2e;--surface3:#1e2740;
-  --border:#1e2d47;--border-focus:#3b82f6;
-  --text:#e2e8f0;--text-muted:#7c8fa8;--text-light:#3d5068;
-  --accent:#3b82f6;--accent-hover:#2563eb;--accent-light:#0f1f3d;--accent-subtle:#162035;
-  --steel:#94a3b8;--steel-light:#64748b;
-  --success:#22c55e;--success-bg:#052e16;
-  --error:#f87171;--error-bg:#1f0707;
-  --shadow:0 1px 8px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.04);
-  --shadow-md:0 4px 20px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04);
+
+html,body{height:100%;overflow:hidden;}
+
+/* ── FULLSCREEN BACKGROUND ── */
+.bg{position:fixed;inset:0;z-index:0;}
+
+.slide{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+  opacity:0;transition:opacity 1.6s ease;
 }
-html,body{height:100%;}
-body{font-family:var(--font);background:var(--bg);color:var(--text);display:grid;grid-template-columns:1fr 440px;min-height:100vh;transition:background .3s,color .3s;}
+.slide.active{opacity:1;animation:kbz 12s ease forwards;}
 
-/* ── HERO ── */
-.hero{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;min-height:100vh;}
+@keyframes kbz{from{transform:scale(1.06);}to{transform:scale(1.0);}}
 
-.slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.4s ease;}
-.slide.active{opacity:1;animation:zoomSlow 10s ease forwards;}
-@keyframes zoomSlow{from{transform:scale(1.06);}to{transform:scale(1.0);}}
-
-.hero-vignette{
+/* Multi-layer cinematic overlay */
+.bg-overlay{
   position:absolute;inset:0;z-index:1;
   background:
-    linear-gradient(to top, rgba(5,8,18,.95) 0%, rgba(5,8,18,.5) 40%, rgba(5,8,18,.15) 70%),
-    linear-gradient(to right, rgba(5,8,18,.4) 0%, transparent 55%);
+    radial-gradient(ellipse at 30% 50%, rgba(10,20,50,.55) 0%, transparent 65%),
+    linear-gradient(to bottom, rgba(5,10,25,.35) 0%, rgba(5,10,25,.7) 60%, rgba(5,10,25,.9) 100%),
+    linear-gradient(to right, rgba(5,10,25,.5) 0%, rgba(5,10,25,.0) 40%);
 }
 
-.hero-inner{position:relative;z-index:2;padding:2.5rem 2.75rem;display:flex;flex-direction:column;height:100%;}
+/* Subtle grain texture */
+.bg-noise{position:absolute;inset:0;z-index:2;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px;}
 
-/* Brand */
-.brand{display:flex;align-items:center;gap:.85rem;}
+/* ── TOP BAR ── */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  padding:1.5rem 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+}
+
+.brand{display:flex;align-items:center;gap:.75rem;}
 .brand-logo{
-  width:46px;height:46px;border-radius:14px;
-  background:linear-gradient(135deg,#2563eb,#1e40af);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  box-shadow:0 4px 20px rgba(37,99,235,.4);
+  width:40px;height:40px;border-radius:12px;
+  background:linear-gradient(135deg,#3b82f6,#1e40af);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(59,130,246,.4);
+  flex-shrink:0;
 }
-.brand-text{line-height:1.1;}
-.brand-name{font-size:1.3rem;font-weight:700;color:#fff;letter-spacing:-.01em;}
-.brand-tagline{font-size:.65rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.14em;font-weight:500;}
+.brand-name{font-size:1.15rem;font-weight:700;color:#fff;letter-spacing:-.01em;}
+.brand-sub{font-size:.6rem;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.14em;font-weight:500;}
 
-/* Hero bottom content */
-.hero-bottom{margin-top:auto;}
-
-.live-badge{
-  display:inline-flex;align-items:center;gap:.4rem;
-  background:rgba(37,99,235,.18);border:1px solid rgba(59,130,246,.3);
-  color:#93c5fd;border-radius:100px;padding:.28rem .8rem;
-  font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;
-  margin-bottom:1.4rem;
-}
-.live-dot{width:6px;height:6px;border-radius:50%;background:#3b82f6;animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-
-.hero-title{
-  font-size:clamp(2.4rem,3.8vw,3.6rem);
-  font-weight:700;color:#fff;line-height:1.06;
-  letter-spacing:-.025em;margin-bottom:1rem;
-}
-.hero-title strong{
-  display:block;
-  background:linear-gradient(100deg,#93c5fd,#60a5fa);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-
-.hero-desc{color:rgba(255,255,255,.55);font-size:.92rem;line-height:1.7;max-width:380px;margin-bottom:2.2rem;font-weight:400;}
-
-/* Stat pills */
-.stat-pills{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:2rem;}
-.pill{
-  display:flex;align-items:center;gap:.5rem;
-  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
-  border-radius:100px;padding:.45rem 1rem;
-  backdrop-filter:blur(8px);
-}
-.pill-val{font-size:.92rem;font-weight:700;color:#fff;}
-.pill-label{font-size:.68rem;color:rgba(255,255,255,.45);font-weight:500;}
-.pill-sep{width:1px;height:12px;background:rgba(255,255,255,.15);}
-
-/* Slide controls */
-.slide-bar{display:flex;align-items:center;gap:.75rem;}
-.slide-dots{display:flex;gap:5px;}
-.sdot{height:3px;border-radius:100px;background:rgba(255,255,255,.2);cursor:pointer;transition:all .35s;width:20px;}
-.sdot.active{background:rgba(255,255,255,.8);width:36px;}
-.slide-label{font-size:.68rem;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;}
-
-/* ── PANEL ── */
-.panel{
-  background:var(--surface);border-left:1px solid var(--border);
-  display:flex;flex-direction:column;justify-content:center;
-  padding:2.5rem 2rem;overflow-y:auto;position:relative;
-}
-.panel-actions{position:absolute;top:1.5rem;right:1.5rem;display:flex;gap:.4rem;}
+.topbar-right{display:flex;align-items:center;gap:.5rem;}
 .icon-btn{
   width:36px;height:36px;border-radius:var(--radius-xs);
-  border:1px solid var(--border);background:var(--surface2);
+  border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);
   cursor:pointer;display:flex;align-items:center;justify-content:center;
-  color:var(--text-muted);transition:all .18s;
+  color:rgba(255,255,255,.6);backdrop-filter:blur(8px);transition:all .18s;
 }
-.icon-btn:hover{border-color:var(--accent);color:var(--accent);}
+.icon-btn:hover{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.22);}
 
-.panel-inner{width:100%;max-width:360px;margin:0 auto;}
-
-.panel-eyebrow{
-  display:flex;align-items:center;gap:.5rem;
-  font-size:.68rem;font-weight:600;color:var(--accent);
-  text-transform:uppercase;letter-spacing:.12em;margin-bottom:.7rem;
+/* ── SLIDE DOTS BOTTOM ── */
+.slide-controls{
+  position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);
+  z-index:50;display:flex;align-items:center;gap:.65rem;
 }
-.panel-eyebrow::after{content:'';flex:1;height:1px;background:var(--accent-subtle);}
-.panel-title{font-size:1.9rem;font-weight:700;letter-spacing:-.025em;margin-bottom:.35rem;}
-.panel-sub{font-size:.84rem;color:var(--text-muted);margin-bottom:2rem;}
+.sdot{height:3px;border-radius:100px;background:rgba(255,255,255,.22);cursor:pointer;transition:all .38s;width:20px;}
+.sdot.active{background:rgba(255,255,255,.8);width:38px;}
+.slide-caption-text{
+  position:fixed;bottom:3.6rem;left:2.5rem;z-index:50;
+  font-size:.68rem;color:rgba(255,255,255,.3);
+  text-transform:uppercase;letter-spacing:.12em;font-weight:500;
+}
 
-/* Tabs */
-.tabs{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:3px;margin-bottom:1.75rem;gap:2px;}
-.tab{flex:1;padding:.58rem .35rem;border:none;border-radius:var(--radius-xs);background:transparent;color:var(--text-muted);font-family:var(--font);font-weight:600;font-size:.73rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.3rem;transition:all .18s;white-space:nowrap;}
-.tab.active{background:var(--surface);color:var(--text);box-shadow:var(--shadow);}
-.tab:hover:not(.active){color:var(--text);}
+/* ── STAT PILLS BOTTOM RIGHT ── */
+.stat-pills{
+  position:fixed;bottom:2rem;right:2rem;z-index:50;
+  display:flex;gap:.5rem;flex-wrap:wrap;justify-content:flex-end;
+}
+.pill{
+  display:flex;align-items:center;gap:.45rem;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);
+  border-radius:100px;padding:.38rem .85rem;backdrop-filter:blur(10px);
+}
+.pill-val{font-size:.84rem;font-weight:700;color:#fff;}
+.pill-sep{width:1px;height:10px;background:rgba(255,255,255,.18);}
+.pill-lbl{font-size:.65rem;color:rgba(255,255,255,.4);font-weight:500;}
+
+/* ── RIGHT PANEL LAYOUT ── */
+.center{
+  position:fixed;top:0;right:0;bottom:0;z-index:40;
+  width:480px;
+  display:flex;align-items:center;justify-content:center;
+  padding:2rem 2rem 2rem 0;
+  pointer-events:none;
+}
+
+/* ── FLOATING WHITE CARD ── */
+.card{
+  pointer-events:all;
+  width:100%;max-height:calc(100vh - 4rem);
+  overflow-y:auto;
+  background:#ffffff;
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:24px;
+  box-shadow:
+    0 4px 6px rgba(0,0,0,.04),
+    0 12px 40px rgba(0,0,0,.14),
+    0 32px 80px rgba(0,0,0,.12);
+  padding:2.25rem 2rem;
+  animation:floatIn .45s cubic-bezier(.22,1,.36,1);
+}
+@keyframes floatIn{from{opacity:0;transform:translateX(28px);}to{opacity:1;transform:translateX(0);}}
+@keyframes cardIn{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+
+.card-header{margin-bottom:1.75rem;}
+.card-eyebrow{
+  font-size:.66rem;font-weight:600;color:var(--accent);
+  text-transform:uppercase;letter-spacing:.13em;margin-bottom:.5rem;
+  display:flex;align-items:center;gap:.4rem;
+}
+.card-eyebrow::before{content:'';width:14px;height:2px;background:var(--accent);border-radius:2px;}
+.card-title{font-size:1.65rem;font-weight:700;color:var(--pt);letter-spacing:-.02em;line-height:1.1;margin-bottom:.3rem;}
+.card-sub{font-size:.82rem;color:var(--pt-muted);font-weight:400;}
+
+/* ── TABS ── */
+.tabs{
+  display:flex;background:var(--field-bg);
+  border:1px solid var(--field-border);border-radius:var(--radius-xs);
+  padding:3px;margin-bottom:1.5rem;gap:2px;
+}
+.tab{
+  flex:1;padding:.54rem .35rem;border:none;border-radius:6px;
+  background:transparent;color:var(--pt-muted);
+  font-family:var(--font);font-weight:600;font-size:.72rem;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  gap:.3rem;transition:all .18s;white-space:nowrap;
+}
+.tab.active{background:#fff;color:var(--pt);border:1px solid var(--field-border);box-shadow:0 1px 4px rgba(15,23,42,.07);}
+.tab:hover:not(.active){color:var(--pt);}
 .tab-panel{display:none;}
 .tab-panel.active{display:block;animation:fadeUp .2s ease;}
 
-/* TG block */
-.tg-block{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.75rem;text-align:center;margin-bottom:1rem;}
-.tg-orb{width:56px;height:56px;background:linear-gradient(135deg,#2AABEE,#1a8fd1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto .9rem;box-shadow:0 4px 16px rgba(42,171,238,.25);}
-.tg-title{font-size:1rem;font-weight:700;margin-bottom:.35rem;}
-.tg-desc{color:var(--text-muted);font-size:.8rem;margin-bottom:1.25rem;line-height:1.55;}
-#tg-widget{display:flex;justify-content:center;min-height:46px;align-items:center;}
+/* ── TG BLOCK ── */
+.tg-block{
+  background:var(--field-bg);border:1px solid var(--field-border);
+  border-radius:var(--radius-sm);padding:1.5rem;text-align:center;margin-bottom:.9rem;
+}
+.tg-orb{width:50px;height:50px;background:linear-gradient(135deg,#2AABEE,#1a8fd1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto .85rem;box-shadow:0 4px 16px rgba(42,171,238,.3);}
+.tg-title{font-size:.95rem;font-weight:700;color:var(--pt);margin-bottom:.3rem;}
+.tg-desc{color:var(--pt-muted);font-size:.78rem;margin-bottom:1.15rem;line-height:1.5;}
+#tg-widget{display:flex;justify-content:center;min-height:44px;align-items:center;}
 
 /* OTP */
 #otp-step{display:none;}
-.otp-notice{background:var(--accent-light);border:1px solid var(--accent-subtle);border-radius:var(--radius-sm);padding:.75rem .9rem;color:var(--accent);font-size:.8rem;margin-bottom:1.2rem;display:flex;align-items:flex-start;gap:.45rem;line-height:1.45;}
+.otp-notice{
+  background:#eff6ff;border:1px solid #bfdbfe;
+  border-radius:var(--radius-xs);padding:.7rem .9rem;
+  color:#2563eb;font-size:.78rem;margin-bottom:1.1rem;
+  display:flex;align-items:flex-start;gap:.4rem;line-height:1.45;
+}
 
-/* Fields */
-.field{margin-bottom:1rem;}
-.field label{display:flex;align-items:center;gap:.35rem;font-size:.68rem;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.45rem;}
+/* ── FIELDS ── */
+.field{margin-bottom:.9rem;}
+.field label{
+  display:flex;align-items:center;gap:.35rem;
+  font-size:.67rem;font-weight:700;color:var(--pt-light);
+  text-transform:uppercase;letter-spacing:.1em;margin-bottom:.42rem;
+}
 .input-wrap{position:relative;}
-.input-icon{position:absolute;left:.9rem;top:50%;transform:translateY(-50%);color:var(--text-light);pointer-events:none;width:14px;height:14px;}
-input[type="text"],input[type="password"]{width:100%;padding:.8rem 1rem .8rem 2.5rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:.88rem;font-family:var(--font);background:var(--surface2);color:var(--text);transition:all .18s;outline:none;}
-input:focus{border-color:var(--border-focus);background:var(--surface);box-shadow:0 0 0 3px rgba(37,99,235,.1);}
-input::placeholder{color:var(--text-light);}
-input[readonly]{background:var(--accent-light);border-color:var(--accent-subtle);color:var(--accent);cursor:default;font-family:var(--mono);}
+.input-icon{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);color:var(--pt-light);pointer-events:none;width:14px;height:14px;}
+input[type="text"],input[type="password"]{
+  width:100%;padding:.76rem 1rem .76rem 2.45rem;
+  border:1.5px solid var(--field-border);border-radius:var(--radius-xs);
+  font-size:.86rem;font-family:var(--font);
+  background:var(--field-bg);color:var(--pt);
+  transition:all .18s;outline:none;
+}
+input:focus{border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(59,130,246,.1);}
+input::placeholder{color:var(--pt-light);}
+input[readonly]{background:#eff6ff;border-color:#bfdbfe;color:var(--accent);cursor:default;font-family:var(--mono);}
 
-/* Buttons */
-.btn-primary{width:100%;padding:.88rem 1.5rem;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);font-family:var(--font);font-size:.92rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:all .18s;margin-top:.5rem;box-shadow:0 3px 12px rgba(37,99,235,.25);}
-.btn-primary:hover{background:var(--accent-hover);transform:translateY(-1px);box-shadow:0 5px 18px rgba(37,99,235,.35);}
+/* ── BUTTONS ── */
+.btn-primary{
+  width:100%;padding:.82rem 1.5rem;
+  background:var(--accent);color:#fff;border:none;border-radius:var(--radius-xs);
+  font-family:var(--font);font-size:.9rem;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  gap:.45rem;transition:all .18s;margin-top:.45rem;
+  box-shadow:0 3px 14px rgba(59,130,246,.3);
+}
+.btn-primary:hover{background:var(--accent-hover);transform:translateY(-1px);box-shadow:0 5px 20px rgba(59,130,246,.4);}
 .btn-primary:active{transform:translateY(0);}
-.btn-primary.loading{opacity:.65;pointer-events:none;}
-.btn-ghost{width:100%;padding:.8rem 1.5rem;background:transparent;color:var(--text-muted);border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:var(--font);font-size:.88rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.45rem;transition:all .18s;margin-top:.5rem;}
-.btn-ghost:hover{border-color:var(--border-focus);color:var(--text);}
+.btn-primary.loading{opacity:.6;pointer-events:none;}
 
-/* Alerts */
-.alert{display:none;padding:.7rem .9rem;border-radius:var(--radius-sm);font-size:.8rem;font-weight:500;margin-top:.65rem;align-items:center;gap:.45rem;}
+.btn-ghost{
+  width:100%;padding:.75rem 1.5rem;
+  background:var(--field-bg);color:var(--pt-muted);
+  border:1.5px solid var(--field-border);border-radius:var(--radius-xs);
+  font-family:var(--font);font-size:.84rem;font-weight:600;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  gap:.4rem;transition:all .18s;margin-top:.45rem;
+}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ── ALERTS ── */
+.alert{display:none;padding:.65rem .85rem;border-radius:var(--radius-xs);font-size:.78rem;font-weight:500;margin-top:.6rem;align-items:center;gap:.4rem;}
 .alert.visible{display:flex;}
-.alert-error{background:var(--error-bg);border:1px solid rgba(220,38,38,.15);color:var(--error);}
-.alert-success{background:var(--success-bg);border:1px solid rgba(22,163,74,.15);color:var(--success);}
+.alert-error{background:#fef2f2;border:1px solid #fecaca;color:#dc2626;}
+.alert-success{background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;}
 
-/* Divider */
-.divider{display:flex;align-items:center;gap:.65rem;margin:1.1rem 0;color:var(--text-light);font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;}
-.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+/* ── DIVIDER ── */
+.divider{display:flex;align-items:center;gap:.6rem;margin:.9rem 0;color:var(--pt-light);font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--field-border);}
 
-/* Hint */
-.hint{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.7rem .9rem;color:var(--text-muted);font-size:.79rem;margin-bottom:.9rem;display:flex;align-items:flex-start;gap:.4rem;line-height:1.45;}
+/* ── HINT ── */
+.hint{background:var(--field-bg);border:1px solid var(--field-border);border-radius:var(--radius-xs);padding:.65rem .85rem;color:var(--pt-muted);font-size:.77rem;margin-bottom:.9rem;display:flex;align-items:flex-start;gap:.4rem;line-height:1.45;}
 
-/* Spinner */
-.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .65s linear infinite;}
+/* ── SPINNER ── */
+.spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .65s linear infinite;}
 
-@media(max-width:960px){body{grid-template-columns:1fr;}.hero{min-height:300px;}.panel{border-left:none;border-top:1px solid var(--border);}}
-@media(max-width:480px){.panel{padding:1.5rem 1.25rem;}.tab{font-size:.68rem;padding:.52rem .3rem;}}
-
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@media(max-width:768px){
+  .center{width:100%;padding:1rem;}
+  .card{max-height:calc(100vh - 2rem);}
+  .stat-pills{display:none;}
+  .slide-controls{display:none;}
+  .slide-caption-text{display:none;}
+}
+@media(max-width:520px){.card{padding:1.5rem 1rem;border-radius:18px;}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 @keyframes spin{to{transform:rotate(360deg);}}
 </style>
 </head>
 <body>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="slide active" id="sl0" style="background-image:url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=1600&q=85')"></div>
-  <div class="slide" id="sl1" style="background-image:url('https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=1600&q=85')"></div>
-  <div class="slide" id="sl2" style="background-image:url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1600&q=85')"></div>
-  <div class="slide" id="sl3" style="background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=85')"></div>
-  <div class="slide" id="sl4" style="background-image:url('https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1600&q=85')"></div>
-  <div class="hero-vignette"></div>
-  <div class="hero-inner">
-    <div class="brand">
-      <div class="brand-logo"><i data-lucide="truck" style="width:22px;height:22px;color:white;"></i></div>
-      <div class="brand-text">
-        <div class="brand-name">Kurtex</div>
-        <div class="brand-tagline">Fleet Operations</div>
-      </div>
+<!-- BACKGROUND SLIDESHOW -->
+<div class="bg">
+  <!-- Reefer/flatbed/highway truck photos from Unsplash (free) -->
+  <div class="slide active" id="sl0" style="background-image:url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=1920&q=90')"></div>
+  <div class="slide" id="sl1" style="background-image:url('https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=1920&q=90')"></div>
+  <div class="slide" id="sl2" style="background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=90')"></div>
+  <div class="slide" id="sl3" style="background-image:url('https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1920&q=90')"></div>
+  <div class="slide" id="sl4" style="background-image:url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1920&q=90')"></div>
+  <div class="bg-overlay"></div>
+  <div class="bg-noise"></div>
+</div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-logo"><i data-lucide="truck" style="width:19px;height:19px;color:white;"></i></div>
+    <div>
+      <div class="brand-name">Kurtex</div>
+      <div class="brand-sub">Fleet Operations</div>
     </div>
-    <div class="hero-bottom">
-      <div class="live-badge"><span class="live-dot"></span> Live Operations</div>
-      <h2 class="hero-title">Every mile,<strong>fully managed.</strong></h2>
-      <p class="hero-desc">Real-time case management for trucking fleets. Coordinate agents, track drivers, resolve incidents — all from one place.</p>
-      <div class="stat-pills">
-        <div class="pill"><span class="pill-val">2.4k+</span><span class="pill-sep"></span><span class="pill-label">Cases Resolved</span></div>
-        <div class="pill"><span class="pill-val">98%</span><span class="pill-sep"></span><span class="pill-label">Uptime</span></div>
-        <div class="pill"><span class="pill-val">4 min</span><span class="pill-sep"></span><span class="pill-label">Avg Response</span></div>
-      </div>
-      <div class="slide-bar">
-        <div class="slide-dots" id="sdots">
-          <div class="sdot active" onclick="goSlide(0)"></div>
-          <div class="sdot" onclick="goSlide(1)"></div>
-          <div class="sdot" onclick="goSlide(2)"></div>
-          <div class="sdot" onclick="goSlide(3)"></div>
-          <div class="sdot" onclick="goSlide(4)"></div>
-        </div>
-        <span class="slide-label" id="slabel">Long-haul fleet</span>
-      </div>
-    </div>
+  </div>
+  <div class="topbar-right">
+    <button class="icon-btn" onclick="toggleTheme()" id="themeBtn">
+      <i data-lucide="sun" id="themeIcon" style="width:14px;height:14px;"></i>
+    </button>
   </div>
 </div>
 
-<!-- PANEL -->
-<div class="panel">
-  <div class="panel-actions">
-    <button class="icon-btn" onclick="toggleTheme()">
-      <i data-lucide="moon" id="themeIcon" style="width:15px;height:15px;"></i>
-    </button>
-  </div>
-  <div class="panel-inner">
-    <div class="panel-eyebrow">Secure Access</div>
-    <div class="panel-title">Sign in</div>
-    <div class="panel-sub">Access your operations dashboard</div>
+<!-- SLIDE CAPTION -->
+<div class="slide-caption-text" id="slideCaption">Long-haul freight</div>
+
+<!-- SLIDE DOTS -->
+<div class="slide-controls" id="sdots">
+  <div class="sdot active" onclick="goSlide(0)"></div>
+  <div class="sdot" onclick="goSlide(1)"></div>
+  <div class="sdot" onclick="goSlide(2)"></div>
+  <div class="sdot" onclick="goSlide(3)"></div>
+  <div class="sdot" onclick="goSlide(4)"></div>
+</div>
+
+<!-- STAT PILLS -->
+<div class="stat-pills">
+  <div class="pill"><span class="pill-val">2.4k+</span><span class="pill-sep"></span><span class="pill-lbl">Cases Resolved</span></div>
+  <div class="pill"><span class="pill-val">98%</span><span class="pill-sep"></span><span class="pill-lbl">Uptime</span></div>
+  <div class="pill"><span class="pill-val">4 min</span><span class="pill-sep"></span><span class="pill-lbl">Avg Response</span></div>
+</div>
+
+<!-- CENTER CARD -->
+<div class="center">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-eyebrow">Secure Access</div>
+      <div class="card-title">Sign in</div>
+      <div class="card-sub">Access your operations dashboard</div>
+    </div>
 
     <div class="tabs">
-      <button class="tab active" onclick="switchTab('telegram',this)"><i data-lucide="send" style="width:12px;height:12px;"></i> Telegram</button>
-      <button class="tab" onclick="switchTab('login',this)"><i data-lucide="lock" style="width:12px;height:12px;"></i> Password</button>
-      <button class="tab" onclick="switchTab('register',this)"><i data-lucide="user-plus" style="width:12px;height:12px;"></i> Register</button>
-      <button class="tab" onclick="switchTab('reset',this)"><i data-lucide="rotate-ccw" style="width:12px;height:12px;"></i> Reset</button>
+      <button class="tab active" onclick="switchTab('telegram',this)"><i data-lucide="send" style="width:11px;height:11px;"></i> Telegram</button>
+      <button class="tab" onclick="switchTab('login',this)"><i data-lucide="lock" style="width:11px;height:11px;"></i> Password</button>
+      <button class="tab" onclick="switchTab('register',this)"><i data-lucide="user-plus" style="width:11px;height:11px;"></i> Register</button>
+      <button class="tab" onclick="switchTab('reset',this)"><i data-lucide="rotate-ccw" style="width:11px;height:11px;"></i> Reset</button>
     </div>
 
     <!-- TELEGRAM -->
     <div class="tab-panel active" id="panel-telegram">
       <div id="tg-step-widget">
         <div class="tg-block">
-          <div class="tg-orb"><i data-lucide="send" style="width:22px;height:22px;color:white;"></i></div>
+          <div class="tg-orb"><i data-lucide="send" style="width:20px;height:20px;color:white;"></i></div>
           <div class="tg-title">Telegram Login</div>
           <div class="tg-desc">One tap authentication via your Telegram account.</div>
           <div id="tg-widget">
             {% if bot_username %}
             <script async src="https://telegram.org/js/telegram-widget.js?22"
                data-telegram-login="{{ bot_username }}"
-               data-size="large" data-radius="10"
+               data-size="large" data-radius="8"
                data-onauth="onTelegramAuth(user)"
                data-request-access="write"></script>
             {% else %}
-            <div style="font-size:.76rem;color:var(--text-light);">Telegram login not configured</div>
+            <div style="font-size:.75rem;color:rgba(255,255,255,.25);">Telegram login not configured</div>
             {% endif %}
           </div>
         </div>
@@ -281,104 +336,108 @@ input[readonly]{background:var(--accent-light);border-color:var(--accent-subtle)
       </div>
       <div id="otp-step">
         <div class="otp-notice">
-          <i data-lucide="message-square" style="width:14px;height:14px;flex-shrink:0;margin-top:1px;"></i>
-          A 6-digit code was sent to your Telegram. Enter it below.
+          <i data-lucide="message-square" style="width:13px;height:13px;flex-shrink:0;margin-top:1px;"></i>
+          A 6-digit code was sent to your Telegram.
         </div>
         <div class="field">
-          <label><i data-lucide="hash" style="width:12px;height:12px;"></i> Verification Code</label>
+          <label><i data-lucide="hash" style="width:11px;height:11px;"></i> Code</label>
           <div class="input-wrap">
             <i data-lucide="hash" class="input-icon"></i>
             <input type="text" id="otp-code" placeholder="000000" maxlength="6" autocomplete="one-time-code"
               onkeydown="if(event.key==='Enter')submitOtp()"
-              style="text-align:center;letter-spacing:.3em;font-size:1.15rem;padding-left:1rem;font-family:var(--mono);">
+              style="text-align:center;letter-spacing:.3em;font-size:1.1rem;padding-left:1rem;font-family:var(--mono);">
           </div>
         </div>
-        <div class="alert alert-error" id="otp-error"><i data-lucide="alert-circle" style="width:13px;height:13px;flex-shrink:0;"></i><span id="otp-error-text"></span></div>
-        <button class="btn-primary" onclick="submitOtp()" id="otpBtn"><i data-lucide="arrow-right" style="width:15px;height:15px;"></i> Verify & Enter</button>
-        <button class="btn-ghost" onclick="resetOtpStep()"><i data-lucide="arrow-left" style="width:13px;height:13px;"></i> Back</button>
+        <div class="alert alert-error" id="otp-error"><i data-lucide="alert-circle" style="width:12px;height:12px;flex-shrink:0;"></i><span id="otp-error-text"></span></div>
+        <button class="btn-primary" onclick="submitOtp()" id="otpBtn"><i data-lucide="arrow-right" style="width:14px;height:14px;"></i> Verify & Enter</button>
+        <button class="btn-ghost" onclick="resetOtpStep()"><i data-lucide="arrow-left" style="width:12px;height:12px;"></i> Back</button>
       </div>
     </div>
 
     <!-- PASSWORD -->
     <div class="tab-panel" id="panel-login">
       <div class="field">
-        <label><i data-lucide="at-sign" style="width:12px;height:12px;"></i> Username</label>
+        <label><i data-lucide="at-sign" style="width:11px;height:11px;"></i> Username</label>
         <div class="input-wrap"><i data-lucide="at-sign" class="input-icon"></i>
           <input type="text" id="login-username" placeholder="telegram_username" autocomplete="username">
         </div>
       </div>
       <div class="field">
-        <label><i data-lucide="lock" style="width:12px;height:12px;"></i> Password</label>
+        <label><i data-lucide="lock" style="width:11px;height:11px;"></i> Password</label>
         <div class="input-wrap"><i data-lucide="lock" class="input-icon"></i>
-          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')loginWithPw()">
+          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"
+            onkeydown="if(event.key==='Enter')loginWithPw()">
         </div>
       </div>
-      <div class="alert alert-error" id="login-error"><i data-lucide="alert-circle" style="width:13px;height:13px;flex-shrink:0;"></i><span id="login-error-text"></span></div>
-      <button class="btn-primary" onclick="loginWithPw()" id="loginBtn"><i data-lucide="log-in" style="width:15px;height:15px;"></i> Sign In</button>
-      <button class="btn-ghost" onclick="switchTab('reset',document.querySelectorAll('.tab')[3])"><i data-lucide="rotate-ccw" style="width:13px;height:13px;"></i> Forgot password?</button>
+      <div class="alert alert-error" id="login-error"><i data-lucide="alert-circle" style="width:12px;height:12px;flex-shrink:0;"></i><span id="login-error-text"></span></div>
+      <button class="btn-primary" onclick="loginWithPw()" id="loginBtn"><i data-lucide="log-in" style="width:14px;height:14px;"></i> Sign In</button>
+      <button class="btn-ghost" onclick="switchTab('reset',document.querySelectorAll('.tab')[3])"><i data-lucide="rotate-ccw" style="width:12px;height:12px;"></i> Forgot password?</button>
     </div>
 
     <!-- REGISTER -->
     <div class="tab-panel" id="panel-register">
-      <div class="hint"><i data-lucide="info" style="width:13px;height:13px;flex-shrink:0;margin-top:1px;"></i>Your account must be created by an administrator before setting a password.</div>
+      <div class="hint"><i data-lucide="info" style="width:12px;height:12px;flex-shrink:0;margin-top:1px;"></i>Your account must be created by an administrator first.</div>
       <div class="field">
-        <label><i data-lucide="at-sign" style="width:12px;height:12px;"></i> Username</label>
+        <label><i data-lucide="at-sign" style="width:11px;height:11px;"></i> Username</label>
         <div class="input-wrap"><i data-lucide="at-sign" class="input-icon"></i>
           <input type="text" id="reg-username" placeholder="telegram_username">
         </div>
       </div>
       <div class="field">
-        <label><i data-lucide="lock" style="width:12px;height:12px;"></i> Password</label>
+        <label><i data-lucide="lock" style="width:11px;height:11px;"></i> Password</label>
         <div class="input-wrap"><i data-lucide="lock" class="input-icon"></i>
           <input type="password" id="reg-password" placeholder="Min 6 characters" onkeydown="if(event.key==='Enter')registerUser()">
         </div>
       </div>
-      <div class="alert alert-error" id="reg-error"><i data-lucide="alert-circle" style="width:13px;height:13px;flex-shrink:0;"></i><span id="reg-error-text"></span></div>
-      <div class="alert alert-success" id="reg-success"><i data-lucide="check-circle" style="width:13px;height:13px;flex-shrink:0;"></i><span>Account created. You can now sign in.</span></div>
-      <button class="btn-primary" onclick="registerUser()" id="regBtn"><i data-lucide="user-check" style="width:15px;height:15px;"></i> Create Account</button>
+      <div class="alert alert-error" id="reg-error"><i data-lucide="alert-circle" style="width:12px;height:12px;flex-shrink:0;"></i><span id="reg-error-text"></span></div>
+      <div class="alert alert-success" id="reg-success"><i data-lucide="check-circle" style="width:12px;height:12px;flex-shrink:0;"></i><span>Account created. You can now sign in.</span></div>
+      <button class="btn-primary" onclick="registerUser()" id="regBtn"><i data-lucide="user-check" style="width:14px;height:14px;"></i> Create Account</button>
     </div>
 
     <!-- RESET -->
     <div class="tab-panel" id="panel-reset">
       <div id="reset-step1">
-        <div class="hint"><i data-lucide="info" style="width:13px;height:13px;flex-shrink:0;margin-top:1px;"></i>Enter your username to generate a one-time reset token.</div>
+        <div class="hint"><i data-lucide="info" style="width:12px;height:12px;flex-shrink:0;margin-top:1px;"></i>Enter your username to get a one-time reset token.</div>
         <div class="field">
-          <label><i data-lucide="at-sign" style="width:12px;height:12px;"></i> Username</label>
+          <label><i data-lucide="at-sign" style="width:11px;height:11px;"></i> Username</label>
           <div class="input-wrap"><i data-lucide="at-sign" class="input-icon"></i>
             <input type="text" id="reset-username" placeholder="telegram_username">
           </div>
         </div>
-        <div class="alert alert-error" id="reset-error"><i data-lucide="alert-circle" style="width:13px;height:13px;flex-shrink:0;"></i><span id="reset-error-text"></span></div>
-        <button class="btn-primary" onclick="resetPasswordStep1()" id="resetBtn1"><i data-lucide="send" style="width:15px;height:15px;"></i> Generate Token</button>
+        <div class="alert alert-error" id="reset-error"><i data-lucide="alert-circle" style="width:12px;height:12px;flex-shrink:0;"></i><span id="reset-error-text"></span></div>
+        <button class="btn-primary" onclick="resetPasswordStep1()" id="resetBtn1"><i data-lucide="send" style="width:14px;height:14px;"></i> Generate Token</button>
       </div>
       <div id="reset-step2" style="display:none;">
-        <div class="hint"><i data-lucide="check-circle" style="width:13px;height:13px;flex-shrink:0;margin-top:1px;color:var(--success);"></i>Token generated. Copy it and set your new password.</div>
+        <div class="hint"><i data-lucide="check-circle" style="width:12px;height:12px;flex-shrink:0;margin-top:1px;color:var(--success);"></i>Token generated. Copy it and set your new password.</div>
         <div class="field">
-          <label><i data-lucide="hash" style="width:12px;height:12px;"></i> Reset Token</label>
+          <label><i data-lucide="hash" style="width:11px;height:11px;"></i> Token</label>
           <div class="input-wrap"><i data-lucide="hash" class="input-icon"></i><input type="text" id="reset-token" readonly></div>
         </div>
         <div class="field">
-          <label><i data-lucide="lock" style="width:12px;height:12px;"></i> New Password</label>
+          <label><i data-lucide="lock" style="width:11px;height:11px;"></i> New Password</label>
           <div class="input-wrap"><i data-lucide="lock" class="input-icon"></i><input type="password" id="reset-newpw" placeholder="Min 6 characters"></div>
         </div>
         <div class="field">
-          <label><i data-lucide="lock" style="width:12px;height:12px;"></i> Confirm Password</label>
+          <label><i data-lucide="lock" style="width:11px;height:11px;"></i> Confirm</label>
           <div class="input-wrap"><i data-lucide="lock" class="input-icon"></i>
             <input type="password" id="reset-confirmpw" placeholder="Repeat password" onkeydown="if(event.key==='Enter')resetPasswordStep2()">
           </div>
         </div>
-        <div class="alert alert-error" id="reset-error2"><i data-lucide="alert-circle" style="width:13px;height:13px;flex-shrink:0;"></i><span id="reset-error2-text"></span></div>
-        <div class="alert alert-success" id="reset-success"><i data-lucide="check-circle" style="width:13px;height:13px;flex-shrink:0;"></i><span>Password updated. Redirecting…</span></div>
-        <button class="btn-primary" onclick="resetPasswordStep2()" id="resetBtn2"><i data-lucide="shield-check" style="width:15px;height:15px;"></i> Reset Password</button>
-        <button class="btn-ghost" onclick="resetBack()"><i data-lucide="arrow-left" style="width:13px;height:13px;"></i> Back</button>
+        <div class="alert alert-error" id="reset-error2"><i data-lucide="alert-circle" style="width:12px;height:12px;flex-shrink:0;"></i><span id="reset-error2-text"></span></div>
+        <div class="alert alert-success" id="reset-success"><i data-lucide="check-circle" style="width:12px;height:12px;flex-shrink:0;"></i><span>Password updated. Redirecting…</span></div>
+        <button class="btn-primary" onclick="resetPasswordStep2()" id="resetBtn2"><i data-lucide="shield-check" style="width:14px;height:14px;"></i> Reset Password</button>
+        <button class="btn-ghost" onclick="resetBack()"><i data-lucide="arrow-left" style="width:12px;height:12px;"></i> Back</button>
       </div>
     </div>
+
   </div>
 </div>
 
 <script>
 lucide.createIcons();
-const CAPTIONS=['Long-haul fleet','Driver coordination','Route dispatch','Freight tracking','Cross-country ops'];
+
+// Slideshow
+const CAPS=['Long-haul freight','Reefer operations','Flatbed dispatch','Highway logistics','Fleet coordination'];
 let cur=0,stimer;
 function goSlide(i){
   document.getElementById('sl'+cur).classList.remove('active');
@@ -387,27 +446,46 @@ function goSlide(i){
   const s=document.getElementById('sl'+cur);
   s.classList.add('active');s.style.animation='none';s.offsetHeight;s.style.animation='';
   document.querySelectorAll('.sdot')[cur].classList.add('active');
-  document.getElementById('slabel').textContent=CAPTIONS[cur];
-  clearInterval(stimer);stimer=setInterval(()=>goSlide((cur+1)%5),7000);
+  document.getElementById('slideCaption').textContent=CAPS[cur];
+  clearInterval(stimer);stimer=setInterval(()=>goSlide((cur+1)%5),8000);
 }
-stimer=setInterval(()=>goSlide((cur+1)%5),7000);
+stimer=setInterval(()=>goSlide((cur+1)%5),8000);
 
+// Theme toggle — switches background overlay intensity
+let isLight=false;
 function toggleTheme(){
-  const h=document.documentElement,d=h.dataset.theme==='dark';
-  h.dataset.theme=d?'light':'dark';localStorage.setItem('kt',h.dataset.theme);
-  document.getElementById('themeIcon').setAttribute('data-lucide',d?'moon':'sun');lucide.createIcons();
+  isLight=!isLight;
+  document.querySelector('.bg-overlay').style.opacity=isLight?'.5':'1';
+  document.getElementById('themeIcon').setAttribute('data-lucide',isLight?'moon':'sun');
+  lucide.createIcons();
 }
-(function(){const s=localStorage.getItem('kt');if(s){document.documentElement.dataset.theme=s;document.getElementById('themeIcon').setAttribute('data-lucide',s==='light'?'moon':'sun');lucide.createIcons();}})();
 
-function switchTab(n,b){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));if(b)b.classList.add('active');document.getElementById('panel-'+n).classList.add('active');}
-function showAlert(id,msg,type='error'){const el=document.getElementById(id),tx=document.getElementById(id+'-text');if(tx)tx.textContent=msg;el.className=`alert alert-${type} visible`;}
+// Tabs
+function switchTab(n,b){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  if(b)b.classList.add('active');
+  document.getElementById('panel-'+n).classList.add('active');
+}
+
+function showAlert(id,msg,type='error'){
+  const el=document.getElementById(id),tx=document.getElementById(id+'-text');
+  if(tx)tx.textContent=msg;el.className=`alert alert-${type} visible`;
+}
 function hideAlert(id){const el=document.getElementById(id);if(el)el.classList.remove('visible');}
-function setLoading(id,on,html){const b=document.getElementById(id);if(!b)return;b.classList.toggle('loading',on);if(on)b.innerHTML='<div class="spinner"></div>';else if(html){b.innerHTML=html;lucide.createIcons();}}
+function setLoading(id,on,html){
+  const b=document.getElementById(id);if(!b)return;
+  b.classList.toggle('loading',on);
+  if(on)b.innerHTML='<div class="spinner"></div>';
+  else if(html){b.innerHTML=html;lucide.createIcons();}
+}
 
 let _tgId=null;
 window.onTelegramAuth=async function(user){
   _tgId=parseInt(user.id);
-  try{const r=await fetch('/auth/telegram',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(user)});const d=await r.json();
+  try{
+    const r=await fetch('/auth/telegram',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(user)});
+    const d=await r.json();
     if(d.ok){document.getElementById('tg-step-widget').style.display='none';document.getElementById('otp-step').style.display='block';setTimeout(()=>document.getElementById('otp-code').focus(),100);}
     else alert(d.error||'Not authorized.');
   }catch(e){alert('Network error.');}
@@ -416,10 +494,11 @@ async function submitOtp(){
   const code=document.getElementById('otp-code').value.trim();hideAlert('otp-error');
   if(!code||code.length<6){showAlert('otp-error','Enter the 6-digit code.');return;}
   setLoading('otpBtn',true);
-  try{const r=await fetch('/verify-code',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({telegram_id:_tgId,code})});const d=await r.json();
-    if(d.ok){window.location=d.redirect;return;}showAlert('otp-error',d.error||'Invalid code.');
+  try{
+    const r=await fetch('/verify-code',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({telegram_id:_tgId,code})});
+    const d=await r.json();if(d.ok){window.location=d.redirect;return;}showAlert('otp-error',d.error||'Invalid code.');
   }catch(e){showAlert('otp-error','Network error.');}
-  setLoading('otpBtn',false,'<i data-lucide="arrow-right" style="width:15px;height:15px;"></i> Verify & Enter');
+  setLoading('otpBtn',false,'<i data-lucide="arrow-right" style="width:14px;height:14px;"></i> Verify & Enter');
 }
 function resetOtpStep(){document.getElementById('tg-step-widget').style.display='';document.getElementById('otp-step').style.display='none';document.getElementById('otp-code').value='';hideAlert('otp-error');_tgId=null;}
 
@@ -427,40 +506,47 @@ async function loginWithPw(){
   const u=document.getElementById('login-username').value.trim().replace(/^@/,''),p=document.getElementById('login-password').value;
   hideAlert('login-error');if(!u||!p){showAlert('login-error','Username and password required.');return;}
   setLoading('loginBtn',true);
-  try{const r=await fetch('/login-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({telegram_username:u,password:p})});const d=await r.json();
-    if(d.ok){window.location=d.redirect;return;}showAlert('login-error',d.error||'Invalid credentials.');
+  try{
+    const r=await fetch('/login-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({telegram_username:u,password:p})});
+    const d=await r.json();if(d.ok){window.location=d.redirect;return;}showAlert('login-error',d.error||'Invalid credentials.');
   }catch(e){showAlert('login-error','Network error.');}
-  setLoading('loginBtn',false,'<i data-lucide="log-in" style="width:15px;height:15px;"></i> Sign In');
+  setLoading('loginBtn',false,'<i data-lucide="log-in" style="width:14px;height:14px;"></i> Sign In');
 }
 async function registerUser(){
   const u=document.getElementById('reg-username').value.trim().replace(/^@/,''),p=document.getElementById('reg-password').value;
   hideAlert('reg-error');hideAlert('reg-success');if(!u||!p||p.length<6){showAlert('reg-error','Username and password (min 6) required.');return;}
   setLoading('regBtn',true);
-  try{const r=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({telegram_username:u,password:p})});const d=await r.json();
+  try{
+    const r=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({telegram_username:u,password:p})});
+    const d=await r.json();
     if(d.ok){document.getElementById('reg-success').classList.add('visible');document.getElementById('reg-username').value='';document.getElementById('reg-password').value='';}
     else showAlert('reg-error',d.error||'Registration failed.');
   }catch(e){showAlert('reg-error','Network error.');}
-  setLoading('regBtn',false,'<i data-lucide="user-check" style="width:15px;height:15px;"></i> Create Account');
+  setLoading('regBtn',false,'<i data-lucide="user-check" style="width:14px;height:14px;"></i> Create Account');
 }
 async function resetPasswordStep1(){
   const u=document.getElementById('reset-username').value.trim().replace(/^@/,'');hideAlert('reset-error');
   if(!u){showAlert('reset-error','Enter your username.');return;}setLoading('resetBtn1',true);
-  try{const r=await fetch('/reset-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({telegram_username:u})});const d=await r.json();
+  try{
+    const r=await fetch('/reset-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({telegram_username:u})});
+    const d=await r.json();
     if(d.ok){document.getElementById('reset-token').value=d.token;document.getElementById('reset-step1').style.display='none';document.getElementById('reset-step2').style.display='block';}
     else showAlert('reset-error',d.error||'User not found.');
   }catch(e){showAlert('reset-error','Network error.');}
-  setLoading('resetBtn1',false,'<i data-lucide="send" style="width:15px;height:15px;"></i> Generate Token');
+  setLoading('resetBtn1',false,'<i data-lucide="send" style="width:14px;height:14px;"></i> Generate Token');
 }
 async function resetPasswordStep2(){
   const u=document.getElementById('reset-username').value.trim().replace(/^@/,''),token=document.getElementById('reset-token').value.trim(),np=document.getElementById('reset-newpw').value,cp=document.getElementById('reset-confirmpw').value;
   hideAlert('reset-error2');hideAlert('reset-success');
   if(!np||np.length<6){showAlert('reset-error2','Min 6 characters.');return;}if(np!==cp){showAlert('reset-error2','Passwords do not match.');return;}
   setLoading('resetBtn2',true);
-  try{const r=await fetch('/verify-reset',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({telegram_username:u,token,password:np})});const d=await r.json();
+  try{
+    const r=await fetch('/verify-reset',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({telegram_username:u,token,password:np})});
+    const d=await r.json();
     if(d.ok){document.getElementById('reset-success').classList.add('visible');setTimeout(()=>switchTab('login',document.querySelectorAll('.tab')[1]),2000);}
     else showAlert('reset-error2',d.error||'Reset failed.');
   }catch(e){showAlert('reset-error2','Network error.');}
-  setLoading('resetBtn2',false,'<i data-lucide="shield-check" style="width:15px;height:15px;"></i> Reset Password');
+  setLoading('resetBtn2',false,'<i data-lucide="shield-check" style="width:14px;height:14px;"></i> Reset Password');
 }
 function resetBack(){document.getElementById('reset-step1').style.display='block';document.getElementById('reset-step2').style.display='none';['reset-token','reset-newpw','reset-confirmpw'].forEach(id=>document.getElementById(id).value='');['reset-error','reset-error2','reset-success'].forEach(hideAlert);}
 </script>
