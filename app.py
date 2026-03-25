@@ -39,7 +39,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY", "dev-secret-change-in-production")
+app.secret_key = os.getenv("SECRET_KEY", "Kx9#mP2$vL8@nQ4w")
 
 # ── MongoDB ───────────────────────────────────────────────────────────────────
 
