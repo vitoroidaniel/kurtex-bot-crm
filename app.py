@@ -89,6 +89,18 @@ ROLE_COLORS = {
     "agent":       "#64748b",
 }
 
+def serialize_user(user: dict) -> dict:
+    """Convert bytes/ObjectId fields to JSON-safe format"""
+    new_user = {}
+    for k, v in user.items():
+        if isinstance(v, bytes):
+            new_user[k] = v.decode("utf-8")  # or base64.b64encode(v).decode("utf-8")
+        elif isinstance(v, ObjectId):
+            new_user[k] = str(v)
+        else:
+            new_user[k] = v
+    return new_user
+
 def hash_password(password):
     """Hash a password for storage."""
     salt = bcrypt.gensalt()
@@ -545,19 +557,20 @@ def api_users():
 
     return jsonify({"users": users, "role_labels": ROLE_LABELS, "role_colors": ROLE_COLORS})
 
-@app.route("/api/me")
-@login_required
+@app.route("/api/me", methods=["GET"])
 def api_me():
-    user = get_current_user()
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"error": "Not logged in"}), 401
+
+    user = users_col().find_one({"telegram_id": user_id}) or {}
+    safe_user = serialize_user(user)
+
     return jsonify({
-        "name": session.get("user_name"),
-        "role": session.get("user_role"),
-        "role_label": ROLE_LABELS.get(session.get("user_role"), "Agent"),
-        "telegram_id": session.get("user_id"),
-        **(user or {}),
+        "name": session.get("user_name", "User"),
+        "role": session.get("user_role", safe_user.get("role", "agent")),
+        **safe_user
     })
-
-
 
 @app.route("/api/cases/<case_id>", methods=["PATCH"])
 @login_required
