@@ -165,6 +165,8 @@ def role_required(*roles):
 # ── Routes: Auth ──────────────────────────────────────────────────────────────
 
 # 1️⃣ Telegram login
+telegram_otp_store = {}
+
 @app.route("/auth/telegram", methods=["POST"])
 def auth_telegram():
     data = request.json or {}
@@ -176,12 +178,14 @@ def auth_telegram():
     telegram_id = int(data.get("id", 0))
     user = strip(users_col().find_one({"telegram_id": telegram_id}))
     if not user:
-        return jsonify({"error": "You are not registered"}), 403
+        return jsonify({"error": "Not registered"}), 403
 
     # Generate OTP
     otp_code = str(random.randint(100000, 999999))
     telegram_otp_store[telegram_id] = {"code": otp_code, "expires": time.time() + 300}
-    send_telegram_otp(telegram_id, otp_code)
+
+    if not send_telegram_otp(telegram_id, otp_code):
+        return jsonify({"error": "Failed to send OTP"}), 500
 
     return jsonify({"ok": True, "message": "OTP sent via Telegram"})
 
