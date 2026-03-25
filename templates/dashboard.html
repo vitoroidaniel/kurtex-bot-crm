@@ -1,325 +1,329 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kurtex CRM — Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#f0f2ff;--surface:#fff;--surface2:#f5f6ff;--surface3:#eceeff;
-  --border:#dde0f8;--border-strong:#b8bef4;
-  --text:#18181b;--text-muted:#6b7280;--text-light:#9ca3af;
-  --accent:#6366f1;--accent-hover:#4f46e5;--accent-light:#eef2ff;--accent-subtle:#e0e7ff;
-  --accent-2:#8b5cf6;
-  --success:#059669;--success-bg:#ecfdf5;
+  --bg:#f5f7fa;--surface:#ffffff;--surface2:#f0f3f8;--surface3:#e4e9f2;
+  --border:#d4dae8;--border-strong:#b8c2d8;
+  --text:#0f172a;--text-muted:#4a5568;--text-light:#94a3b8;
+  --accent:#2563eb;--accent-hover:#1d4ed8;--accent-light:#eff6ff;--accent-subtle:#dbeafe;
+  --accent-2:#7c3aed;
+  --success:#16a34a;--success-bg:#f0fdf4;
   --warning:#d97706;--warning-bg:#fffbeb;
-  --info:#2563eb;--info-bg:#eff6ff;
+  --info:#0891b2;--info-bg:#ecfeff;
   --danger:#dc2626;--danger-bg:#fef2f2;
-  --purple:#7c3aed;--purple-bg:#f5f3ff;
-  --radius:20px;--radius-md:16px;--radius-sm:12px;--radius-xs:8px;
-  --sidebar-w:252px;--header-h:64px;
-  --shadow:0 1px 4px rgba(99,102,241,.08),0 0 0 1px rgba(99,102,241,.05);
-  --shadow-md:0 4px 18px rgba(99,102,241,.12),0 0 0 1px rgba(99,102,241,.06);
-  --shadow-lg:0 20px 56px rgba(99,102,241,.18),0 0 0 1px rgba(99,102,241,.08);
-  --font:'Inter',sans-serif;--mono:'JetBrains Mono',monospace;
+  --steel:#334155;--steel-bg:#f1f5f9;
+  --radius:18px;--radius-md:14px;--radius-sm:10px;--radius-xs:7px;
+  --sidebar-w:240px;--header-h:60px;
+  --shadow:0 1px 6px rgba(15,23,42,.07),0 0 0 1px rgba(15,23,42,.04);
+  --shadow-md:0 4px 16px rgba(15,23,42,.1),0 0 0 1px rgba(15,23,42,.05);
+  --shadow-lg:0 16px 48px rgba(15,23,42,.14),0 0 0 1px rgba(15,23,42,.06);
+  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
 }
 [data-theme="dark"]{
-  --bg:#0d0d14;--surface:#13131e;--surface2:#1a1a28;--surface3:#222236;
-  --border:#2e2e4a;--border-strong:#444466;
-  --text:#e8e8f4;--text-muted:#8b8ba8;--text-light:#5a5a78;
-  --accent:#818cf8;--accent-hover:#6366f1;--accent-light:#1a1a2e;--accent-subtle:#22223a;
-  --accent-2:#a78bfa;
-  --success:#34d399;--success-bg:#0a2018;
-  --warning:#fbbf24;--warning-bg:#1e1808;
-  --info:#60a5fa;--info-bg:#0a1828;
-  --danger:#f87171;--danger-bg:#2a0a0a;
-  --purple:#a78bfa;--purple-bg:#1c1038;
-  --shadow:0 1px 4px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.04);
-  --shadow-md:0 4px 18px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04);
-  --shadow-lg:0 20px 56px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.05);
+  --bg:#090d18;--surface:#0f1624;--surface2:#141d2e;--surface3:#1a2438;
+  --border:#1e2d47;--border-strong:#2d4060;
+  --text:#e2e8f0;--text-muted:#7c8fa8;--text-light:#3d5068;
+  --accent:#3b82f6;--accent-hover:#2563eb;--accent-light:#0d1f3c;--accent-subtle:#162035;
+  --accent-2:#8b5cf6;
+  --success:#22c55e;--success-bg:#052e16;
+  --warning:#fbbf24;--warning-bg:#1a1205;
+  --info:#22d3ee;--info-bg:#031a1f;
+  --danger:#f87171;--danger-bg:#1f0707;
+  --steel:#94a3b8;--steel-bg:#141d2e;
+  --shadow:0 1px 6px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.04);
+  --shadow-md:0 4px 16px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04);
+  --shadow-lg:0 16px 48px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.05);
 }
 html,body{height:100%;}
-body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;transition:background .25s,color .25s;overflow:hidden;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;overflow:hidden;transition:background .25s,color .25s;}
 
 /* ── SIDEBAR ── */
-.sidebar{width:var(--sidebar-w);height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;position:relative;z-index:100;transition:background .25s,border-color .25s,transform .3s;}
-.sidebar-logo{padding:1.25rem 1.25rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.7rem;}
-.logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 10px rgba(99,102,241,.3);}
-.logo-name{font-size:1.15rem;font-weight:800;letter-spacing:-.025em;}
-.logo-sub{font-size:.65rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;}
-.nav{flex:1;padding:.75rem;overflow-y:auto;display:flex;flex-direction:column;gap:2px;}
-.nav-section{font-size:.65rem;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.1em;padding:.75rem .5rem .35rem;}
-.nav-item{display:flex;align-items:center;gap:.65rem;padding:.62rem .9rem;border-radius:var(--radius-sm);color:var(--text-muted);font-size:.875rem;font-weight:600;cursor:pointer;border:none;background:none;width:100%;text-align:left;transition:all .15s;text-decoration:none;}
+.sidebar{width:var(--sidebar-w);height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;z-index:100;transition:transform .3s;}
+.sidebar-logo{padding:1.1rem 1.1rem .9rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.65rem;}
+.logo-mark{width:36px;height:36px;background:linear-gradient(135deg,#2563eb,#1e3a8a);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 10px rgba(37,99,235,.3);}
+.logo-name{font-size:1.05rem;font-weight:700;letter-spacing:-.01em;}
+.logo-sub{font-size:.6rem;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;}
+
+.nav{flex:1;padding:.6rem;overflow-y:auto;display:flex;flex-direction:column;gap:1px;}
+.nav-section{font-size:.6rem;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.12em;padding:.7rem .6rem .3rem;}
+.nav-item{display:flex;align-items:center;gap:.6rem;padding:.58rem .8rem;border-radius:var(--radius-sm);color:var(--text-muted);font-size:.84rem;font-weight:500;cursor:pointer;border:none;background:none;width:100%;text-align:left;transition:all .15s;}
 .nav-item:hover{background:var(--surface2);color:var(--text);}
-.nav-item.active{background:var(--accent-light);color:var(--accent);}
+.nav-item.active{background:var(--accent-light);color:var(--accent);font-weight:600;}
 [data-theme="dark"] .nav-item.active{background:var(--accent-subtle);}
-.nav-item .nav-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:.63rem;font-weight:700;padding:2px 7px;border-radius:100px;min-width:20px;text-align:center;}
-.sidebar-footer{padding:.75rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.4rem;}
-.user-card{display:flex;align-items:center;gap:.6rem;padding:.65rem .9rem;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);}
-.user-avatar{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0;}
-.user-info{flex:1;min-width:0;}
-.user-name{font-size:.84rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.user-role{font-size:.68rem;color:var(--text-muted);font-weight:500;}
+.nav-item .nav-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:100px;}
+
+.sidebar-footer{padding:.65rem;border-top:1px solid var(--border);}
+.user-card{display:flex;align-items:center;gap:.6rem;padding:.6rem .8rem;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:2px;}
+.user-av{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:#fff;flex-shrink:0;}
+.user-name{font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.user-role{font-size:.65rem;color:var(--text-muted);}
 
 /* ── MAIN ── */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
-.topbar{height:var(--header-h);background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:1rem;}
-.topbar-left{display:flex;align-items:center;gap:.85rem;}
-.topbar-right{display:flex;align-items:center;gap:.5rem;}
-.page-title{font-size:1rem;font-weight:800;letter-spacing:-.015em;}
-.page-sub{font-size:.74rem;color:var(--text-muted);}
-.topbar-btn{width:36px;height:36px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:all .2s;}
-.topbar-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light);}
+.topbar{height:var(--header-h);background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.4rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.topbar-left{display:flex;align-items:center;gap:.8rem;}
+.topbar-right{display:flex;align-items:center;gap:.4rem;}
+.page-title{font-size:.95rem;font-weight:700;letter-spacing:-.01em;}
+.page-sub{font-size:.72rem;color:var(--text-muted);}
+.tbtn{width:34px;height:34px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:all .18s;}
+.tbtn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light);}
 
 /* ── CONTENT ── */
-.content{flex:1;overflow-y:auto;padding:1.4rem 1.5rem;display:flex;flex-direction:column;gap:1.3rem;}
+.content{flex:1;overflow-y:auto;padding:1.35rem 1.4rem;display:flex;flex-direction:column;gap:1.2rem;}
 
-/* ── STAT CARDS ── */
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.25rem;transition:box-shadow .2s,transform .15s;}
-.stat:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
-.stat-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.9rem;}
-.stat-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.stat-icon.violet{background:var(--accent-light);color:var(--accent);}
-.stat-icon.blue{background:var(--info-bg);color:var(--info);}
-.stat-icon.green{background:var(--success-bg);color:var(--success);}
-.stat-icon.amber{background:var(--warning-bg);color:var(--warning);}
-.stat-icon.purple{background:var(--purple-bg);color:var(--purple);}
-[data-theme="dark"] .stat-icon.violet{background:var(--accent-subtle);}
-[data-theme="dark"] .stat-icon.blue{background:#0a1828;}
-[data-theme="dark"] .stat-icon.green{background:#071a10;}
-[data-theme="dark"] .stat-icon.amber{background:#1a1208;}
-[data-theme="dark"] .stat-icon.purple{background:#150e28;}
-.stat-trend{font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:100px;}
-.stat-trend.up{background:var(--success-bg);color:var(--success);}
-.stat-trend.neutral{background:var(--surface3);color:var(--text-muted);}
-.stat-value{font-size:1.85rem;font-weight:800;letter-spacing:-.035em;margin-bottom:.2rem;}
-.stat-label{font-size:.78rem;color:var(--text-muted);font-weight:500;}
+/* ── STAT GRID ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;}
+.stat{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);
+  padding:1.15rem;transition:box-shadow .2s,transform .15s;position:relative;overflow:hidden;
+}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:2px;}
+.stat.blue::before{background:linear-gradient(90deg,#2563eb,#60a5fa);}
+.stat.green::before{background:linear-gradient(90deg,#16a34a,#4ade80);}
+.stat.amber::before{background:linear-gradient(90deg,#d97706,#fbbf24);}
+.stat.cyan::before{background:linear-gradient(90deg,#0891b2,#22d3ee);}
+.stat:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+.stat-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem;}
+.stat-ico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;}
+.stat-ico.blue{background:var(--accent-light);color:var(--accent);}
+.stat-ico.green{background:var(--success-bg);color:var(--success);}
+.stat-ico.amber{background:var(--warning-bg);color:var(--warning);}
+.stat-ico.cyan{background:var(--info-bg);color:var(--info);}
+[data-theme="dark"] .stat-ico.blue{background:#0d1f3c;}
+[data-theme="dark"] .stat-ico.green{background:#052e16;}
+[data-theme="dark"] .stat-ico.amber{background:#1a1205;}
+[data-theme="dark"] .stat-ico.cyan{background:#031a1f;}
+.stat-pill{font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:100px;}
+.stat-pill.up{background:var(--success-bg);color:var(--success);}
+.stat-pill.neutral{background:var(--surface3);color:var(--text-muted);}
+.stat-val{font-size:1.85rem;font-weight:700;letter-spacing:-.04em;line-height:1;margin-bottom:.25rem;}
+.stat-lbl{font-size:.75rem;color:var(--text-muted);font-weight:500;}
 
 /* ── LAYOUTS ── */
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
-.grid-3{display:grid;grid-template-columns:2fr 1fr;gap:1.25rem;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.grid-r{display:grid;grid-template-columns:2fr 1fr;gap:1.2rem;}
 
-/* ── CARDS ── */
+/* ── CARD ── */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;}
-.card-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:.75rem;}
-.card-title{font-size:.9rem;font-weight:700;}
-.card-sub{font-size:.74rem;color:var(--text-muted);margin-top:2px;}
+.card-head{padding:.9rem 1.15rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:.6rem;}
+.card-title{font-size:.88rem;font-weight:700;}
+.card-sub{font-size:.72rem;color:var(--text-muted);margin-top:1px;}
 
 /* ── TABLE ── */
-.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
-table{width:100%;border-collapse:collapse;font-size:.84rem;}
-thead th{padding:.65rem 1rem;text-align:left;font-size:.69rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;background:var(--surface2);border-bottom:1px solid var(--border);white-space:nowrap;}
-tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
+.tw{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:.82rem;}
+thead th{padding:.6rem 1rem;text-align:left;font-size:.67rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;background:var(--surface2);border-bottom:1px solid var(--border);white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;}
 tbody tr:last-child{border-bottom:none;}
 tbody tr:hover{background:var(--surface2);}
-tbody td{padding:.8rem 1rem;vertical-align:middle;}
-.td-main{font-weight:600;}
-.td-sub{font-size:.73rem;color:var(--text-muted);margin-top:1px;font-family:var(--mono);}
+tbody td{padding:.78rem 1rem;vertical-align:middle;}
+.tdm{font-weight:600;}
+.tds{font-size:.7rem;color:var(--text-muted);margin-top:1px;font-family:var(--mono);}
 
 /* ── BADGES ── */
-.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:100px;font-size:.71rem;font-weight:700;white-space:nowrap;}
-.badge-open{background:var(--info-bg);color:var(--info);}
-.badge-pending{background:var(--warning-bg);color:var(--warning);}
-.badge-done{background:var(--success-bg);color:var(--success);}
-.badge-closed{background:var(--surface3);color:var(--text-muted);}
-.badge-role-dev{background:var(--purple-bg);color:var(--purple);}
-.badge-role-mgr{background:var(--warning-bg);color:var(--warning);}
-.badge-role-tl{background:var(--success-bg);color:var(--success);}
-.badge-role-agt{background:var(--surface3);color:var(--text-muted);}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:100px;font-size:.69rem;font-weight:700;white-space:nowrap;}
+.bo{background:var(--accent-light);color:var(--accent);}
+.bp{background:var(--warning-bg);color:var(--warning);}
+.bd{background:var(--success-bg);color:var(--success);}
+.bc{background:var(--surface3);color:var(--text-muted);}
+.br-dev{background:#f5f3ff;color:#7c3aed;}
+.br-mgr{background:var(--warning-bg);color:var(--warning);}
+.br-tl{background:var(--success-bg);color:var(--success);}
+.br-agt{background:var(--surface3);color:var(--text-muted);}
+[data-theme="dark"] .br-dev{background:#1c1538;color:#a78bfa;}
+/* Status badge variants */
+.bs-done{background:#dcfce7;color:#15803d;}
+.bs-open{background:#dbeafe;color:#1d4ed8;}
+.bs-pending{background:#fef9c3;color:#92400e;}
+.bs-missed{background:#fee2e2;color:#b91c1c;}
+.bs-grey{background:var(--surface3);color:var(--text-muted);}
+[data-theme="dark"] .bs-done{background:#052e16;color:#4ade80;}
+[data-theme="dark"] .bs-open{background:#0d1f3c;color:#60a5fa;}
+[data-theme="dark"] .bs-pending{background:#1a1205;color:#fbbf24;}
+[data-theme="dark"] .bs-missed{background:#1f0707;color:#f87171;}
 
 /* ── TOOLBAR ── */
-.toolbar{padding:.85rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;}
-.search-wrap{position:relative;flex:1;min-width:200px;max-width:320px;}
-.search-wrap input{width:100%;padding:.58rem .85rem .58rem 2.3rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);font-family:var(--font);font-size:.84rem;transition:all .2s;outline:none;}
-.search-wrap input:focus{border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 3px rgba(99,102,241,.1);}
-.search-icon{position:absolute;left:.7rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;}
-.filter-btn{padding:.52rem .9rem;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface2);font-family:var(--font);font-size:.8rem;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.35rem;white-space:nowrap;}
-.filter-btn:hover{border-color:var(--accent);color:var(--accent);}
-.filter-btn.active{border-color:var(--accent);background:var(--accent-light);color:var(--accent);}
-[data-theme="dark"] .filter-btn.active{background:var(--accent-subtle);}
-.date-input{padding:.52rem .75rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);font-family:var(--font);font-size:.8rem;transition:all .2s;outline:none;cursor:pointer;}
-.date-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,.1);}
-[data-theme="dark"] .date-input{color-scheme:dark;}
-.btn-accent{padding:.56rem 1.1rem;border-radius:var(--radius-sm);border:none;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;font-family:var(--font);font-size:.83rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.4rem;white-space:nowrap;box-shadow:0 3px 10px rgba(99,102,241,.25);}
-.btn-accent:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(99,102,241,.35);}
-.btn-outline{padding:.52rem .9rem;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface2);font-family:var(--font);font-size:.8rem;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.4rem;white-space:nowrap;}
-.btn-outline:hover{border-color:var(--accent);color:var(--accent);}
-
-/* ── EXPORT BAR ── */
-.export-bar{padding:.65rem 1.25rem;border-bottom:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;}
-.export-label{font-size:.74rem;font-weight:600;color:var(--text-muted);}
+.toolbar{padding:.8rem 1.15rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+.sw{position:relative;flex:1;min-width:180px;max-width:300px;}
+.sw input{width:100%;padding:.55rem .8rem .55rem 2.2rem;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);font-family:var(--font);font-size:.82rem;outline:none;transition:all .18s;}
+.sw input:focus{border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 3px rgba(37,99,235,.08);}
+.si{position:absolute;left:.65rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;}
+.fb{padding:.48rem .8rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface2);font-family:var(--font);font-size:.78rem;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:.3rem;white-space:nowrap;}
+.fb:hover{border-color:var(--accent);color:var(--accent);}
+.fb.active{border-color:var(--accent);background:var(--accent-light);color:var(--accent);}
+[data-theme="dark"] .fb.active{background:var(--accent-subtle);}
+.di{padding:.48rem .65rem;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);font-family:var(--font);font-size:.78rem;outline:none;cursor:pointer;transition:all .18s;}
+.di:focus{border-color:var(--accent);}
+[data-theme="dark"] .di{color-scheme:dark;}
+.bo-btn{padding:.5rem .9rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface2);font-family:var(--font);font-size:.78rem;font-weight:600;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;gap:.35rem;transition:all .18s;white-space:nowrap;}
+.bo-btn:hover{border-color:var(--accent);color:var(--accent);}
+.export-bar{padding:.6rem 1.15rem;border-bottom:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+.export-lbl{font-size:.72rem;font-weight:600;color:var(--text-muted);}
 
 /* ── PAGINATION ── */
-.pagination{padding:.85rem 1.25rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
-.pagination-info{font-size:.8rem;color:var(--text-muted);}
-.pagination-btns{display:flex;gap:3px;}
-.pg-btn{width:32px;height:32px;border-radius:var(--radius-xs);border:1.5px solid var(--border);background:var(--surface2);font-family:var(--font);font-size:.8rem;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;}
-.pg-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent);}
-.pg-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
-.pg-btn:disabled{opacity:.35;cursor:default;}
+.pagination{padding:.75rem 1.15rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.pg-info{font-size:.78rem;color:var(--text-muted);}
+.pg-btns{display:flex;gap:2px;}
+.pgb{width:30px;height:30px;border-radius:var(--radius-xs);border:1px solid var(--border);background:var(--surface2);font-family:var(--font);font-size:.78rem;font-weight:600;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.pgb:hover:not(:disabled){border-color:var(--accent);color:var(--accent);}
+.pgb.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.pgb:disabled{opacity:.3;cursor:default;}
 
 /* ── LEADERBOARD ── */
-.lb-row{display:flex;align-items:center;gap:.75rem;padding:.75rem 1.25rem;border-bottom:1px solid var(--border);font-size:.85rem;}
+.lb-row{display:flex;align-items:center;gap:.7rem;padding:.7rem 1.15rem;border-bottom:1px solid var(--border);}
 .lb-row:last-child{border-bottom:none;}
-.lb-rank{width:26px;height:26px;border-radius:50%;background:var(--surface3);color:var(--text-muted);font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.lb-rank.gold{background:#fef08a;color:#92400e;}
-.lb-rank.silver{background:#e2e8f0;color:#475569;}
-.lb-rank.bronze{background:#fed7aa;color:#9a3412;}
-[data-theme="dark"] .lb-rank.gold{background:#2e2208;color:#fbbf24;}
-[data-theme="dark"] .lb-rank.silver{background:#1c2232;color:#94a3b8;}
-[data-theme="dark"] .lb-rank.bronze{background:#2a1608;color:#fb923c;}
-.lb-name{font-weight:700;flex:1;}
-.lb-cases{font-size:.74rem;color:var(--text-muted);}
-.lb-resolved{font-size:.78rem;font-weight:700;color:var(--success);margin-left:auto;}
+.lb-rank{width:24px;height:24px;border-radius:50%;font-size:.67rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--surface3);color:var(--text-muted);}
+.lb-rank.g{background:#fef08a;color:#78350f;}
+.lb-rank.s{background:#e2e8f0;color:#334155;}
+.lb-rank.b{background:#fed7aa;color:#7c2d12;}
+[data-theme="dark"] .lb-rank.g{background:#292007;color:#fcd34d;}
+[data-theme="dark"] .lb-rank.s{background:#1c2a3a;color:#94a3b8;}
+[data-theme="dark"] .lb-rank.b{background:#24120a;color:#fb923c;}
+.lb-name{font-weight:600;flex:1;font-size:.83rem;}
+.lb-num{font-size:.78rem;font-weight:700;color:var(--success);}
 
 /* ── DRAWER ── */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;opacity:0;transition:opacity .25s;backdrop-filter:blur(4px);}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none;opacity:0;transition:opacity .25s;backdrop-filter:blur(4px);}
 .overlay.open{display:block;opacity:1;}
-.drawer{position:fixed;right:0;top:0;bottom:0;width:500px;max-width:96vw;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;z-index:210;transform:translateX(100%);transition:transform .3s cubic-bezier(.25,.46,.45,.94);box-shadow:var(--shadow-lg);}
+.drawer{position:fixed;right:0;top:0;bottom:0;width:480px;max-width:95vw;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;z-index:210;transform:translateX(100%);transition:transform .3s cubic-bezier(.25,.46,.45,.94);box-shadow:var(--shadow-lg);}
 .drawer.open{transform:translateX(0);}
-.drawer-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-.drawer-title{font-size:1rem;font-weight:700;}
-.drawer-close{width:32px;height:32px;border-radius:var(--radius-xs);border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:all .2s;}
-.drawer-close:hover{border-color:var(--accent);color:var(--accent);}
-.drawer-body{flex:1;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1.25rem;}
-.detail-row{display:flex;flex-direction:column;gap:.35rem;}
-.detail-label{font-size:.68rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;}
-.detail-val{font-size:.9rem;font-weight:600;}
-.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
-.drawer-section{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;display:flex;flex-direction:column;gap:.75rem;}
-.drawer-section-title{font-size:.68rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;}
+.dh{padding:1.15rem 1.4rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.dt{font-size:.95rem;font-weight:700;}
+.dc{width:30px;height:30px;border-radius:var(--radius-xs);border:1px solid var(--border);background:var(--surface2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:all .18s;}
+.dc:hover{border-color:var(--accent);color:var(--accent);}
+.db{flex:1;overflow-y:auto;padding:1.35rem;display:flex;flex-direction:column;gap:1.1rem;}
+.dr{display:flex;flex-direction:column;gap:.3rem;}
+.dl{font-size:.65rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;}
+.dv{font-size:.88rem;font-weight:600;}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+.dsec{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.9rem;display:flex;flex-direction:column;gap:.65rem;}
+.dst{font-size:.65rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;}
 
-/* ── IMAGE GALLERY ── */
-.pics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:.5rem;}
-.pic-thumb{aspect-ratio:1;border-radius:var(--radius-xs);overflow:hidden;border:1.5px solid var(--border);cursor:pointer;transition:transform .15s,box-shadow .15s;background:var(--surface3);display:flex;align-items:center;justify-content:center;}
-.pic-thumb:hover{transform:scale(1.05);box-shadow:var(--shadow-md);}
-.pic-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+/* ── GALLERY ── */
+.pics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:.4rem;}
+.pt{aspect-ratio:1;border-radius:var(--radius-xs);overflow:hidden;border:1px solid var(--border);cursor:pointer;transition:transform .15s;background:var(--surface3);}
+.pt:hover{transform:scale(1.06);}
+.pt img{width:100%;height:100%;object-fit:cover;display:block;}
 
 /* ── LIGHTBOX ── */
-.lightbox{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.93);display:none;align-items:center;justify-content:center;padding:2rem;}
+.lightbox{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.94);display:none;align-items:center;justify-content:center;padding:2rem;}
 .lightbox.open{display:flex;}
 .lightbox img{max-width:90vw;max-height:85vh;border-radius:var(--radius-sm);object-fit:contain;}
-.lightbox-close{position:absolute;top:1.25rem;right:1.25rem;width:40px;height:40px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:var(--radius-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;transition:background .2s;}
-.lightbox-close:hover{background:rgba(255,255,255,.2);}
+.lbx-close{position:absolute;top:1.2rem;right:1.2rem;width:38px;height:38px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:var(--radius-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;transition:background .18s;}
+.lbx-close:hover{background:rgba(255,255,255,.2);}
 
-/* ── EMPTY STATE ── */
-.empty{text-align:center;padding:2.5rem 1rem;color:var(--text-muted);display:flex;flex-direction:column;align-items:center;gap:.65rem;}
-.empty svg{opacity:.3;}
-.empty-title{font-weight:700;color:var(--text);font-size:.9rem;}
-.empty-desc{font-size:.83rem;}
+/* ── EMPTY ── */
+.empty{text-align:center;padding:2.5rem 1rem;color:var(--text-muted);display:flex;flex-direction:column;align-items:center;gap:.6rem;}
+.empty-title{font-weight:700;color:var(--text);font-size:.88rem;}
+.empty-desc{font-size:.8rem;}
 
 /* ── ANALYTICS ── */
-.analytics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;}
-.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;}
-.chart-body{padding:1.25rem;position:relative;min-height:220px;display:flex;align-items:center;justify-content:center;}
-.chart-body canvas{max-height:200px;}
-.summary-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
-.summary-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.2rem;display:flex;align-items:flex-start;gap:.85rem;}
+.an-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;}
+.ch-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;}
+.ch-body{padding:1.1rem;min-height:210px;display:flex;align-items:center;justify-content:center;position:relative;}
+.ch-body canvas{max-height:190px;}
+.sum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;}
+.sum-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.1rem;display:flex;align-items:flex-start;gap:.8rem;}
 
-/* ── MY PERFORMANCE ── */
-.perf-header{background:linear-gradient(135deg,var(--accent) 0%,var(--accent-2) 100%);border-radius:var(--radius-md);padding:1.75rem;color:#fff;margin-bottom:1.25rem;position:relative;overflow:hidden;}
-.perf-header::before{content:'';position:absolute;top:-40%;right:-10%;width:300px;height:300px;background:rgba(255,255,255,.07);border-radius:50%;}
-.perf-name{font-size:1.4rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.25rem;}
-.perf-role{font-size:.8rem;opacity:.75;font-weight:500;}
-.perf-stats{display:flex;gap:2rem;margin-top:1.25rem;flex-wrap:wrap;}
-.perf-stat-val{font-size:1.6rem;font-weight:800;letter-spacing:-.03em;}
-.perf-stat-label{font-size:.72rem;opacity:.75;margin-top:2px;}
-.case-row-full{padding:1rem 1.25rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
-.case-row-full:last-child{border-bottom:none;}
-.case-row-full:hover{background:var(--surface2);}
-.case-row-top{display:flex;align-items:center;gap:.65rem;margin-bottom:.3rem;flex-wrap:wrap;}
-.case-row-id{font-family:var(--mono);font-size:.72rem;color:var(--text-muted);}
-.case-row-driver{font-weight:700;font-size:.9rem;}
-.case-row-meta{font-size:.76rem;color:var(--text-muted);display:flex;gap:.85rem;flex-wrap:wrap;}
-.case-row-note{margin-top:.5rem;font-size:.8rem;color:var(--text-muted);background:var(--surface2);border-radius:var(--radius-xs);padding:.5rem .75rem;border-left:3px solid var(--border-strong);line-height:1.5;}
-.case-row-note.has-note{border-left-color:var(--accent);color:var(--text);}
+/* ── PERF ── */
+.perf-banner{
+  border-radius:var(--radius-md);padding:1.6rem;color:#fff;
+  background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 50%,#0891b2 100%);
+  position:relative;overflow:hidden;margin-bottom:1.2rem;
+}
+.perf-banner::before{content:'';position:absolute;top:-30%;right:-8%;width:260px;height:260px;background:rgba(255,255,255,.06);border-radius:50%;}
+.perf-banner::after{content:'';position:absolute;bottom:-20%;left:40%;width:180px;height:180px;background:rgba(255,255,255,.04);border-radius:50%;}
+.pn{font-size:1.35rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.2rem;position:relative;z-index:1;}
+.pr{font-size:.75rem;opacity:.65;font-weight:500;position:relative;z-index:1;}
+.ps{display:flex;gap:1.75rem;margin-top:1.15rem;flex-wrap:wrap;position:relative;z-index:1;}
+.psv{font-size:1.55rem;font-weight:700;letter-spacing:-.03em;}
+.psl{font-size:.68rem;opacity:.65;margin-top:2px;}
+.crf{padding:.9rem 1.15rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;}
+.crf:last-child{border-bottom:none;}
+.crf:hover{background:var(--surface2);}
+.crt{display:flex;align-items:center;gap:.6rem;margin-bottom:.28rem;flex-wrap:wrap;}
+.crid{font-family:var(--mono);font-size:.7rem;color:var(--text-muted);}
+.crdr{font-weight:700;font-size:.88rem;}
+.crm{font-size:.74rem;color:var(--text-muted);display:flex;gap:.8rem;flex-wrap:wrap;}
+.crn{margin-top:.45rem;font-size:.78rem;color:var(--text-muted);background:var(--surface2);border-radius:var(--radius-xs);padding:.45rem .7rem;border-left:3px solid var(--border-strong);line-height:1.5;}
+.crn.has{border-left-color:var(--accent);color:var(--text);}
 
-/* ── MOBILE SIDEBAR ── */
-.sidebar-mask{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:98;backdrop-filter:blur(2px);}
-
-/* ── SPINNER / ANIM ── */
-.spin{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;}
+/* ── DATE CHIP ── */
+.date-chip{display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;}
+.date-today{font-size:.72rem;font-weight:700;color:var(--success);background:var(--success-bg);padding:1px 7px;border-radius:100px;}
+.date-yesterday{font-size:.72rem;font-weight:700;color:var(--warning);background:var(--warning-bg);padding:1px 7px;border-radius:100px;}
+.date-week{font-size:.72rem;font-weight:700;color:var(--accent);background:var(--accent-light);padding:1px 7px;border-radius:100px;}
+.date-old{font-size:.72rem;font-weight:600;color:var(--text-muted);}
+.date-time{font-size:.72rem;color:var(--text-light);font-family:var(--mono);}
+/* ── DRAWER META ── */
+.drawer-meta-row{display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.85rem 1rem;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);}
+.drawer-status-block{display:flex;align-items:center;gap:.5rem;}
+.drawer-date-block{display:flex;align-items:center;gap:.4rem;font-size:.78rem;color:var(--text-muted);font-family:var(--mono);}
+/* ── MOBILE ── */
+.sm{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:98;backdrop-filter:blur(2px);}
+.spin{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .65s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-.page-anim{animation:fadeUp .28s ease;}
+.pa{animation:fadeUp .25s ease;}
 
-/* ── RESPONSIVE ── */
-@media(max-width:1200px){.stats-grid{grid-template-columns:repeat(2,1fr);}.analytics-grid{grid-template-columns:repeat(2,1fr);}.summary-cards{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:1024px){.grid-3{grid-template-columns:1fr;}.grid-2{grid-template-columns:1fr;}}
+@media(max-width:1200px){.stats-grid{grid-template-columns:repeat(2,1fr);}.an-grid{grid-template-columns:repeat(2,1fr);}.sum-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:1024px){.grid-r{grid-template-columns:1fr;}.grid-2{grid-template-columns:1fr;}}
 @media(max-width:768px){
   .sidebar{position:fixed;top:0;left:0;bottom:0;transform:translateX(-100%);z-index:99;}
   .sidebar.open{transform:translateX(0);}
-  .sidebar-mask{display:block;visibility:hidden;}
-  .sidebar-mask.open{visibility:visible;}
+  .sm{display:block;visibility:hidden;}
+  .sm.open{visibility:visible;}
   .stats-grid{grid-template-columns:1fr 1fr;}
-  .analytics-grid{grid-template-columns:1fr;}
-  .summary-cards{grid-template-columns:1fr;}
-  .toolbar{flex-wrap:wrap;}
-  .search-wrap{min-width:100%;max-width:100%;}
-  .content{padding:1rem;gap:1rem;}
+  .an-grid{grid-template-columns:1fr;}
+  .sum-grid{grid-template-columns:1fr;}
+  .content{padding:.9rem;gap:1rem;}
 }
-@media(max-width:520px){
+@media(max-width:500px){
   .stats-grid{grid-template-columns:1fr;}
-  .detail-grid{grid-template-columns:1fr;}
+  .dgrid{grid-template-columns:1fr;}
   table thead{display:none;}
-  table tbody tr{display:block;margin-bottom:.75rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);}
-  table tbody td{display:flex;justify-content:space-between;align-items:center;padding:.5rem .85rem;border-bottom:1px solid var(--border);font-size:.82rem;}
+  table tbody tr{display:block;margin-bottom:.65rem;border:1px solid var(--border);border-radius:var(--radius-sm);}
+  table tbody td{display:flex;justify-content:space-between;align-items:center;padding:.45rem .8rem;border-bottom:1px solid var(--border);font-size:.8rem;}
   table tbody td:last-child{border-bottom:none;}
-  table tbody td::before{content:attr(data-label);font-weight:700;color:var(--text-muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;margin-right:.5rem;white-space:nowrap;}
+  table tbody td::before{content:attr(data-label);font-weight:700;color:var(--text-muted);font-size:.67rem;text-transform:uppercase;letter-spacing:.07em;margin-right:.5rem;white-space:nowrap;}
 }
 </style>
 </head>
 <body>
-
-<div class="sidebar-mask" id="sidebarMask" onclick="closeSidebar()"></div>
+<div class="sm" id="sm" onclick="closeSidebar()"></div>
 
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <div class="logo-icon"><i data-lucide="truck" style="width:18px;height:18px;color:white;"></i></div>
+    <div class="logo-mark"><i data-lucide="truck" style="width:17px;height:17px;color:white;"></i></div>
     <div><div class="logo-name">Kurtex</div><div class="logo-sub">CRM Platform</div></div>
   </div>
   <nav class="nav">
     <div class="nav-section">Main</div>
-    <button class="nav-item active" onclick="showPage('dashboard',this)">
-      <i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Dashboard
-    </button>
-    <button class="nav-item" onclick="showPage('cases',this)">
-      <i data-lucide="folder-open" style="width:16px;height:16px;"></i> Cases
-      <span class="nav-badge" id="nav-badge">…</span>
-    </button>
-    <button class="nav-item" onclick="showPage('my-performance',this)">
-      <i data-lucide="user-check" style="width:16px;height:16px;"></i> My Performance
-    </button>
+    <button class="nav-item active" onclick="showPage('dashboard',this)"><i data-lucide="layout-dashboard" style="width:15px;height:15px;"></i> Dashboard</button>
+    <button class="nav-item" onclick="showPage('cases',this)"><i data-lucide="folder-open" style="width:15px;height:15px;"></i> Cases<span class="nav-badge" id="nav-badge">…</span></button>
+    <button class="nav-item" onclick="showPage('my-performance',this)"><i data-lucide="user-check" style="width:15px;height:15px;"></i> My Performance</button>
     <div class="nav-section" id="admin-section" style="display:none;">Analytics</div>
-    <button class="nav-item" onclick="showPage('analytics',this)" id="analytics-nav" style="display:none;">
-      <i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> Analytics
-    </button>
+    <button class="nav-item" onclick="showPage('analytics',this)" id="analytics-nav" style="display:none;"><i data-lucide="bar-chart-2" style="width:15px;height:15px;"></i> Analytics</button>
     <div class="nav-section" id="team-section" style="display:none;">Team</div>
-    <button class="nav-item" onclick="showPage('team',this)" id="team-nav" style="display:none;">
-      <i data-lucide="users" style="width:16px;height:16px;"></i> Team Members
-    </button>
-    <button class="nav-item" onclick="showPage('leaderboard',this)" id="lb-nav" style="display:none;">
-      <i data-lucide="trophy" style="width:16px;height:16px;"></i> Leaderboard
-    </button>
+    <button class="nav-item" onclick="showPage('team',this)" id="team-nav" style="display:none;"><i data-lucide="users" style="width:15px;height:15px;"></i> Team Members</button>
+    <button class="nav-item" onclick="showPage('leaderboard',this)" id="lb-nav" style="display:none;"><i data-lucide="trophy" style="width:15px;height:15px;"></i> Leaderboard</button>
   </nav>
   <div class="sidebar-footer">
     <div class="user-card">
-      <div class="user-avatar" id="user-avatar">?</div>
-      <div class="user-info">
-        <div class="user-name" id="user-name-el">Loading…</div>
-        <div class="user-role" id="user-role-el">—</div>
-      </div>
+      <div class="user-av" id="user-av">?</div>
+      <div style="flex:1;min-width:0;"><div class="user-name" id="user-name-el">Loading…</div><div class="user-role" id="user-role-el">—</div></div>
     </div>
-    <button class="nav-item" onclick="location='/logout'">
-      <i data-lucide="log-out" style="width:15px;height:15px;"></i> Sign Out
-    </button>
+    <button class="nav-item" onclick="location='/logout'"><i data-lucide="log-out" style="width:14px;height:14px;"></i> Sign Out</button>
   </div>
 </aside>
 
@@ -327,189 +331,150 @@ tbody td{padding:.8rem 1rem;vertical-align:middle;}
 <div class="main">
   <div class="topbar">
     <div class="topbar-left">
-      <button class="topbar-btn" id="menuBtn" onclick="toggleSidebar()" style="display:none;">
-        <i data-lucide="menu" style="width:16px;height:16px;"></i>
-      </button>
-      <div>
-        <div class="page-title" id="topbarTitle">Dashboard</div>
-        <div class="page-sub" id="topbarSub">Welcome back</div>
-      </div>
+      <button class="tbtn" id="menuBtn" onclick="toggleSidebar()" style="display:none;"><i data-lucide="menu" style="width:15px;height:15px;"></i></button>
+      <div><div class="page-title" id="topbarTitle">Dashboard</div><div class="page-sub" id="topbarSub">Welcome back</div></div>
     </div>
     <div class="topbar-right">
-      <button class="topbar-btn" onclick="toggleTheme()" title="Toggle theme">
-        <i data-lucide="moon" id="themeIcon" style="width:15px;height:15px;"></i>
-      </button>
+      <button class="tbtn" onclick="toggleTheme()"><i data-lucide="moon" id="themeIcon" style="width:14px;height:14px;"></i></button>
     </div>
   </div>
 
   <div class="content">
 
     <!-- DASHBOARD -->
-    <div id="page-dashboard" class="page-anim">
+    <div id="page-dashboard" class="pa">
       <div class="stats-grid">
-        <div class="stat">
-          <div class="stat-header"><div class="stat-icon violet"><i data-lucide="folder-open" style="width:18px;height:18px;"></i></div><span class="stat-trend neutral">Today</span></div>
-          <div class="stat-value" id="stat-today">—</div><div class="stat-label">Cases Today</div>
+        <div class="stat blue">
+          <div class="stat-head"><div class="stat-ico blue"><i data-lucide="folder-open" style="width:17px;height:17px;"></i></div><span class="stat-pill neutral">Today</span></div>
+          <div class="stat-val" id="stat-today">—</div><div class="stat-lbl">Cases Today</div>
         </div>
-        <div class="stat">
-          <div class="stat-header"><div class="stat-icon blue"><i data-lucide="calendar-days" style="width:18px;height:18px;"></i></div><span class="stat-trend neutral">Week</span></div>
-          <div class="stat-value" id="stat-week">—</div><div class="stat-label">Cases This Week</div>
+        <div class="stat cyan">
+          <div class="stat-head"><div class="stat-ico cyan"><i data-lucide="calendar-days" style="width:17px;height:17px;"></i></div><span class="stat-pill neutral">Week</span></div>
+          <div class="stat-val" id="stat-week">—</div><div class="stat-lbl">Cases This Week</div>
         </div>
-        <div class="stat">
-          <div class="stat-header"><div class="stat-icon green"><i data-lucide="check-circle-2" style="width:18px;height:18px;"></i></div><span class="stat-trend up" id="stat-resolved-pct">—%</span></div>
-          <div class="stat-value" id="stat-resolved">—</div><div class="stat-label">Resolved (week)</div>
+        <div class="stat green">
+          <div class="stat-head"><div class="stat-ico green"><i data-lucide="check-circle-2" style="width:17px;height:17px;"></i></div><span class="stat-pill up" id="stat-resolved-pct">—%</span></div>
+          <div class="stat-val" id="stat-resolved">—</div><div class="stat-lbl">Resolved (week)</div>
         </div>
-        <div class="stat">
-          <div class="stat-header"><div class="stat-icon amber"><i data-lucide="database" style="width:18px;height:18px;"></i></div><span class="stat-trend neutral">All</span></div>
-          <div class="stat-value" id="stat-total">—</div><div class="stat-label">Total Cases</div>
+        <div class="stat amber">
+          <div class="stat-head"><div class="stat-ico amber"><i data-lucide="database" style="width:17px;height:17px;"></i></div><span class="stat-pill neutral">All time</span></div>
+          <div class="stat-val" id="stat-total">—</div><div class="stat-lbl">Total Cases</div>
         </div>
       </div>
-      <div class="grid-3">
+      <div class="grid-r">
         <div class="card">
-          <div class="card-header">
+          <div class="card-head">
             <div><div class="card-title">Recent Cases</div><div class="card-sub">Last 10 across all agents</div></div>
-            <button class="filter-btn" onclick="showPage('cases',document.querySelectorAll('.nav-item')[1])">
-              <i data-lucide="arrow-right" style="width:13px;height:13px;"></i> View all
-            </button>
+            <button class="bo-btn" onclick="showPage('cases',document.querySelectorAll('.nav-item')[1])"><i data-lucide="arrow-right" style="width:12px;height:12px;"></i> View all</button>
           </div>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Reported by</th><th>Status</th><th>Handled by</th><th>Opened</th></tr></thead>
-              <tbody id="recent-cases-tbody"><tr><td colspan="4"><div class="empty"><div class="spin"></div></div></td></tr></tbody>
-            </table>
-          </div>
+          <div class="tw"><table>
+            <thead><tr><th>Group</th><th>Reported by</th><th>Status</th><th>Handled by</th><th>Opened</th></tr></thead>
+            <tbody id="recent-tbody"><tr><td colspan="5"><div class="empty"><div class="spin"></div></div></td></tr></tbody>
+          </table></div>
         </div>
         <div class="card">
-          <div class="card-header"><div><div class="card-title">Top Agents</div><div class="card-sub">This week</div></div></div>
+          <div class="card-head"><div><div class="card-title">Top Agents</div><div class="card-sub">This week</div></div></div>
           <div id="lb-preview"></div>
         </div>
       </div>
     </div>
 
     <!-- CASES -->
-    <div id="page-cases" style="display:none;" class="page-anim">
+    <div id="page-cases" style="display:none;" class="pa">
       <div class="card">
         <div class="export-bar">
-          <span class="export-label"><i data-lucide="download" style="width:12px;height:12px;display:inline-block;margin-right:4px;vertical-align:middle;"></i>Export:</span>
-          <button class="btn-outline" onclick="exportCases('csv')"><i data-lucide="file-text" style="width:13px;height:13px;"></i> CSV</button>
-          <button class="btn-outline" onclick="exportCases('excel')"><i data-lucide="table" style="width:13px;height:13px;"></i> Excel</button>
+          <span class="export-lbl"><i data-lucide="download" style="width:11px;height:11px;display:inline-block;margin-right:3px;vertical-align:middle;"></i>Export:</span>
+          <button class="bo-btn" onclick="exportCases('csv')"><i data-lucide="file-text" style="width:12px;height:12px;"></i> CSV</button>
+          <button class="bo-btn" onclick="exportCases('excel')"><i data-lucide="table" style="width:12px;height:12px;"></i> Excel</button>
         </div>
         <div class="toolbar">
-          <div class="search-wrap">
-            <i data-lucide="search" class="search-icon" style="width:14px;height:14px;"></i>
-            <input type="text" id="case-search" placeholder="Search driver, agent, ID, group…" oninput="debouncedLoad()">
-          </div>
-          <input type="date" class="date-input" id="case-date-from" title="From date" onchange="loadCases(1)">
-          <input type="date" class="date-input" id="case-date-to" title="To date" onchange="loadCases(1)">
-          <button class="filter-btn active" id="filter-all" onclick="setFilter('all',this)">All</button>
-          <button class="filter-btn" id="filter-open" onclick="setFilter('open',this)"><i data-lucide="circle" style="width:10px;height:10px;"></i> Open</button>
-          <button class="filter-btn" id="filter-pending" onclick="setFilter('pending',this)"><i data-lucide="clock" style="width:10px;height:10px;"></i> Pending</button>
-          <button class="filter-btn" id="filter-done" onclick="setFilter('done',this)"><i data-lucide="check-circle" style="width:10px;height:10px;"></i> Done</button>
-          <button class="filter-btn" onclick="clearFilters()"><i data-lucide="x" style="width:10px;height:10px;"></i> Clear</button>
+          <div class="sw"><i data-lucide="search" class="si" style="width:13px;height:13px;"></i><input type="text" id="case-search" placeholder="Search driver, agent, ID…" oninput="debouncedLoad()"></div>
+          <input type="date" class="di" id="case-date-from" onchange="loadCases(1)">
+          <input type="date" class="di" id="case-date-to" onchange="loadCases(1)">
+          <button class="fb active" id="filter-all" onclick="setFilter('all',this)">All</button>
+          <button class="fb" id="filter-open" onclick="setFilter('open',this)"><i data-lucide="circle" style="width:9px;height:9px;"></i> Open</button>
+          <button class="fb" id="filter-pending" onclick="setFilter('pending',this)"><i data-lucide="clock" style="width:9px;height:9px;"></i> Pending</button>
+          <button class="fb" id="filter-done" onclick="setFilter('done',this)"><i data-lucide="check-circle" style="width:9px;height:9px;"></i> Done</button>
+          <button class="fb" onclick="clearFilters()"><i data-lucide="x" style="width:9px;height:9px;"></i> Clear</button>
         </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Case ID</th><th>Reported by</th><th>Group</th><th>Status</th><th>Handled by</th><th>Opened</th></tr></thead>
-            <tbody id="cases-tbody"><tr><td colspan="6"><div class="empty"><div class="spin"></div></div></td></tr></tbody>
-          </table>
-        </div>
-        <div class="pagination">
-          <div class="pagination-info" id="cases-info">—</div>
-          <div class="pagination-btns" id="cases-pages"></div>
-        </div>
+        <div class="tw"><table>
+          <thead><tr><th>Group</th><th>Reported by</th><th>Status</th><th>Handled by</th><th>Opened</th></tr></thead>
+          <tbody id="cases-tbody"><tr><td colspan="5"><div class="empty"><div class="spin"></div></div></td></tr></tbody>
+        </table></div>
+        <div class="pagination"><div class="pg-info" id="cases-info">—</div><div class="pg-btns" id="cases-pages"></div></div>
       </div>
     </div>
 
     <!-- MY PERFORMANCE -->
-    <div id="page-my-performance" style="display:none;" class="page-anim">
-      <div class="perf-header">
-        <div class="perf-name" id="perf-name">—</div>
-        <div class="perf-role" id="perf-role">—</div>
-        <div class="perf-stats">
-          <div class="perf-stat"><div class="perf-stat-val" id="perf-total">—</div><div class="perf-stat-label">Total Cases</div></div>
-          <div class="perf-stat"><div class="perf-stat-val" id="perf-resolved">—</div><div class="perf-stat-label">Resolved</div></div>
-          <div class="perf-stat"><div class="perf-stat-val" id="perf-open">—</div><div class="perf-stat-label">Open / Pending</div></div>
-          <div class="perf-stat"><div class="perf-stat-val" id="perf-rate">—%</div><div class="perf-stat-label">Resolution Rate</div></div>
+    <div id="page-my-performance" style="display:none;" class="pa">
+      <div class="perf-banner">
+        <div class="pn" id="perf-name">—</div><div class="pr" id="perf-role">—</div>
+        <div class="ps">
+          <div><div class="psv" id="perf-total">—</div><div class="psl">Total Cases</div></div>
+          <div><div class="psv" id="perf-resolved">—</div><div class="psl">Resolved</div></div>
+          <div><div class="psv" id="perf-open">—</div><div class="psl">Open / Pending</div></div>
+          <div><div class="psv" id="perf-rate">—%</div><div class="psl">Resolution Rate</div></div>
         </div>
       </div>
       <div class="card">
         <div class="toolbar">
-          <div class="search-wrap">
-            <i data-lucide="search" class="search-icon" style="width:14px;height:14px;"></i>
-            <input type="text" id="perf-search" placeholder="Search your cases…" oninput="debouncedLoadPerf()">
-          </div>
-          <input type="date" class="date-input" id="perf-date-from" title="From date" onchange="loadMyPerf(1)">
-          <input type="date" class="date-input" id="perf-date-to" title="To date" onchange="loadMyPerf(1)">
-          <button class="filter-btn active" id="pfilter-all" onclick="setPerfFilter('all',this)">All</button>
-          <button class="filter-btn" id="pfilter-open" onclick="setPerfFilter('open',this)">Open</button>
-          <button class="filter-btn" id="pfilter-pending" onclick="setPerfFilter('pending',this)">Pending</button>
-          <button class="filter-btn" id="pfilter-done" onclick="setPerfFilter('done',this)">Done</button>
+          <div class="sw"><i data-lucide="search" class="si" style="width:13px;height:13px;"></i><input type="text" id="perf-search" placeholder="Search your cases…" oninput="debouncedLoadPerf()"></div>
+          <input type="date" class="di" id="perf-date-from" onchange="loadMyPerf(1)">
+          <input type="date" class="di" id="perf-date-to" onchange="loadMyPerf(1)">
+          <button class="fb active" id="pfilter-all" onclick="setPerfFilter('all',this)">All</button>
+          <button class="fb" id="pfilter-open" onclick="setPerfFilter('open',this)">Open</button>
+          <button class="fb" id="pfilter-pending" onclick="setPerfFilter('pending',this)">Pending</button>
+          <button class="fb" id="pfilter-done" onclick="setPerfFilter('done',this)">Done</button>
         </div>
-        <div id="perf-cases-list"><div class="empty"><div class="spin"></div></div></div>
-        <div class="pagination">
-          <div class="pagination-info" id="perf-info">—</div>
-          <div class="pagination-btns" id="perf-pages"></div>
-        </div>
+        <div id="perf-list"><div class="empty"><div class="spin"></div></div></div>
+        <div class="pagination"><div class="pg-info" id="perf-info">—</div><div class="pg-btns" id="perf-pages"></div></div>
       </div>
     </div>
 
     <!-- ANALYTICS -->
-    <div id="page-analytics" style="display:none;" class="page-anim">
-      <div class="summary-cards">
-        <div class="summary-card">
-          <div class="stat-icon violet"><i data-lucide="folder-open" style="width:18px;height:18px;"></i></div>
-          <div><div class="stat-value" id="an-total" style="font-size:1.5rem;">—</div><div class="stat-label">Cases (30 days)</div></div>
-        </div>
-        <div class="summary-card">
-          <div class="stat-icon blue"><i data-lucide="clock" style="width:18px;height:18px;"></i></div>
-          <div><div class="stat-value" id="an-avg-res" style="font-size:1.5rem;">—</div><div class="stat-label">Avg. Resolution (min)</div></div>
-        </div>
-        <div class="summary-card">
-          <div class="stat-icon purple"><i data-lucide="image" style="width:18px;height:18px;"></i></div>
-          <div><div class="stat-value" id="an-pics" style="font-size:1.5rem;">—</div><div class="stat-label">Cases with Attachments</div></div>
-        </div>
+    <div id="page-analytics" style="display:none;" class="pa">
+      <div class="sum-grid">
+        <div class="sum-card"><div class="stat-ico blue"><i data-lucide="folder-open" style="width:17px;height:17px;"></i></div><div><div class="stat-val" id="an-total" style="font-size:1.4rem;">—</div><div class="stat-lbl">Cases (30 days)</div></div></div>
+        <div class="sum-card"><div class="stat-ico cyan"><i data-lucide="clock" style="width:17px;height:17px;"></i></div><div><div class="stat-val" id="an-avg-res" style="font-size:1.4rem;">—</div><div class="stat-lbl">Avg Resolution (min)</div></div></div>
+        <div class="sum-card"><div class="stat-ico" style="background:var(--steel-bg);color:var(--steel);"><i data-lucide="image" style="width:17px;height:17px;"></i></div><div><div class="stat-val" id="an-pics" style="font-size:1.4rem;">—</div><div class="stat-lbl">Cases with Attachments</div></div></div>
       </div>
-      <div class="analytics-grid">
-        <div class="chart-card"><div class="card-header"><div class="card-title">Status Breakdown</div></div><div class="chart-body"><canvas id="chart-status"></canvas></div></div>
-        <div class="chart-card"><div class="card-header"><div class="card-title">Cases by Agent</div></div><div class="chart-body"><canvas id="chart-agent"></canvas></div></div>
-        <div class="chart-card"><div class="card-header"><div class="card-title">Cases by Group</div></div><div class="chart-body"><canvas id="chart-group"></canvas></div></div>
+      <div class="an-grid">
+        <div class="ch-card"><div class="card-head"><div class="card-title">Status Breakdown</div></div><div class="ch-body"><canvas id="chart-status"></canvas></div></div>
+        <div class="ch-card"><div class="card-head"><div class="card-title">Cases by Agent</div></div><div class="ch-body"><canvas id="chart-agent"></canvas></div></div>
+        <div class="ch-card"><div class="card-head"><div class="card-title">Cases by Group</div></div><div class="ch-body"><canvas id="chart-group"></canvas></div></div>
       </div>
       <div class="card">
-        <div class="card-header">
+        <div class="card-head">
           <div><div class="card-title">Agent Leaderboard (30 days)</div><div class="card-sub">Full performance breakdown</div></div>
-          <div style="display:flex;gap:.5rem;">
-            <button class="btn-outline" onclick="exportCases('csv')"><i data-lucide="download" style="width:13px;height:13px;"></i> CSV</button>
-            <button class="btn-outline" onclick="exportCases('excel')"><i data-lucide="download" style="width:13px;height:13px;"></i> Excel</button>
+          <div style="display:flex;gap:.4rem;">
+            <button class="bo-btn" onclick="exportCases('csv')"><i data-lucide="download" style="width:12px;height:12px;"></i> CSV</button>
+            <button class="bo-btn" onclick="exportCases('excel')"><i data-lucide="download" style="width:12px;height:12px;"></i> Excel</button>
           </div>
         </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>#</th><th>Agent</th><th>Total</th><th>Resolved</th><th>Avg. Resolution</th><th>Rate</th></tr></thead>
-            <tbody id="analytics-lb-tbody"><tr><td colspan="6"><div class="empty"><div class="spin"></div></div></td></tr></tbody>
-          </table>
-        </div>
+        <div class="tw"><table>
+          <thead><tr><th>#</th><th>Agent</th><th>Total</th><th>Resolved</th><th>Avg Time</th><th>Rate</th></tr></thead>
+          <tbody id="an-lb-tbody"><tr><td colspan="6"><div class="empty"><div class="spin"></div></div></td></tr></tbody>
+        </table></div>
       </div>
     </div>
 
     <!-- TEAM -->
-    <div id="page-team" style="display:none;" class="page-anim">
+    <div id="page-team" style="display:none;" class="pa">
       <div class="card">
-        <div class="card-header"><div><div class="card-title">Team Members</div><div class="card-sub">All registered agents and managers</div></div></div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Cases</th><th>Resolved</th></tr></thead>
-            <tbody id="team-tbody"><tr><td colspan="5"><div class="empty"><div class="spin"></div></div></td></tr></tbody>
-          </table>
-        </div>
+        <div class="card-head"><div><div class="card-title">Team Members</div><div class="card-sub">All registered agents and managers</div></div></div>
+        <div class="tw"><table>
+          <thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Cases</th><th>Resolved</th></tr></thead>
+          <tbody id="team-tbody"><tr><td colspan="5"><div class="empty"><div class="spin"></div></div></td></tr></tbody>
+        </table></div>
       </div>
     </div>
 
     <!-- LEADERBOARD -->
-    <div id="page-leaderboard" style="display:none;" class="page-anim">
-      <div class="card" style="max-width:640px;">
-        <div class="card-header">
+    <div id="page-leaderboard" style="display:none;" class="pa">
+      <div class="card" style="max-width:600px;">
+        <div class="card-head">
           <div><div class="card-title">Weekly Leaderboard</div><div class="card-sub">Agent performance this week</div></div>
-          <i data-lucide="trophy" style="width:20px;height:20px;color:var(--warning);"></i>
+          <i data-lucide="trophy" style="width:18px;height:18px;color:var(--warning);"></i>
         </div>
         <div id="lb-full"></div>
       </div>
@@ -518,64 +483,50 @@ tbody td{padding:.8rem 1rem;vertical-align:middle;}
   </div>
 </div>
 
-<!-- OVERLAYS -->
+<!-- DRAWER -->
 <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="case-drawer">
-  <div class="drawer-header">
-    <div class="drawer-title" id="drawer-title">Case Details</div>
-    <button class="drawer-close" onclick="closeDrawer()"><i data-lucide="x" style="width:14px;height:14px;"></i></button>
-  </div>
-  <div class="drawer-body" id="drawer-body"></div>
+  <div class="dh"><div class="dt" id="drawer-title">Case Details</div><button class="dc" onclick="closeDrawer()"><i data-lucide="x" style="width:13px;height:13px;"></i></button></div>
+  <div class="db" id="drawer-body"></div>
 </div>
 
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-  <button class="lightbox-close" onclick="closeLightbox()"><i data-lucide="x" style="width:16px;height:16px;"></i></button>
-  <img id="lightbox-img" src="" alt="attachment">
+  <button class="lbx-close" onclick="closeLightbox()"><i data-lucide="x" style="width:15px;height:15px;"></i></button>
+  <img id="lbx-img" src="" alt="">
 </div>
 
 <script>
 lucide.createIcons();
 
-// ─── Theme
+// Theme
 function toggleTheme(){
-  const html=document.documentElement,isDark=html.dataset.theme==='dark';
-  html.dataset.theme=isDark?'light':'dark';
-  localStorage.setItem('kurtex-theme',html.dataset.theme);
-  document.getElementById('themeIcon').setAttribute('data-lucide',isDark?'moon':'sun');
-  lucide.createIcons();
+  const h=document.documentElement,d=h.dataset.theme==='dark';
+  h.dataset.theme=d?'light':'dark';localStorage.setItem('kt',h.dataset.theme);
+  document.getElementById('themeIcon').setAttribute('data-lucide',d?'moon':'sun');lucide.createIcons();
   if(document.getElementById('page-analytics').style.display!=='none')loadAnalytics();
 }
 (function(){
-  const s=localStorage.getItem('kurtex-theme')||(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
-  document.documentElement.dataset.theme=s;
-  if(s==='dark'){document.getElementById('themeIcon').setAttribute('data-lucide','sun');lucide.createIcons();}
+  const s=localStorage.getItem('kt');if(s){document.documentElement.dataset.theme=s;document.getElementById('themeIcon').setAttribute('data-lucide',s==='light'?'moon':'sun');lucide.createIcons();}
 })();
 
-// ─── Sidebar
-function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sidebarMask').classList.toggle('open');}
-function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarMask').classList.remove('open');}
+// Sidebar
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sm').classList.toggle('open');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sm').classList.remove('open');}
 if(window.innerWidth<=768)document.getElementById('menuBtn').style.display='flex';
 window.addEventListener('resize',()=>{document.getElementById('menuBtn').style.display=window.innerWidth<=768?'flex':'none';});
 
-// ─── Navigation
-const ALL_PAGES=['dashboard','cases','my-performance','analytics','team','leaderboard'];
-const PAGE_TITLES={
-  dashboard:['Dashboard','Welcome back'],
-  cases:['Cases','View and search all cases'],
-  'my-performance':['My Performance','Your cases, notes and attachments'],
-  analytics:['Analytics','Statistics for managers & team leaders'],
-  team:['Team Members','All registered users'],
-  leaderboard:['Leaderboard','Weekly agent performance'],
-};
+// Navigation
+const PAGES=['dashboard','cases','my-performance','analytics','team','leaderboard'];
+const PTITLES={dashboard:['Dashboard','Welcome back'],cases:['Cases','View and search all cases'],'my-performance':['My Performance','Your cases and stats'],analytics:['Analytics','Stats for managers & team leaders'],team:['Team Members','All registered users'],leaderboard:['Leaderboard','Weekly agent performance']};
 
-function showPage(name,navBtn){
+function showPage(name,nb){
   document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
-  if(navBtn)navBtn.classList.add('active');
-  ALL_PAGES.forEach(p=>{const el=document.getElementById('page-'+p);if(el)el.style.display=p===name?'':'none';});
-  const[title,sub]=PAGE_TITLES[name]||[name,''];
-  document.getElementById('topbarTitle').textContent=title;
-  document.getElementById('topbarSub').textContent=sub;
+  if(nb)nb.classList.add('active');
+  PAGES.forEach(p=>{const el=document.getElementById('page-'+p);if(el)el.style.display=p===name?'':'none';});
+  const[t,s]=PTITLES[name]||[name,''];
+  document.getElementById('topbarTitle').textContent=t;
+  document.getElementById('topbarSub').textContent=s;
   closeSidebar();
   if(name==='cases')loadCases(1);
   if(name==='team')loadTeam();
@@ -584,63 +535,72 @@ function showPage(name,navBtn){
   if(name==='my-performance')loadMyPerf(1);
 }
 
-// ─── State
-const state={page:1,perPage:25,status:'all',search:''};
-const perfState={page:1,perPage:20,status:'all',search:''};
+const state={page:1,perPage:25,status:'all'};
+const perfState={page:1,perPage:20,status:'all'};
 let currentUser=null;
 
-// ─── Helpers
+// Helpers
 function fmtDate(iso){if(!iso)return'—';const d=new Date(iso);return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit',hour:'2-digit',minute:'2-digit'});}
-function fmtDateShort(iso){if(!iso)return'—';const d=new Date(iso);return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});}
-
-function statusBadge(s){
-  const map={open:'badge-open',pending:'badge-pending',done:'badge-done',closed:'badge-closed'};
-  const icons={open:'circle',pending:'clock',done:'check-circle',closed:'x-circle'};
-  return`<span class="badge ${map[s]||'badge-closed'}"><i data-lucide="${icons[s]||'circle'}" style="width:10px;height:10px;"></i>${s||'—'}</span>`;
+function fmtShort(iso){if(!iso)return'—';const d=new Date(iso);return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});}
+function fmtDateChip(iso){
+  if(!iso)return'—';
+  const d=new Date(iso);
+  const now=new Date();
+  const diff=Math.floor((now-d)/86400000);
+  const timeStr=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  const dateStr=d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'});
+  let age='';
+  if(diff===0)age='<span class="date-today">Today</span>';
+  else if(diff===1)age='<span class="date-yesterday">Yesterday</span>';
+  else if(diff<=7)age=`<span class="date-week">${diff}d ago</span>`;
+  else age=`<span class="date-old">${dateStr}</span>`;
+  return`${age} <span class="date-time">${timeStr}</span>`;
 }
 
-function roleBadge(role,roleLabels){
-  const map={developer:'badge-role-dev',super_admin:'badge-role-dev',manager:'badge-role-mgr',team_leader:'badge-role-tl',agent:'badge-role-agt'};
-  const label=roleLabels?.[role]||role||'—';
-  return`<span class="badge ${map[role]||'badge-role-agt'}">${label}</span>`;
+function sBadge(s){
+  const cfg={
+    done:     {cls:'bs-done',    icon:'check-circle-2', label:'Done'},
+    open:     {cls:'bs-open',    icon:'circle',          label:'Open'},
+    assigned: {cls:'bs-open',    icon:'user-check',      label:'Assigned'},
+    pending:  {cls:'bs-pending', icon:'clock',           label:'Pending'},
+    missed:   {cls:'bs-missed',  icon:'alert-triangle',  label:'Missed'},
+    closed:   {cls:'bs-missed',  icon:'x-circle',        label:'Closed'},
+    cancelled:{cls:'bs-missed',  icon:'ban',             label:'Cancelled'},
+  };
+  const c=cfg[s]||{cls:'bs-grey',icon:'minus-circle',label:s||'—'};
+  return`<span class="badge ${c.cls}"><i data-lucide="${c.icon}" style="width:9px;height:9px;"></i>${c.label}</span>`;
 }
-
-function extractImageUrls(text){
-  if(!text)return[];
-  const regex=/https?:\/\/[^\s"'<>]+\.(?:jpg|jpeg|png|gif|webp|bmp)(?:\?[^\s"'<>]*)?/gi;
-  return[...new Set(text.match(regex)||[])];
+function rBadge(role,rl){
+  const m={developer:'br-dev',super_admin:'br-dev',manager:'br-mgr',team_leader:'br-tl',agent:'br-agt'};
+  return`<span class="badge ${m[role]||'br-agt'}">${rl?.[role]||role||'—'}</span>`;
 }
+function imgUrls(t){if(!t)return[];return[...new Set((t.match(/https?:\/\/[^\s"'<>]+\.(?:jpg|jpeg|png|gif|webp)(?:\?[^\s"'<>]*)?/gi)||[]))];}
 
-function renderPagination(prefix,total,page,perPage,fn){
-  const totalPages=Math.ceil(total/perPage);
-  const from=(page-1)*perPage+1,to=Math.min(page*perPage,total);
-  document.getElementById(prefix+'-info').textContent=`${from}–${to} of ${total}`;
+function renderPg(prefix,total,page,perPage,fn){
+  const tp=Math.ceil(total/perPage),fr=(page-1)*perPage+1,to=Math.min(page*perPage,total);
+  document.getElementById(prefix+'-info').textContent=`${fr}–${to} of ${total}`;
   const el=document.getElementById(prefix+'-pages');
-  let h=`<button class="pg-btn" onclick="${fn}(${page-1})" ${page<=1?'disabled':''}><i data-lucide="chevron-left" style="width:13px;height:13px;"></i></button>`;
-  for(let i=Math.max(1,page-2);i<=Math.min(totalPages,page+2);i++){h+=`<button class="pg-btn ${i===page?'active':''}" onclick="${fn}(${i})">${i}</button>`;}
-  h+=`<button class="pg-btn" onclick="${fn}(${page+1})" ${page>=totalPages?'disabled':''}><i data-lucide="chevron-right" style="width:13px;height:13px;"></i></button>`;
+  let h=`<button class="pgb" onclick="${fn}(${page-1})" ${page<=1?'disabled':''}><i data-lucide="chevron-left" style="width:12px;height:12px;"></i></button>`;
+  for(let i=Math.max(1,page-2);i<=Math.min(tp,page+2);i++)h+=`<button class="pgb ${i===page?'active':''}" onclick="${fn}(${i})">${i}</button>`;
+  h+=`<button class="pgb" onclick="${fn}(${page+1})" ${page>=tp?'disabled':''}><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></button>`;
   el.innerHTML=h;lucide.createIcons();
 }
 
-// ─── Load user
+// Load user
 async function loadMe(){
   try{
-    const d=await fetch('/api/me').then(r=>r.json());
-    currentUser=d;
+    const d=await fetch('/api/me').then(r=>r.json());currentUser=d;
     document.getElementById('user-name-el').textContent=d.name||'User';
     document.getElementById('user-role-el').textContent=d.role_label||d.role||'Agent';
-    document.getElementById('user-avatar').textContent=(d.name||'?')[0].toUpperCase();
+    document.getElementById('user-av').textContent=(d.name||'?')[0].toUpperCase();
     document.getElementById('topbarSub').textContent=`Welcome back, ${d.name||''}`;
-    const isAdmin=['developer','super_admin','manager','team_leader'].includes(d.role);
-    if(isAdmin){
-      ['admin-section','team-section','analytics-nav','team-nav','lb-nav'].forEach(id=>{
-        const el=document.getElementById(id);if(el)el.style.display='';
-      });
+    if(['developer','super_admin','manager','team_leader'].includes(d.role)){
+      ['admin-section','team-section','analytics-nav','team-nav','lb-nav'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='';});
     }
   }catch(e){}
 }
 
-// ─── Stats
+// Stats
 async function loadStats(){
   try{
     const d=await fetch('/api/stats').then(r=>r.json());
@@ -650,24 +610,22 @@ async function loadStats(){
     document.getElementById('stat-total').textContent=d.all?.total??0;
     const t=d.week?.total||0,r=d.week?.done||0;
     document.getElementById('stat-resolved-pct').textContent=(t?Math.round(r/t*100):0)+'%';
-    renderLbPreview(d.leaderboard||[]);
-    lucide.createIcons();
+    renderLbPreview(d.leaderboard||[]);lucide.createIcons();
   }catch(e){}
 }
 
-// ─── Recent Cases
 async function loadRecentCases(){
   try{
     const d=await fetch('/api/cases?per_page=10').then(r=>r.json());
-    const tbody=document.getElementById('recent-cases-tbody');
-    if(!d.cases?.length){tbody.innerHTML='<tr><td colspan="4"><div class="empty"><div class="empty-desc">No cases yet</div></div></td></tr>';return;}
-    tbody.innerHTML=d.cases.map(c=>`
-      <tr onclick="openCaseDrawer('${c.id}')">
-        <td data-label="Driver"><div class="td-main">${c.driver_name||'—'}</div><div class="td-sub">@${c.driver_username||'?'}</div></td>
-        <td data-label="Status">${statusBadge(c.status)}</td>
-        <td data-label="Agent"><div style="font-size:.82rem;font-weight:600;">${c.agent_name||'—'}</div></td>
-        <td data-label="Opened"><div style="font-size:.78rem;color:var(--text-muted);font-family:var(--mono);">${fmtDate(c.opened_at)}</div></td>
-      </tr>`).join('');
+    const tb=document.getElementById('recent-tbody');
+    if(!d.cases?.length){tb.innerHTML='<tr><td colspan="5"><div class="empty"><div class="empty-desc">No cases yet</div></div></td></tr>';return;}
+    tb.innerHTML=d.cases.map(c=>`<tr onclick="openDrawer('${c.id}')">
+      <td data-label="Group"><div class="tdm">${c.group_name||'—'}</div></td>
+      <td data-label="Reported by"><div class="tdm">${c.driver_name||'—'}</div><div class="tds">@${c.driver_username||'?'}</div></td>
+      <td data-label="Status">${sBadge(c.status)}</td>
+      <td data-label="Handled by"><div style="font-size:.8rem;font-weight:600;">${c.agent_name||'—'}</div></td>
+      <td data-label="Opened"><div class="date-chip">${fmtDateChip(c.opened_at)}</div></td>
+    </tr>`).join('');
     lucide.createIcons();
   }catch(e){}
 }
@@ -675,188 +633,116 @@ async function loadRecentCases(){
 function renderLbPreview(lb){
   const el=document.getElementById('lb-preview');
   if(!lb.length){el.innerHTML='<div class="empty"><div class="empty-desc">No data yet</div></div>';return;}
-  const rc=['gold','silver','bronze'];
-  el.innerHTML=lb.slice(0,5).map((a,i)=>`
-    <div class="lb-row">
-      <div class="lb-rank ${rc[i]||''}">${i+1}</div>
-      <div class="lb-name">${a.name}</div>
-      <div class="lb-cases">${a.cases} cases</div>
-      <div class="lb-resolved">✓ ${a.resolved}</div>
-    </div>`).join('');
+  const rc=['g','s','b'];
+  el.innerHTML=lb.slice(0,5).map((a,i)=>`<div class="lb-row">
+    <div class="lb-rank ${rc[i]||''}">${i+1}</div>
+    <div class="lb-name">${a.name}</div>
+    <div style="font-size:.74rem;color:var(--text-muted);">${a.cases} cases</div>
+    <div class="lb-num">✓ ${a.resolved}</div>
+  </div>`).join('');
 }
 
-// ─── Cases
-let searchTimeout;
-function debouncedLoad(){clearTimeout(searchTimeout);searchTimeout=setTimeout(()=>loadCases(1),350);}
-
-function setFilter(s,btn){
-  state.status=s;
-  document.querySelectorAll('#page-cases .filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  loadCases(1);
-}
-
-function clearFilters(){
-  state.status='all';state.search='';
-  document.getElementById('case-search').value='';
-  document.getElementById('case-date-from').value='';
-  document.getElementById('case-date-to').value='';
-  document.querySelectorAll('#page-cases .filter-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('filter-all').classList.add('active');
-  loadCases(1);
-}
+// Cases
+let st;
+function debouncedLoad(){clearTimeout(st);st=setTimeout(()=>loadCases(1),320);}
+function setFilter(s,btn){state.status=s;document.querySelectorAll('#page-cases .fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadCases(1);}
+function clearFilters(){state.status='all';document.getElementById('case-search').value='';document.getElementById('case-date-from').value='';document.getElementById('case-date-to').value='';document.querySelectorAll('#page-cases .fb').forEach(b=>b.classList.remove('active'));document.getElementById('filter-all').classList.add('active');loadCases(1);}
 
 async function loadCases(page){
   state.page=page||1;
-  const tbody=document.getElementById('cases-tbody');
-  tbody.innerHTML='<tr><td colspan="6"><div class="empty"><div class="spin"></div></div></td></tr>';
-  const q=new URLSearchParams({
-    page:state.page,per_page:state.perPage,
-    status:state.status,
-    q:document.getElementById('case-search')?.value.trim()||'',
-    date_from:document.getElementById('case-date-from')?.value||'',
-    date_to:document.getElementById('case-date-to')?.value||'',
-  });
+  const tb=document.getElementById('cases-tbody');
+  tb.innerHTML='<tr><td colspan="6"><div class="empty"><div class="spin"></div></div></td></tr>';
+  const q=new URLSearchParams({page:state.page,per_page:state.perPage,status:state.status,q:document.getElementById('case-search')?.value.trim()||'',date_from:document.getElementById('case-date-from')?.value||'',date_to:document.getElementById('case-date-to')?.value||''});
   try{
     const d=await fetch('/api/cases?'+q).then(r=>r.json());
-    document.getElementById('nav-badge').textContent=d.total??'0';
-    if(!d.cases?.length){tbody.innerHTML='<tr><td colspan="6"><div class="empty"><div class="empty-title">No cases found</div><div class="empty-desc">Try adjusting your filters</div></div></td></tr>';return;}
-    tbody.innerHTML=d.cases.map(c=>{
-      const pics=extractImageUrls((c.notes||'')+' '+(c.description||''));
-      return`<tr onclick="openCaseDrawer('${c.id}')">
-        <td data-label="ID"><div style="font-family:var(--mono);font-size:.76rem;color:var(--text-muted);">${c.id||'—'}</div></td>
-        <td data-label="Driver"><div class="td-main">${c.driver_name||'—'}</div><div class="td-sub">@${c.driver_username||'?'}</div></td>
-        <td data-label="Group"><div style="font-size:.82rem;">${c.group_name||'—'}</div></td>
-        <td data-label="Status">${statusBadge(c.status)}${pics.length?`<span class="badge" style="margin-left:4px;background:var(--purple-bg);color:var(--purple);"><i data-lucide="image" style="width:10px;height:10px;"></i>${pics.length}</span>`:''}</td>
-        <td data-label="Agent"><div style="font-weight:600;font-size:.82rem;">${c.agent_name||'—'}</div></td>
-        <td data-label="Opened"><div style="font-size:.77rem;color:var(--text-muted);font-family:var(--mono);">${fmtDate(c.opened_at)}</div></td>
+    document.getElementById('nav-badge').textContent=d.total??0;
+    if(!d.cases?.length){tb.innerHTML='<tr><td colspan="5"><div class="empty"><div class="empty-title">No cases found</div><div class="empty-desc">Try adjusting filters</div></div></td></tr>';return;}
+    tb.innerHTML=d.cases.map(c=>{
+      const pics=imgUrls((c.notes||'')+' '+(c.description||''));
+      return`<tr onclick="openDrawer('${c.id}')">
+        <td data-label="Group"><div class="tdm">${c.group_name||'—'}</div></td>
+        <td data-label="Reported by"><div class="tdm">${c.driver_name||'—'}</div><div class="tds">@${c.driver_username||'?'}</div></td>
+        <td data-label="Status"><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;">${sBadge(c.status)}${pics.length?`<span class="badge bs-grey"><i data-lucide="image" style="width:9px;height:9px;"></i>${pics.length}</span>`:''}</div></td>
+        <td data-label="Handled by"><div style="font-weight:600;font-size:.8rem;">${c.agent_name||'—'}</div></td>
+        <td data-label="Opened"><div class="date-chip">${fmtDateChip(c.opened_at)}</div></td>
       </tr>`;
     }).join('');
-    renderPagination('cases',d.total,d.page,d.per_page,'loadCases');
-    lucide.createIcons();
-  }catch(e){tbody.innerHTML='<tr><td colspan="6"><div class="empty"><div class="empty-desc">Failed to load cases</div></div></td></tr>';}
+    renderPg('cases',d.total,d.page,d.per_page,'loadCases');lucide.createIcons();
+  }catch(e){tb.innerHTML='<tr><td colspan="5"><div class="empty"><div class="empty-desc">Failed to load</div></div></td></tr>';}
 }
 
-function exportCases(format){
-  const q=new URLSearchParams({
-    format,
-    status:state.status,
-    q:document.getElementById('case-search')?.value.trim()||'',
-    date_from:document.getElementById('case-date-from')?.value||'',
-    date_to:document.getElementById('case-date-to')?.value||'',
-  });
+function exportCases(fmt){
+  const q=new URLSearchParams({format:fmt,status:state.status,q:document.getElementById('case-search')?.value.trim()||'',date_from:document.getElementById('case-date-from')?.value||'',date_to:document.getElementById('case-date-to')?.value||''});
   window.open('/api/export?'+q,'_blank');
 }
 
-// ─── My Performance
-let perfSearchTimeout;
-function debouncedLoadPerf(){clearTimeout(perfSearchTimeout);perfSearchTimeout=setTimeout(()=>loadMyPerf(1),350);}
-
-function setPerfFilter(s,btn){
-  perfState.status=s;
-  document.querySelectorAll('#page-my-performance .filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  loadMyPerf(1);
-}
+// My Performance
+let pst;
+function debouncedLoadPerf(){clearTimeout(pst);pst=setTimeout(()=>loadMyPerf(1),320);}
+function setPerfFilter(s,btn){perfState.status=s;document.querySelectorAll('#page-my-performance .fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');loadMyPerf(1);}
 
 async function loadMyPerf(page){
-  perfState.page=page||1;
-  if(!currentUser)return;
-  // Fill header
+  perfState.page=page||1;if(!currentUser)return;
   document.getElementById('perf-name').textContent=currentUser.name||'Me';
   document.getElementById('perf-role').textContent=currentUser.role_label||currentUser.role||'Agent';
-  const listEl=document.getElementById('perf-cases-list');
-  listEl.innerHTML='<div class="empty"><div class="spin"></div></div>';
-  const q=new URLSearchParams({
-    page:perfState.page,per_page:perfState.perPage,
-    status:perfState.status,
-    q:document.getElementById('perf-search')?.value.trim()||'',
-    date_from:document.getElementById('perf-date-from')?.value||'',
-    date_to:document.getElementById('perf-date-to')?.value||'',
-  });
+  const el=document.getElementById('perf-list');el.innerHTML='<div class="empty"><div class="spin"></div></div>';
+  const q=new URLSearchParams({page:perfState.page,per_page:perfState.perPage,status:perfState.status,q:document.getElementById('perf-search')?.value.trim()||'',date_from:document.getElementById('perf-date-from')?.value||'',date_to:document.getElementById('perf-date-to')?.value||''});
   try{
     const d=await fetch('/api/cases?'+q).then(r=>r.json());
-    // Perf stats
     const tot=d.total,res=(d.cases||[]).filter(c=>c.status==='done').length;
     document.getElementById('perf-total').textContent=tot;
     document.getElementById('perf-resolved').textContent=res;
     document.getElementById('perf-open').textContent=(d.cases||[]).filter(c=>c.status==='open'||c.status==='pending').length;
     document.getElementById('perf-rate').textContent=(tot?Math.round(res/tot*100):0)+'%';
-    if(!d.cases?.length){listEl.innerHTML='<div class="empty"><div class="empty-title">No cases found</div><div class="empty-desc">Adjust your filters or date range</div></div>';return;}
-    listEl.innerHTML=d.cases.map(c=>{
-      const pics=extractImageUrls((c.notes||'')+' '+(c.description||''));
-      return`<div class="case-row-full" onclick="openCaseDrawer('${c.id}')">
-        <div class="case-row-top">
-          <span class="case-row-id">${c.id||'—'}</span>
-          <span class="case-row-driver">${c.driver_name||'—'}</span>
-          ${statusBadge(c.status)}
-          ${pics.length?`<span class="badge" style="background:var(--purple-bg);color:var(--purple);"><i data-lucide="image" style="width:10px;height:10px;"></i>${pics.length}</span>`:''}
-        </div>
-        <div class="case-row-meta">
-          <span>Group: ${c.group_name||'—'}</span>
-          <span>Opened: ${fmtDateShort(c.opened_at)}</span>
-          ${c.closed_at?`<span>Closed: ${fmtDateShort(c.closed_at)}</span>`:''}
-        </div>
-        ${c.notes
-          ?`<div class="case-row-note has-note"><strong>Note:</strong> ${c.notes.slice(0,240)}${c.notes.length>240?'…':''}</div>`
-          :'<div class="case-row-note">No resolution note yet</div>'}
+    if(!d.cases?.length){el.innerHTML='<div class="empty"><div class="empty-title">No cases found</div><div class="empty-desc">Adjust filters or date range</div></div>';return;}
+    el.innerHTML=d.cases.map(c=>{
+      const pics=imgUrls((c.notes||'')+' '+(c.description||''));
+      return`<div class="crf" onclick="openDrawer('${c.id}')">
+        <div class="crt"><span class="crid">${c.id||'—'}</span><span class="crdr">${c.driver_name||'—'}</span>${sBadge(c.status)}${pics.length?`<span class="badge" style="background:var(--steel-bg);color:var(--steel);"><i data-lucide="image" style="width:9px;height:9px;"></i>${pics.length}</span>`:''}</div>
+        <div class="crm"><span>Group: ${c.group_name||'—'}</span><span>Opened: ${fmtShort(c.opened_at)}</span>${c.closed_at?`<span>Closed: ${fmtShort(c.closed_at)}</span>`:''}</div>
+        ${c.notes?`<div class="crn has"><strong>Note:</strong> ${c.notes.slice(0,220)}${c.notes.length>220?'…':''}</div>`:'<div class="crn">No note yet</div>'}
       </div>`;
     }).join('');
-    renderPagination('perf',d.total,page,perfState.perPage,'loadMyPerf');
-    lucide.createIcons();
-  }catch(e){listEl.innerHTML='<div class="empty"><div class="empty-desc">Failed to load</div></div>';}
+    renderPg('perf',d.total,page,perfState.perPage,'loadMyPerf');lucide.createIcons();
+  }catch(e){el.innerHTML='<div class="empty"><div class="empty-desc">Failed to load</div></div>';}
 }
 
-// ─── Team
+// Team
 async function loadTeam(){
-  const tbody=document.getElementById('team-tbody');
-  tbody.innerHTML='<tr><td colspan="5"><div class="empty"><div class="spin"></div></div></td></tr>';
+  const tb=document.getElementById('team-tbody');tb.innerHTML='<tr><td colspan="5"><div class="empty"><div class="spin"></div></div></td></tr>';
   try{
     const d=await fetch('/api/users').then(r=>r.json());
-    if(!d.users?.length){tbody.innerHTML='<tr><td colspan="5"><div class="empty"><div class="empty-desc">No users</div></div></td></tr>';return;}
-    tbody.innerHTML=d.users.map(u=>`
-      <tr>
-        <td data-label="Name"><div class="td-main">${u.name||'—'}</div></td>
-        <td data-label="Username"><div style="font-family:var(--mono);font-size:.82rem;color:var(--text-muted);">@${u.username||'?'}</div></td>
-        <td data-label="Role">${roleBadge(u.role,d.role_labels)}</td>
-        <td data-label="Cases"><div style="font-weight:700;">${u.case_count??0}</div></td>
-        <td data-label="Resolved"><div style="font-weight:700;color:var(--success);">${u.resolved??0}</div></td>
-      </tr>`).join('');
+    if(!d.users?.length){tb.innerHTML='<tr><td colspan="5"><div class="empty"><div class="empty-desc">No users</div></div></td></tr>';return;}
+    tb.innerHTML=d.users.map(u=>`<tr>
+      <td data-label="Name"><div class="tdm">${u.name||'—'}</div></td>
+      <td data-label="Username"><div style="font-family:var(--mono);font-size:.8rem;color:var(--text-muted);">@${u.username||'?'}</div></td>
+      <td data-label="Role">${rBadge(u.role,d.role_labels)}</td>
+      <td data-label="Cases"><div style="font-weight:700;">${u.case_count??0}</div></td>
+      <td data-label="Resolved"><div style="font-weight:700;color:var(--success);">${u.resolved??0}</div></td>
+    </tr>`).join('');
     lucide.createIcons();
   }catch(e){}
 }
 
-// ─── Leaderboard
+// Leaderboard
 async function loadLeaderboard(){
-  const el=document.getElementById('lb-full');
-  el.innerHTML='<div class="empty"><div class="spin"></div></div>';
+  const el=document.getElementById('lb-full');el.innerHTML='<div class="empty"><div class="spin"></div></div>';
   try{
-    const d=await fetch('/api/stats').then(r=>r.json());
-    const lb=d.leaderboard||[];
+    const d=await fetch('/api/stats').then(r=>r.json());const lb=d.leaderboard||[];
     if(!lb.length){el.innerHTML='<div class="empty"><div class="empty-desc">No data yet</div></div>';return;}
-    const rc=['gold','silver','bronze'];
-    el.innerHTML=lb.map((a,i)=>`
-      <div class="lb-row">
-        <div class="lb-rank ${rc[i]||''}">${i+1}</div>
-        <div style="flex:1;">
-          <div class="lb-name">${a.name}</div>
-          ${a.avg_secs?`<div style="font-size:.72rem;color:var(--text-muted);">avg ${Math.round(a.avg_secs/60)}m resolution</div>`:''}
-        </div>
-        <div style="text-align:right;">
-          <div style="font-size:.85rem;font-weight:700;">${a.cases} cases</div>
-          <div style="font-size:.72rem;color:var(--success);font-weight:700;">✓ ${a.resolved} resolved</div>
-        </div>
-      </div>`).join('');
+    const rc=['g','s','b'];
+    el.innerHTML=lb.map((a,i)=>`<div class="lb-row">
+      <div class="lb-rank ${rc[i]||''}">${i+1}</div>
+      <div style="flex:1;"><div class="lb-name">${a.name}</div>${a.avg_secs?`<div style="font-size:.7rem;color:var(--text-muted);">avg ${Math.round(a.avg_secs/60)}m</div>`:''}</div>
+      <div style="text-align:right;"><div style="font-size:.82rem;font-weight:700;">${a.cases} cases</div><div style="font-size:.7rem;color:var(--success);font-weight:700;">✓ ${a.resolved}</div></div>
+    </div>`).join('');
   }catch(e){}
 }
 
-// ─── Analytics
-let chartInstances={};
-function destroyCharts(){Object.values(chartInstances).forEach(c=>c.destroy());chartInstances={};}
-function getChartColors(n){
-  const base=['#6366f1','#8b5cf6','#2563eb','#059669','#d97706','#0891b2','#dc2626','#7c3aed'];
-  return Array.from({length:n},(_,i)=>base[i%base.length]);
-}
+// Analytics
+let ci={};
+function destroyCharts(){Object.values(ci).forEach(c=>c.destroy());ci={};}
+function colors(n){const b=['#2563eb','#0891b2','#16a34a','#d97706','#7c3aed','#dc2626','#0f766e','#9333ea'];return Array.from({length:n},(_,i)=>b[i%b.length]);}
 
 async function loadAnalytics(){
   try{
@@ -864,117 +750,83 @@ async function loadAnalytics(){
     document.getElementById('an-total').textContent=d.summary?.total_30d??0;
     document.getElementById('an-avg-res').textContent=d.summary?.avg_resolution_min??0;
     document.getElementById('an-pics').textContent=d.summary?.cases_with_pics??0;
-    const isDark=document.documentElement.dataset.theme==='dark';
-    const tc=isDark?'#8b8ba8':'#6b7280';
-    const gc=isDark?'#2e2e4a':'#dde0f8';
-    Chart.defaults.color=tc;
-    destroyCharts();
+    const dk=document.documentElement.dataset.theme==='dark';
+    const tc=dk?'#7c8fa8':'#4a5568',gc=dk?'#1e2d47':'#d4dae8';
+    Chart.defaults.color=tc;destroyCharts();
 
     const sd=d.charts?.status_pie||{};
     if(Object.keys(sd).length){
-      const sColors={open:'#2563eb',pending:'#d97706',done:'#059669',closed:'#6b7280'};
-      chartInstances.status=new Chart(document.getElementById('chart-status'),{
-        type:'doughnut',
-        data:{labels:Object.keys(sd),datasets:[{data:Object.values(sd),backgroundColor:Object.keys(sd).map(k=>sColors[k]||'#888'),borderWidth:0,hoverOffset:4}]},
-        options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{position:'bottom',labels:{padding:12,usePointStyle:true,font:{family:"'Inter'",size:11}}}}},
-      });
+      const sc={open:'#2563eb',pending:'#d97706',done:'#16a34a',closed:'#64748b'};
+      ci.status=new Chart(document.getElementById('chart-status'),{type:'doughnut',data:{labels:Object.keys(sd),datasets:[{data:Object.values(sd),backgroundColor:Object.keys(sd).map(k=>sc[k]||'#888'),borderWidth:0,hoverOffset:5}]},options:{responsive:true,maintainAspectRatio:false,cutout:'70%',plugins:{legend:{position:'bottom',labels:{padding:10,usePointStyle:true,font:{family:"'DM Sans'",size:11}}}}}});
     }
     const ad=d.charts?.agent_bar||{};
     if(Object.keys(ad).length){
-      chartInstances.agent=new Chart(document.getElementById('chart-agent'),{
-        type:'bar',
-        data:{labels:Object.keys(ad),datasets:[{label:'Cases',data:Object.values(ad),backgroundColor:getChartColors(Object.keys(ad).length),borderRadius:8,borderSkipped:false}]},
-        options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:gc},ticks:{font:{family:"'Inter'",size:11}}},y:{grid:{display:false},ticks:{font:{family:"'Inter'",size:11}}}}},
-      });
+      ci.agent=new Chart(document.getElementById('chart-agent'),{type:'bar',data:{labels:Object.keys(ad),datasets:[{label:'Cases',data:Object.values(ad),backgroundColor:colors(Object.keys(ad).length),borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:gc},ticks:{font:{family:"'DM Sans'",size:11}}},y:{grid:{display:false},ticks:{font:{family:"'DM Sans'",size:11}}}}}});
     }
     const gd=d.charts?.group_bar||{};
     if(Object.keys(gd).length){
-      chartInstances.group=new Chart(document.getElementById('chart-group'),{
-        type:'bar',
-        data:{labels:Object.keys(gd),datasets:[{label:'Cases',data:Object.values(gd),backgroundColor:getChartColors(Object.keys(gd).length),borderRadius:8}]},
-        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{family:"'Inter'",size:11}}},y:{grid:{color:gc},ticks:{font:{family:"'Inter'",size:11}}}}},
-      });
+      ci.group=new Chart(document.getElementById('chart-group'),{type:'bar',data:{labels:Object.keys(gd),datasets:[{label:'Cases',data:Object.values(gd),backgroundColor:colors(Object.keys(gd).length),borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{family:"'DM Sans'",size:11}}},y:{grid:{color:gc},ticks:{font:{family:"'DM Sans'",size:11}}}}}});
     }
-    const stats=await fetch('/api/stats').then(r=>r.json());
-    const lb=stats.leaderboard||[];
-    const tbody=document.getElementById('analytics-lb-tbody');
-    if(!lb.length){tbody.innerHTML='<tr><td colspan="6"><div class="empty"><div class="empty-desc">No data</div></div></td></tr>';}
+    const stats=await fetch('/api/stats').then(r=>r.json());const lb=stats.leaderboard||[];
+    const tb=document.getElementById('an-lb-tbody');
+    if(!lb.length){tb.innerHTML='<tr><td colspan="6"><div class="empty"><div class="empty-desc">No data</div></div></td></tr>';}
     else{
-      const rc=['gold','silver','bronze'];
-      tbody.innerHTML=lb.map((a,i)=>{
+      const rc=['g','s','b'];
+      tb.innerHTML=lb.map((a,i)=>{
         const rate=a.cases?Math.round(a.resolved/a.cases*100):0;
-        const avg=a.avg_secs?Math.round(a.avg_secs/60)+'m':'—';
         return`<tr>
           <td><div class="lb-rank ${rc[i]||''}" style="margin:0;">${i+1}</div></td>
-          <td><div class="td-main">${a.name}</div></td>
+          <td><div class="tdm">${a.name}</div></td>
           <td><div style="font-weight:700;">${a.cases}</div></td>
           <td><div style="font-weight:700;color:var(--success);">${a.resolved}</div></td>
-          <td><div style="font-family:var(--mono);font-size:.82rem;">${avg}</div></td>
-          <td>
-            <div style="display:flex;align-items:center;gap:.5rem;">
-              <div style="flex:1;height:6px;background:var(--surface3);border-radius:100px;overflow:hidden;min-width:50px;">
-                <div style="width:${rate}%;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:100px;"></div>
-              </div>
-              <span style="font-size:.75rem;font-weight:700;color:var(--success);">${rate}%</span>
+          <td><div style="font-family:var(--mono);font-size:.8rem;">${a.avg_secs?Math.round(a.avg_secs/60)+'m':'—'}</div></td>
+          <td><div style="display:flex;align-items:center;gap:.4rem;">
+            <div style="flex:1;height:5px;background:var(--surface3);border-radius:100px;overflow:hidden;min-width:40px;">
+              <div style="width:${rate}%;height:100%;background:linear-gradient(90deg,#2563eb,#0891b2);border-radius:100px;"></div>
             </div>
-          </td>
+            <span style="font-size:.73rem;font-weight:700;color:var(--success);">${rate}%</span>
+          </div></td>
         </tr>`;
       }).join('');
     }
     lucide.createIcons();
-  }catch(e){console.error('Analytics error',e);}
+  }catch(e){console.error(e);}
 }
 
-// ─── Case Drawer
-async function openCaseDrawer(id){
-  document.getElementById('drawer-title').textContent='Case · '+id;
+// Drawer
+async function openDrawer(id){
+  document.getElementById('drawer-title').textContent='Loading…';
   document.getElementById('drawer-body').innerHTML='<div style="display:flex;justify-content:center;padding:3rem;"><div class="spin"></div></div>';
   document.getElementById('overlay').classList.add('open');
   document.getElementById('case-drawer').classList.add('open');
   try{
     const c=await fetch(`/api/cases/${id}`).then(r=>r.json());
-    const pics=extractImageUrls((c.notes||'')+' '+(c.description||''));
+    const pics=imgUrls((c.notes||'')+' '+(c.description||''));
+    document.getElementById('drawer-title').textContent=(c.group_name||'Case')+' — '+(c.driver_name||'Unknown');
     document.getElementById('drawer-body').innerHTML=`
-      <div class="detail-grid">
-        <div class="detail-row"><div class="detail-label">Driver</div><div class="detail-val">${c.driver_name||'—'}</div></div>
-        <div class="detail-row"><div class="detail-label">Username</div><div class="detail-val" style="font-family:var(--mono);font-size:.85rem;">@${c.driver_username||'?'}</div></div>
-        <div class="detail-row"><div class="detail-label">Group</div><div class="detail-val">${c.group_name||'—'}</div></div>
-        <div class="detail-row"><div class="detail-label">Agent</div><div class="detail-val">${c.agent_name||'—'}</div></div>
-        <div class="detail-row"><div class="detail-label">Opened</div><div class="detail-val" style="font-size:.82rem;font-family:var(--mono);">${fmtDate(c.opened_at)}</div></div>
-        <div class="detail-row"><div class="detail-label">Status</div><div class="detail-val">${statusBadge(c.status)}</div></div>
-        ${c.closed_at?`<div class="detail-row"><div class="detail-label">Closed</div><div class="detail-val" style="font-size:.82rem;font-family:var(--mono);">${fmtDate(c.closed_at)}</div></div>`:''}
-        ${c.resolution_secs?`<div class="detail-row"><div class="detail-label">Resolution</div><div class="detail-val">${Math.round(c.resolution_secs/60)} min</div></div>`:''}
+      <div class="drawer-meta-row">
+        <div class="drawer-status-block">${sBadge(c.status)}</div>
+        <div class="drawer-date-block"><i data-lucide="calendar" style="width:12px;height:12px;opacity:.5;"></i> ${fmtDate(c.opened_at)}${c.closed_at?` → ${fmtDate(c.closed_at)}`:''}</div>
       </div>
-      ${c.description?`<div class="drawer-section"><div class="drawer-section-title">Description</div><div style="font-size:.875rem;line-height:1.65;">${c.description}</div></div>`:''}
-      <div class="drawer-section">
-        <div class="drawer-section-title"><i data-lucide="file-text" style="width:12px;height:12px;display:inline-block;margin-right:3px;vertical-align:middle;"></i>Resolution Note</div>
-        ${c.notes
-          ?`<div style="font-size:.875rem;line-height:1.65;white-space:pre-wrap;">${c.notes}</div>`
-          :`<div style="font-size:.85rem;color:var(--text-muted);">No resolution note yet.</div>`}
+      <div class="dgrid">
+        <div class="dr"><div class="dl">Reported by</div><div class="dv">${c.driver_name||'—'}<span style="font-size:.75rem;color:var(--text-muted);font-family:var(--mono);margin-left:.4rem;">@${c.driver_username||'?'}</span></div></div>
+        <div class="dr"><div class="dl">Handled by</div><div class="dv">${c.agent_name||'—'}</div></div>
+        <div class="dr"><div class="dl">Group</div><div class="dv">${c.group_name||'—'}</div></div>
       </div>
-      ${pics.length?`
-      <div class="drawer-section">
-        <div class="drawer-section-title"><i data-lucide="image" style="width:12px;height:12px;display:inline-block;margin-right:3px;vertical-align:middle;"></i>Attachments (${pics.length})</div>
-        <div class="pics-grid">
-          ${pics.map(url=>`<div class="pic-thumb" onclick="event.stopPropagation();openLightbox('${url}')"><img src="${url}" alt="attachment" onerror="this.parentElement.style.display='none'"></div>`).join('')}
-        </div>
-      </div>`:''}
-    `;
-    lucide.createIcons();
-  }catch(e){document.getElementById('drawer-body').innerHTML='<div style="padding:2rem;text-align:center;color:var(--text-muted);">Failed to load case details</div>';}
+      ${c.description?`<div class="dsec"><div class="dst"><i data-lucide="file-text" style="width:11px;height:11px;display:inline-block;margin-right:4px;vertical-align:middle;"></i>Description</div><div style="font-size:.85rem;line-height:1.65;white-space:pre-wrap;">${c.description}</div></div>`:''}
+      ${c.notes?`<div class="dsec"><div class="dst"><i data-lucide="message-square" style="width:11px;height:11px;display:inline-block;margin-right:4px;vertical-align:middle;"></i>Note</div><div style="font-size:.85rem;line-height:1.65;white-space:pre-wrap;">${c.notes}</div></div>`:''}
+      ${pics.length?`<div class="dsec"><div class="dst"><i data-lucide="image" style="width:11px;height:11px;display:inline-block;margin-right:4px;vertical-align:middle;"></i>Attachments <span style="opacity:.5;">(${pics.length})</span></div>
+        <div class="pics-grid">${pics.map(u=>`<div class="pt" onclick="event.stopPropagation();openLightbox('${u}')"><img src="${u}" onerror="this.parentElement.style.display='none'"></div>`).join('')}</div>
+      </div>`:''}`
+    ;lucide.createIcons();
+  }catch(e){document.getElementById('drawer-body').innerHTML='<div style="padding:2rem;text-align:center;color:var(--text-muted);">Failed to load</div>';}
 }
-
 function closeDrawer(){document.getElementById('overlay').classList.remove('open');document.getElementById('case-drawer').classList.remove('open');}
-
-// ─── Lightbox
-function openLightbox(url){document.getElementById('lightbox-img').src=url;document.getElementById('lightbox').classList.add('open');}
+function openLightbox(u){document.getElementById('lbx-img').src=u;document.getElementById('lightbox').classList.add('open');}
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDrawer();closeLightbox();}});
 
-// ─── Init
-loadMe();
-loadStats();
-loadRecentCases();
+loadMe();loadStats();loadRecentCases();
 </script>
 </body>
 </html>
