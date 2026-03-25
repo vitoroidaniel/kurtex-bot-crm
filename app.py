@@ -12,6 +12,9 @@ Run:
     pip install flask pymongo python-dotenv
     python app.py
 """
+import random
+import time
+from flask import request, jsonify, session, url_for
 
 import os
 import hashlib
@@ -161,34 +164,69 @@ def role_required(*roles):
 
 # ── Routes: Auth ──────────────────────────────────────────────────────────────
 
-@app.route("/login", methods=["GET"])
-def login():
-    bot_username = os.getenv("TELEGRAM_BOT_USERNAME", "")
-    return render_template("login.html", bot_username=bot_username)
+# Store OTP in-memory for simplicity (or in MongoDB for persistence)
+telegram_otp_store = {}  # {telegram_id: {"code": 123456, "expires": 1234567890}}
 
 @app.route("/auth/telegram", methods=["POST"])
 def auth_telegram():
     data = request.json or {}
     tg_data = dict(data)
-    telegram_id = int(data.get("id", 0))
-    logging.info(f"Telegram login attempt: {telegram_id}, data={tg_data}")
 
+    # Verify Telegram login data
     if not verify_telegram_login(tg_data):
-        logging.warning(f"Telegram verification failed for id={telegram_id}")
         return jsonify({"error": "Invalid Telegram login"}), 401
 
+    telegram_id = int(data.get("id", 0))
     user = strip(users_col().find_one({"telegram_id": telegram_id}))
+
     if not user:
-        logging.warning(f"Telegram ID {telegram_id} not found in DB")
         return jsonify({"error": "You are not registered in the system. Ask an admin to add you."}), 403
 
-    role = user.get("role", "agent")
-    session["user_id"] = telegram_id
-    session["user_name"] = user.get("name", data.get("first_name", "User"))
-    session["user_role"] = role
+    # Generate a 6-digit OTP
+    otp_code = random.randint(100000, 999999)
+    telegram_otp_store[telegram_id] = {
+        "code": otp_code,
+        "expires": time.time() + 300  # 5 min expiration
+    }
 
-    logging.info(f"Telegram login successful: {telegram_id}, role={role}")
+    # Send OTP via your bot
+    send_telegram_otp(telegram_id, otp_code)  # <-- we'll define this function
+
+    return jsonify({"ok": True, "message": "OTP sent via Telegram. Enter it to verify."})
+
+@app.route("/verify-code", methods=["POST"])
+def verify_code():
+    data = request.json or {}
+    telegram_id = int(data.get("telegram_id", 0))
+    code = int(data.get("code", 0))
+
+    otp_entry = telegram_otp_store.get(telegram_id)
+    if not otp_entry:
+        return jsonify({"error": "No OTP request found"}), 400
+
+    # Check expiration
+    if time.time() > otp_entry["expires"]:
+        telegram_otp_store.pop(telegram_id, None)
+        return jsonify({"error": "OTP expired"}), 400
+
+    # Validate code
+    if otp_entry["code"] != code:
+        return jsonify({"error": "Invalid code"}), 400
+
+    # OTP valid → log user in
+    user = strip(users_col().find_one({"telegram_id": telegram_id}))
+    if not user:
+        return jsonify({"error": "User not found"}), 403
+
+    session["user_id"]   = telegram_id
+    session["user_name"] = user.get("name", "User")
+    session["user_role"] = user.get("role", "agent")
+
+    # Remove OTP from store
+    telegram_otp_store.pop(telegram_id, None)
+
     return jsonify({"ok": True, "redirect": url_for("dashboard")})
+
 
 @app.route("/logout")
 def logout():
