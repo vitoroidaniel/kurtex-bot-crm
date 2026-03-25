@@ -5,643 +5,307 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kurtex CRM — Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --bg: #f0ede8;
-    --surface: #ffffff;
-    --surface2: #f7f5f2;
-    --surface3: #ede9e4;
-    --border: #e2ddd8;
-    --border-strong: #c8c3bc;
-    --text: #1a1a1a;
-    --text-muted: #6b6560;
-    --text-light: #9a9590;
-    --accent: #c8440c;
-    --accent-hover: #a33609;
-    --accent-light: #fdf0ea;
-    --accent-text: #8b2e07;
-    --success: #1a7a40;
-    --success-bg: #edfaf3;
-    --warning: #9a6300;
-    --warning-bg: #fffbeb;
-    --info: #1553a0;
-    --info-bg: #eff6ff;
-    --danger: #b91c1c;
-    --danger-bg: #fef2f2;
-    --radius: 14px;
-    --radius-sm: 8px;
-    --radius-xs: 6px;
-    --sidebar-w: 240px;
-    --header-h: 60px;
-    --shadow: 0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
-    --shadow-md: 0 4px 16px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
-    --shadow-lg: 0 12px 40px rgba(0,0,0,0.15);
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --bg:#f4f2ef;--surface:#fff;--surface2:#f9f8f6;--surface3:#eeebe6;
+    --border:#e5e0d8;--border-strong:#ccc7be;
+    --text:#1c1917;--text-muted:#78716c;--text-light:#a8a29e;
+    --accent:#d14b0e;--accent-hover:#b03d0a;--accent-light:#fff1eb;--accent-subtle:#fde4d4;
+    --success:#15803d;--success-bg:#f0fdf4;
+    --warning:#a16207;--warning-bg:#fefce8;
+    --info:#1d4ed8;--info-bg:#eff6ff;
+    --danger:#dc2626;--danger-bg:#fef2f2;
+    --purple:#7c3aed;--purple-bg:#f5f3ff;
+    --radius:18px;--radius-md:14px;--radius-sm:10px;--radius-xs:7px;
+    --sidebar-w:248px;--header-h:64px;
+    --shadow:0 1px 3px rgba(0,0,0,.07),0 0 0 1px rgba(0,0,0,.04);
+    --shadow-md:0 4px 16px rgba(0,0,0,.09),0 0 0 1px rgba(0,0,0,.04);
+    --shadow-lg:0 16px 48px rgba(0,0,0,.16),0 0 0 1px rgba(0,0,0,.06);
+    --font:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;
   }
-
-  [data-theme="dark"] {
-    --bg: #0f0e0d;
-    --surface: #1c1a18;
-    --surface2: #232120;
-    --surface3: #2c2a28;
-    --border: #302d2a;
-    --border-strong: #484440;
-    --text: #e8e3dc;
-    --text-muted: #9a9087;
-    --text-light: #6b6560;
-    --accent: #e05a1f;
-    --accent-hover: #f06a2a;
-    --accent-light: #2a1a10;
-    --accent-text: #f0906a;
-    --success: #3db870;
-    --success-bg: #0d2a18;
-    --warning: #f0b020;
-    --warning-bg: #2a1e08;
-    --info: #5090e0;
-    --info-bg: #0d1e38;
-    --danger: #e05050;
-    --danger-bg: #2a1010;
-    --shadow: 0 1px 4px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04);
-    --shadow-md: 0 4px 16px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04);
-    --shadow-lg: 0 12px 40px rgba(0,0,0,0.6);
+  [data-theme="dark"]{
+    --bg:#111110;--surface:#1d1c1b;--surface2:#242322;--surface3:#2d2b29;
+    --border:#333230;--border-strong:#4a4845;
+    --text:#e8e3dc;--text-muted:#9c9490;--text-light:#6b6560;
+    --accent:#e8622a;--accent-hover:#f07040;--accent-light:#2a1a0e;--accent-subtle:#3a2010;
+    --success:#4ade80;--success-bg:#0d2a18;
+    --warning:#fbbf24;--warning-bg:#271e08;
+    --info:#60a5fa;--info-bg:#0e1e38;
+    --danger:#f87171;--danger-bg:#2a0e0e;
+    --purple:#a78bfa;--purple-bg:#1c1538;
+    --shadow:0 1px 3px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.04);
+    --shadow-md:0 4px 16px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.04);
+    --shadow-lg:0 16px 48px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.05);
   }
+  html,body{height:100%;}
+  body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;transition:background .25s,color .25s;overflow:hidden;}
 
-  html, body { height: 100%; }
+  /* SIDEBAR */
+  .sidebar{width:var(--sidebar-w);height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;position:relative;z-index:100;transition:background .25s,border-color .25s,transform .3s;}
+  .sidebar-logo{padding:1.25rem 1.25rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.65rem;}
+  .logo-icon{width:38px;height:38px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(209,75,14,.3);}
+  .logo-name{font-size:1.15rem;font-weight:800;letter-spacing:-.02em;}
+  .logo-sub{font-size:.65rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;}
+  .nav{flex:1;padding:.75rem;overflow-y:auto;display:flex;flex-direction:column;gap:2px;}
+  .nav-section{font-size:.65rem;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.1em;padding:.75rem .5rem .35rem;}
+  .nav-item{display:flex;align-items:center;gap:.65rem;padding:.62rem .85rem;border-radius:var(--radius-sm);color:var(--text-muted);font-size:.875rem;font-weight:600;cursor:pointer;border:none;background:none;width:100%;text-align:left;transition:all .15s;text-decoration:none;}
+  .nav-item:hover{background:var(--surface2);color:var(--text);}
+  .nav-item.active{background:var(--accent-light);color:var(--accent);}
+  .nav-item .nav-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:.65rem;font-weight:700;padding:1px 7px;border-radius:100px;min-width:20px;text-align:center;}
+  .sidebar-footer{padding:.75rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.4rem;}
+  .user-card{display:flex;align-items:center;gap:.6rem;padding:.65rem .85rem;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);}
+  .user-avatar{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#f07050);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0;}
+  .user-info{flex:1;min-width:0;}
+  .user-name{font-size:.84rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .user-role{font-size:.68rem;color:var(--text-muted);font-weight:500;}
 
-  body {
-    font-family: 'Syne', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    display: flex;
-    transition: background 0.25s, color 0.25s;
-    overflow: hidden;
+  /* MAIN */
+  .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+  .topbar{height:var(--header-h);background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:1rem;}
+  .topbar-left{display:flex;align-items:center;gap:.85rem;}
+  .topbar-right{display:flex;align-items:center;gap:.5rem;}
+  .page-title{font-size:1rem;font-weight:800;letter-spacing:-.01em;}
+  .page-sub{font-size:.75rem;color:var(--text-muted);}
+  .topbar-btn{width:36px;height:36px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:all .2s;}
+  .topbar-btn:hover{border-color:var(--border-strong);color:var(--text);}
+
+  /* CONTENT */
+  .content{flex:1;overflow-y:auto;padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:1.25rem;}
+
+  /* STATS */
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;}
+  .stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.2rem;transition:box-shadow .2s;}
+  .stat:hover{box-shadow:var(--shadow-md);}
+  .stat-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.85rem;}
+  .stat-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .stat-icon.orange{background:#fff1eb;color:var(--accent);}
+  .stat-icon.blue{background:var(--info-bg);color:var(--info);}
+  .stat-icon.green{background:var(--success-bg);color:var(--success);}
+  .stat-icon.yellow{background:var(--warning-bg);color:var(--warning);}
+  .stat-icon.purple{background:var(--purple-bg);color:var(--purple);}
+  [data-theme="dark"] .stat-icon.orange{background:#2a1508;}
+  [data-theme="dark"] .stat-icon.blue{background:#0a1828;}
+  [data-theme="dark"] .stat-icon.green{background:#071a10;}
+  [data-theme="dark"] .stat-icon.yellow{background:#1a1508;}
+  [data-theme="dark"] .stat-icon.purple{background:#1a1228;}
+  .stat-trend{font-size:.72rem;font-weight:700;padding:2px 7px;border-radius:100px;}
+  .stat-trend.up{background:var(--success-bg);color:var(--success);}
+  .stat-trend.neutral{background:var(--surface3);color:var(--text-muted);}
+  .stat-value{font-size:1.8rem;font-weight:800;letter-spacing:-.03em;margin-bottom:.2rem;}
+  .stat-label{font-size:.78rem;color:var(--text-muted);font-weight:500;}
+
+  /* LAYOUTS */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
+  .grid-3{display:grid;grid-template-columns:2fr 1fr;gap:1.25rem;}
+
+  /* CARDS */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;}
+  .card-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:.75rem;}
+  .card-title{font-size:.9rem;font-weight:700;}
+  .card-sub{font-size:.75rem;color:var(--text-muted);margin-top:1px;}
+
+  /* TABLE */
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  table{width:100%;border-collapse:collapse;font-size:.85rem;}
+  thead th{padding:.65rem 1rem;text-align:left;font-size:.7rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;background:var(--surface2);border-bottom:1px solid var(--border);white-space:nowrap;}
+  tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
+  tbody tr:last-child{border-bottom:none;}
+  tbody tr:hover{background:var(--surface2);}
+  tbody td{padding:.8rem 1rem;vertical-align:middle;}
+  .td-main{font-weight:600;}
+  .td-sub{font-size:.74rem;color:var(--text-muted);margin-top:1px;font-family:var(--mono);}
+
+  /* BADGES */
+  .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:100px;font-size:.72rem;font-weight:700;white-space:nowrap;}
+  .badge-open{background:var(--info-bg);color:var(--info);}
+  .badge-pending{background:var(--warning-bg);color:var(--warning);}
+  .badge-done{background:var(--success-bg);color:var(--success);}
+  .badge-closed{background:var(--surface3);color:var(--text-muted);}
+  .badge-role-dev{background:var(--purple-bg);color:var(--purple);}
+  .badge-role-mgr{background:var(--warning-bg);color:var(--warning);}
+  .badge-role-tl{background:var(--success-bg);color:var(--success);}
+  .badge-role-agt{background:var(--surface3);color:var(--text-muted);}
+
+  /* TOOLBAR */
+  .toolbar{padding:.85rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;}
+  .search-wrap{position:relative;flex:1;min-width:200px;max-width:320px;}
+  .search-wrap input{width:100%;padding:.58rem .85rem .58rem 2.3rem;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);font-family:var(--font);font-size:.85rem;transition:all .2s;outline:none;}
+  .search-wrap input:focus{border-color:var(--border-strong);background:var(--surface);box-shadow:0 0 0 3px rgba(209,75,14,.1);}
+  .search-icon{position:absolute;left:.7rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;}
+  .filter-btn{padding:.52rem .9rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface2);font-family:var(--font);font-size:.8rem;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.35rem;white-space:nowrap;}
+  .filter-btn:hover{border-color:var(--border-strong);color:var(--text);}
+  .filter-btn.active{border-color:var(--accent);background:var(--accent-light);color:var(--accent);}
+  .date-input{padding:.52rem .75rem;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text);font-family:var(--font);font-size:.8rem;transition:all .2s;outline:none;cursor:pointer;}
+  .date-input:focus{border-color:var(--border-strong);box-shadow:0 0 0 3px rgba(209,75,14,.1);}
+  [data-theme="dark"] .date-input{color-scheme:dark;}
+  .btn-accent{padding:.56rem 1.1rem;border-radius:var(--radius-sm);border:none;background:var(--accent);color:#fff;font-family:var(--font);font-size:.83rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.4rem;white-space:nowrap;}
+  .btn-accent:hover{background:var(--accent-hover);transform:translateY(-1px);}
+  .btn-outline{padding:.52rem .9rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface2);font-family:var(--font);font-size:.8rem;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.4rem;white-space:nowrap;}
+  .btn-outline:hover{border-color:var(--border-strong);color:var(--text);}
+
+  /* EXPORT BAR */
+  .export-bar{padding:.6rem 1.25rem;border-bottom:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;}
+  .export-label{font-size:.75rem;font-weight:600;color:var(--text-muted);}
+
+  /* PAGINATION */
+  .pagination{padding:.8rem 1.25rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+  .pagination-info{font-size:.8rem;color:var(--text-muted);}
+  .pagination-btns{display:flex;gap:3px;}
+  .pg-btn{width:32px;height:32px;border-radius:var(--radius-xs);border:1px solid var(--border);background:var(--surface2);font-family:var(--font);font-size:.8rem;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;}
+  .pg-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent);}
+  .pg-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .pg-btn:disabled{opacity:.35;cursor:default;}
+
+  /* LEADERBOARD */
+  .lb-row{display:flex;align-items:center;gap:.75rem;padding:.7rem 1.25rem;border-bottom:1px solid var(--border);font-size:.85rem;}
+  .lb-row:last-child{border-bottom:none;}
+  .lb-rank{width:24px;height:24px;border-radius:50%;background:var(--surface3);color:var(--text-muted);font-size:.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .lb-rank.gold{background:#fef08a;color:#92400e;}
+  .lb-rank.silver{background:#e2e8f0;color:#475569;}
+  .lb-rank.bronze{background:#fed7aa;color:#9a3412;}
+  [data-theme="dark"] .lb-rank.gold{background:#3a2e08;color:#fbbf24;}
+  [data-theme="dark"] .lb-rank.silver{background:#1e2a38;color:#94a3b8;}
+  [data-theme="dark"] .lb-rank.bronze{background:#2a1808;color:#fb923c;}
+  .lb-name{font-weight:700;flex:1;}
+  .lb-cases{font-size:.75rem;color:var(--text-muted);}
+  .lb-resolved{font-size:.78rem;font-weight:700;color:var(--success);margin-left:auto;}
+
+  /* DRAWER */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;opacity:0;transition:opacity .25s;backdrop-filter:blur(3px);}
+  .overlay.open{display:block;opacity:1;}
+  .drawer{position:fixed;right:0;top:0;bottom:0;width:500px;max-width:96vw;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;z-index:210;transform:translateX(100%);transition:transform .3s cubic-bezier(.25,.46,.45,.94);box-shadow:var(--shadow-lg);}
+  .drawer.open{transform:translateX(0);}
+  .drawer-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+  .drawer-title{font-size:1rem;font-weight:700;}
+  .drawer-close{width:32px;height:32px;border-radius:var(--radius-xs);border:1px solid var(--border);background:var(--surface2);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:all .2s;}
+  .drawer-close:hover{border-color:var(--border-strong);color:var(--text);}
+  .drawer-body{flex:1;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1.25rem;}
+  .detail-row{display:flex;flex-direction:column;gap:.35rem;}
+  .detail-label{font-size:.68rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;}
+  .detail-val{font-size:.9rem;font-weight:600;}
+  .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+  .drawer-section{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem;display:flex;flex-direction:column;gap:.75rem;}
+  .drawer-section-title{font-size:.68rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;}
+
+  /* IMAGE GALLERY */
+  .pics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:.5rem;}
+  .pic-thumb{aspect-ratio:1;border-radius:var(--radius-xs);overflow:hidden;border:1px solid var(--border);cursor:pointer;transition:transform .15s;background:var(--surface3);display:flex;align-items:center;justify-content:center;}
+  .pic-thumb:hover{transform:scale(1.04);}
+  .pic-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+
+  /* LIGHTBOX */
+  .lightbox{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;padding:2rem;}
+  .lightbox.open{display:flex;}
+  .lightbox img{max-width:90vw;max-height:85vh;border-radius:var(--radius-sm);object-fit:contain;}
+  .lightbox-close{position:absolute;top:1.25rem;right:1.25rem;width:38px;height:38px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:var(--radius-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;}
+
+  /* EMPTY STATE */
+  .empty{text-align:center;padding:2.5rem 1rem;color:var(--text-muted);display:flex;flex-direction:column;align-items:center;gap:.65rem;}
+  .empty svg{opacity:.3;}
+  .empty-title{font-weight:700;color:var(--text);font-size:.9rem;}
+  .empty-desc{font-size:.83rem;}
+
+  /* ANALYTICS */
+  .analytics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;}
+  .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;}
+  .chart-card .card-header{padding:1rem 1.25rem;}
+  .chart-body{padding:1.25rem;position:relative;min-height:220px;display:flex;align-items:center;justify-content:center;}
+  .chart-body canvas{max-height:200px;}
+  .summary-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem;}
+  .summary-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.2rem;display:flex;align-items:flex-start;gap:.85rem;}
+
+  /* MY PERFORMANCE */
+  .perf-header{background:linear-gradient(135deg,var(--accent) 0%,#f07050 100%);border-radius:var(--radius-md);padding:1.75rem;color:#fff;margin-bottom:1.25rem;position:relative;overflow:hidden;}
+  .perf-header::before{content:'';position:absolute;top:-40%;right:-10%;width:300px;height:300px;background:rgba(255,255,255,.08);border-radius:50%;}
+  .perf-name{font-size:1.4rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.25rem;}
+  .perf-role{font-size:.8rem;opacity:.75;font-weight:500;}
+  .perf-stats{display:flex;gap:2rem;margin-top:1.25rem;flex-wrap:wrap;}
+  .perf-stat-val{font-size:1.6rem;font-weight:800;letter-spacing:-.03em;}
+  .perf-stat-label{font-size:.72rem;opacity:.75;margin-top:2px;}
+  .case-row-full{padding:1rem 1.25rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
+  .case-row-full:last-child{border-bottom:none;}
+  .case-row-full:hover{background:var(--surface2);}
+  .case-row-top{display:flex;align-items:center;gap:.65rem;margin-bottom:.3rem;flex-wrap:wrap;}
+  .case-row-id{font-family:var(--mono);font-size:.72rem;color:var(--text-muted);}
+  .case-row-driver{font-weight:700;font-size:.9rem;}
+  .case-row-meta{font-size:.76rem;color:var(--text-muted);display:flex;gap:.85rem;flex-wrap:wrap;}
+  .case-row-note{margin-top:.5rem;font-size:.8rem;color:var(--text-muted);background:var(--surface2);border-radius:var(--radius-xs);padding:.5rem .75rem;border-left:3px solid var(--border-strong);line-height:1.5;}
+  .case-row-note.has-note{border-left-color:var(--accent);color:var(--text);}
+
+  /* MOBILE SIDEBAR */
+  .sidebar-mask{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:98;backdrop-filter:blur(2px);}
+
+  /* SPINNER */
+  .spin{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .page-anim{animation:fadeUp .28s ease;}
+
+  /* RESPONSIVE */
+  @media(max-width:1200px){.stats-grid{grid-template-columns:repeat(2,1fr);}.analytics-grid{grid-template-columns:repeat(2,1fr);}.summary-cards{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:1024px){.grid-3{grid-template-columns:1fr;}.grid-2{grid-template-columns:1fr;}}
+  @media(max-width:768px){
+    .sidebar{position:fixed;top:0;left:0;bottom:0;transform:translateX(-100%);z-index:99;}
+    .sidebar.open{transform:translateX(0);}
+    .sidebar-mask{display:block;visibility:hidden;}
+    .sidebar-mask.open{visibility:visible;}
+    .stats-grid{grid-template-columns:1fr 1fr;}
+    .analytics-grid{grid-template-columns:1fr;}
+    .summary-cards{grid-template-columns:1fr;}
+    .toolbar{flex-wrap:wrap;}
+    .search-wrap{min-width:100%;max-width:100%;}
+    .content{padding:1rem;gap:1rem;}
+    .perf-stats{flex-wrap:wrap;gap:1rem;}
   }
-
-  /* ═══ SIDEBAR ══════════════════════════════════════════ */
-  .sidebar {
-    width: var(--sidebar-w);
-    height: 100vh;
-    background: var(--surface);
-    border-right: 1.5px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    position: relative;
-    z-index: 100;
-    transition: background 0.25s, border-color 0.25s, transform 0.3s;
+  @media(max-width:520px){
+    .stats-grid{grid-template-columns:1fr;}
+    .detail-grid{grid-template-columns:1fr;}
+    table thead{display:none;}
+    table tbody tr{display:block;margin-bottom:.75rem;border:1px solid var(--border);border-radius:var(--radius-sm);}
+    table tbody td{display:flex;justify-content:space-between;align-items:center;padding:.5rem .85rem;border-bottom:1px solid var(--border);font-size:.82rem;}
+    table tbody td:last-child{border-bottom:none;}
+    table tbody td::before{content:attr(data-label);font-weight:700;color:var(--text-muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;margin-right:.5rem;white-space:nowrap;}
   }
-
-  .sidebar-logo {
-    padding: 1.25rem 1.25rem 1rem;
-    border-bottom: 1.5px solid var(--border);
-    display: flex; align-items: center; gap: 0.65rem;
-  }
-
-  .logo-icon {
-    width: 36px; height: 36px; background: var(--accent);
-    border-radius: 9px; display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .logo-name { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.02em; }
-  .logo-sub { font-size: 0.65rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
-
-  .nav {
-    flex: 1;
-    padding: 0.75rem 0.75rem;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .nav-section {
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: var(--text-light);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    padding: 0.75rem 0.5rem 0.4rem;
-  }
-
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.6rem 0.75rem;
-    border-radius: var(--radius-sm);
-    color: var(--text-muted);
-    font-size: 0.875rem;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    background: none;
-    width: 100%;
-    text-align: left;
-    transition: all 0.15s;
-    text-decoration: none;
-  }
-
-  .nav-item:hover { background: var(--surface2); color: var(--text); }
-  .nav-item.active { background: var(--accent-light); color: var(--accent); }
-
-  .nav-item .badge {
-    margin-left: auto;
-    background: var(--accent);
-    color: white;
-    font-size: 0.65rem;
-    font-weight: 700;
-    padding: 1px 6px;
-    border-radius: 100px;
-    min-width: 18px;
-    text-align: center;
-  }
-
-  .sidebar-footer {
-    padding: 0.75rem;
-    border-top: 1.5px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-  }
-
-  .user-card {
-    display: flex; align-items: center; gap: 0.6rem;
-    padding: 0.6rem 0.75rem;
-    background: var(--surface2);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-  }
-
-  .user-avatar {
-    width: 32px; height: 32px; border-radius: 50%;
-    background: var(--accent); display: flex; align-items: center; justify-content: center;
-    font-size: 0.75rem; font-weight: 700; color: white; flex-shrink: 0;
-  }
-
-  .user-info { flex: 1; min-width: 0; }
-  .user-name { font-size: 0.82rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .user-role { font-size: 0.67rem; color: var(--text-muted); font-weight: 500; }
-
-  /* ═══ MAIN ══════════════════════════════════════════════ */
-  .main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    min-width: 0;
-  }
-
-  /* Header */
-  .topbar {
-    height: var(--header-h);
-    background: var(--surface);
-    border-bottom: 1.5px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 1.5rem;
-    flex-shrink: 0;
-  }
-
-  .topbar-left { display: flex; align-items: center; gap: 0.75rem; }
-  .topbar-right { display: flex; align-items: center; gap: 0.5rem; }
-
-  .page-title { font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; }
-  .page-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 1px; }
-
-  .topbar-btn {
-    width: 34px; height: 34px; border-radius: 8px;
-    border: 1.5px solid var(--border); background: var(--surface2);
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    color: var(--text-muted); transition: all 0.2s; flex-shrink: 0;
-  }
-  .topbar-btn:hover { border-color: var(--border-strong); color: var(--text); }
-
-  /* Content */
-  .content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  /* ═══ STAT CARDS ════════════════════════════════════════ */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-  }
-
-  .stat {
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.25rem;
-    display: flex; flex-direction: column; gap: 0.75rem;
-    transition: box-shadow 0.2s;
-  }
-
-  .stat:hover { box-shadow: var(--shadow-md); }
-
-  .stat-header { display: flex; align-items: flex-start; justify-content: space-between; }
-
-  .stat-icon {
-    width: 38px; height: 38px; border-radius: 9px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .stat-icon.orange { background: var(--accent-light); color: var(--accent); }
-  .stat-icon.green  { background: var(--success-bg); color: var(--success); }
-  .stat-icon.blue   { background: var(--info-bg); color: var(--info); }
-  .stat-icon.yellow { background: var(--warning-bg); color: var(--warning); }
-
-  .stat-trend {
-    font-size: 0.7rem; font-weight: 700;
-    padding: 2px 7px; border-radius: 100px;
-  }
-  .stat-trend.up { background: var(--success-bg); color: var(--success); }
-  .stat-trend.down { background: var(--danger-bg); color: var(--danger); }
-
-  .stat-value { font-size: 2rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
-  .stat-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
-
-  /* ═══ GRID 2 COL ════════════════════════════════════════ */
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .grid-3 { display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; }
-
-  /* ═══ CARD ══════════════════════════════════════════════ */
-  .card {
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-
-  .card-header {
-    padding: 1rem 1.25rem;
-    border-bottom: 1.5px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-  }
-
-  .card-title { font-size: 0.9rem; font-weight: 700; }
-  .card-sub { font-size: 0.78rem; color: var(--text-muted); margin-top: 1px; }
-
-  .card-body { padding: 1.25rem; }
-
-  /* ═══ TABLE ══════════════════════════════════════════════ */
-  .table-wrap { overflow-x: auto; }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.85rem;
-  }
-
-  thead th {
-    padding: 0.6rem 1rem;
-    text-align: left;
-    font-size: 0.7rem; font-weight: 700;
-    color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;
-    background: var(--surface2);
-    border-bottom: 1.5px solid var(--border);
-    white-space: nowrap;
-  }
-
-  tbody tr {
-    border-bottom: 1px solid var(--border);
-    cursor: pointer;
-    transition: background 0.12s;
-  }
-
-  tbody tr:last-child { border-bottom: none; }
-  tbody tr:hover { background: var(--surface2); }
-
-  tbody td { padding: 0.75rem 1rem; vertical-align: middle; }
-
-  .td-main { font-weight: 600; }
-  .td-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 1px; font-family: 'Geist Mono', monospace; }
-
-  /* ═══ BADGES ════════════════════════════════════════════ */
-  .badge {
-    display: inline-flex; align-items: center; gap: 4px;
-    padding: 3px 8px; border-radius: 100px;
-    font-size: 0.72rem; font-weight: 700;
-    white-space: nowrap;
-  }
-
-  .badge-open    { background: var(--info-bg); color: var(--info); }
-  .badge-pending { background: var(--warning-bg); color: var(--warning); }
-  .badge-done    { background: var(--success-bg); color: var(--success); }
-  .badge-closed  { background: var(--surface3); color: var(--text-muted); }
-  .badge-role-dev  { background: #ede9ff; color: #5b21b6; }
-  .badge-role-mgr  { background: var(--warning-bg); color: var(--warning); }
-  .badge-role-tl   { background: var(--success-bg); color: var(--success); }
-  .badge-role-agt  { background: var(--surface3); color: var(--text-muted); }
-
-  [data-theme="dark"] .badge-role-dev { background: #1e1538; color: #a78bfa; }
-
-  /* ═══ SEARCH / FILTERS ══════════════════════════════════ */
-  .toolbar {
-    padding: 0.75rem 1.25rem;
-    border-bottom: 1.5px solid var(--border);
-    display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
-  }
-
-  .search-wrap { position: relative; flex: 1; min-width: 180px; }
-
-  .search-wrap input {
-    width: 100%;
-    padding: 0.55rem 0.75rem 0.55rem 2.2rem;
-    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
-    background: var(--surface2); color: var(--text);
-    font-family: 'Syne', sans-serif; font-size: 0.85rem;
-    transition: all 0.2s; outline: none;
-  }
-
-  .search-wrap input:focus { border-color: var(--border-strong); background: var(--surface); }
-  .search-icon { position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
-
-  .filter-btn {
-    padding: 0.5rem 0.9rem; border-radius: var(--radius-sm);
-    border: 1.5px solid var(--border); background: var(--surface2);
-    font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 600;
-    color: var(--text-muted); cursor: pointer; transition: all 0.2s;
-    display: flex; align-items: center; gap: 0.35rem; white-space: nowrap;
-  }
-
-  .filter-btn:hover, .filter-btn.active {
-    border-color: var(--accent); background: var(--accent-light); color: var(--accent);
-  }
-
-  .btn-accent {
-    padding: 0.55rem 1rem; border-radius: var(--radius-sm);
-    border: none; background: var(--accent); color: white;
-    font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700;
-    cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.4rem;
-    white-space: nowrap;
-  }
-  .btn-accent:hover { background: var(--accent-hover); }
-
-  /* ═══ PAGINATION ════════════════════════════════════════ */
-  .pagination {
-    padding: 0.75rem 1.25rem;
-    border-top: 1.5px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-  }
-
-  .pagination-info { font-size: 0.8rem; color: var(--text-muted); }
-
-  .pagination-btns { display: flex; gap: 4px; }
-
-  .pg-btn {
-    width: 30px; height: 30px; border-radius: var(--radius-xs);
-    border: 1.5px solid var(--border); background: var(--surface2);
-    font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 600;
-    color: var(--text-muted); cursor: pointer; transition: all 0.15s;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .pg-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
-  .pg-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
-  .pg-btn:disabled { opacity: 0.35; cursor: default; }
-
-  /* ═══ LEADERBOARD ════════════════════════════════════════ */
-  .lb-row {
-    display: flex; align-items: center; gap: 0.75rem;
-    padding: 0.65rem 1.25rem; border-bottom: 1px solid var(--border);
-    font-size: 0.85rem;
-  }
-  .lb-row:last-child { border-bottom: none; }
-
-  .lb-rank {
-    width: 22px; height: 22px; border-radius: 50%;
-    background: var(--surface3); color: var(--text-muted);
-    font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .lb-rank.gold { background: #fef08a; color: #92400e; }
-  .lb-rank.silver { background: #e2e8f0; color: #475569; }
-  .lb-rank.bronze { background: #fed7aa; color: #9a3412; }
-
-  .lb-name { font-weight: 700; flex: 1; }
-  .lb-cases { font-size: 0.75rem; color: var(--text-muted); }
-  .lb-resolved { font-size: 0.78rem; font-weight: 700; color: var(--success); margin-left: auto; }
-
-  /* ═══ DRAWER ════════════════════════════════════════════ */
-  .overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.45);
-    z-index: 200;
-    display: none; opacity: 0;
-    transition: opacity 0.25s;
-    backdrop-filter: blur(2px);
-  }
-  .overlay.open { display: block; opacity: 1; }
-
-  .drawer {
-    position: fixed; right: 0; top: 0; bottom: 0;
-    width: 480px; max-width: 95vw;
-    background: var(--surface);
-    border-left: 1.5px solid var(--border);
-    display: flex; flex-direction: column;
-    z-index: 210;
-    transform: translateX(100%);
-    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    box-shadow: var(--shadow-lg);
-  }
-  .drawer.open { transform: translateX(0); }
-
-  .drawer-header {
-    padding: 1.25rem 1.5rem;
-    border-bottom: 1.5px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-    flex-shrink: 0;
-  }
-
-  .drawer-title { font-size: 1rem; font-weight: 700; }
-
-  .drawer-close {
-    width: 30px; height: 30px; border-radius: 7px;
-    border: 1.5px solid var(--border); background: var(--surface2);
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    color: var(--text-muted); transition: all 0.2s;
-  }
-  .drawer-close:hover { border-color: var(--border-strong); color: var(--text); }
-
-  .drawer-body { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; }
-
-  /* DRAWER FIELDS */
-  .detail-row { display: flex; flex-direction: column; gap: 0.35rem; }
-  .detail-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
-  .detail-val { font-size: 0.9rem; font-weight: 600; }
-
-  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-
-  .drawer-section {
-    background: var(--surface2);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 1rem;
-    display: flex; flex-direction: column; gap: 0.75rem;
-  }
-
-  .drawer-section-title { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
-
-  .status-btn {
-    flex: 1; padding: 0.5rem 0.5rem; border-radius: var(--radius-xs);
-    border: 1.5px solid var(--border); background: var(--surface);
-    font-family: 'Syne', sans-serif; font-size: 0.78rem; font-weight: 700;
-    cursor: pointer; transition: all 0.2s; text-align: center;
-    color: var(--text-muted);
-  }
-  .status-btn:hover { border-color: var(--border-strong); color: var(--text); }
-  .status-btn.open-btn:hover, .status-btn.open-btn.sel { border-color: var(--info); background: var(--info-bg); color: var(--info); }
-  .status-btn.pending-btn:hover, .status-btn.pending-btn.sel { border-color: var(--warning); background: var(--warning-bg); color: var(--warning); }
-  .status-btn.done-btn:hover, .status-btn.done-btn.sel { border-color: var(--success); background: var(--success-bg); color: var(--success); }
-
-  textarea {
-    width: 100%; padding: 0.65rem 0.85rem;
-    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
-    background: var(--surface); color: var(--text);
-    font-family: 'Syne', sans-serif; font-size: 0.875rem;
-    resize: vertical; outline: none; transition: border-color 0.2s;
-    min-height: 80px;
-  }
-  textarea:focus { border-color: var(--border-strong); }
-
-  /* CREATE FORM */
-  .form-field { display: flex; flex-direction: column; gap: 0.4rem; }
-  .form-label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
-
-  .form-input {
-    padding: 0.65rem 0.85rem;
-    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
-    background: var(--surface2); color: var(--text);
-    font-family: 'Syne', sans-serif; font-size: 0.9rem;
-    outline: none; transition: all 0.2s;
-  }
-  .form-input:focus { border-color: var(--border-strong); background: var(--surface); }
-
-  /* ═══ EMPTY STATE ════════════════════════════════════════ */
-  .empty {
-    text-align: center; padding: 3rem 1rem;
-    color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
-  }
-  .empty svg { opacity: 0.3; }
-  .empty-title { font-weight: 700; color: var(--text); }
-  .empty-desc { font-size: 0.85rem; }
-
-  /* ═══ MOBILE SIDEBAR ════════════════════════════════════ */
-  .sidebar-mask {
-    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4);
-    z-index: 98; backdrop-filter: blur(2px);
-  }
-
-  @media (max-width: 1024px) {
-    .stats-grid { grid-template-columns: repeat(2, 1fr); }
-    .grid-3 { grid-template-columns: 1fr; }
-  }
-
-  @media (max-width: 768px) {
-    .sidebar {
-      position: fixed; top: 0; left: 0; bottom: 0;
-      transform: translateX(-100%); z-index: 99;
-    }
-    .sidebar.open { transform: translateX(0); }
-    .sidebar-mask { display: block; }
-    .sidebar-mask.open { display: block; }
-    .stats-grid { grid-template-columns: 1fr 1fr; }
-    .grid-2 { grid-template-columns: 1fr; }
-  }
-
-  @media (max-width: 480px) {
-    .stats-grid { grid-template-columns: 1fr; }
-    .content { padding: 1rem; }
-  }
-
-  /* ═══ TABS (dashboard view switcher) ════════════════════ */
-  .view-tabs {
-    display: flex; gap: 4px;
-    background: var(--surface2); border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm); padding: 3px;
-  }
-
-  .view-tab {
-    padding: 0.4rem 0.8rem; border-radius: 6px;
-    border: none; background: transparent;
-    font-family: 'Syne', sans-serif; font-size: 0.82rem; font-weight: 600;
-    color: var(--text-muted); cursor: pointer; transition: all 0.15s;
-    display: flex; align-items: center; gap: 0.35rem;
-  }
-  .view-tab.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
-  .view-tab:hover:not(.active) { color: var(--text); }
-
-  /* ═══ PAGE SECTIONS ══════════════════════════════════════ */
-  .page-section { display: none; }
-  .page-section.active { display: contents; }
-
-  /* ═══ SPINNER ═══ */
-  .spin {
-    width: 18px; height: 18px;
-    border: 2px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%; animation: spin 0.7s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ═══ ANIMATIONS ════════════════════════════════════════ */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .content > * { animation: fadeUp 0.3s ease; }
 </style>
 </head>
 <body>
 
-<!-- SIDEBAR MASK -->
 <div class="sidebar-mask" id="sidebarMask" onclick="closeSidebar()"></div>
 
-<!-- ═══════════════ SIDEBAR ═══════════════ -->
+<!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <div class="logo-icon">
-      <i data-lucide="truck" style="width:18px;height:18px;color:white;"></i>
-    </div>
-    <div>
-      <div class="logo-name">Kurtex</div>
-      <div class="logo-sub">CRM Platform</div>
-    </div>
+    <div class="logo-icon"><i data-lucide="truck" style="width:18px;height:18px;color:white;"></i></div>
+    <div><div class="logo-name">Kurtex</div><div class="logo-sub">CRM Platform</div></div>
   </div>
-
   <nav class="nav">
     <div class="nav-section">Main</div>
-    <button class="nav-item active" onclick="showPage('dashboard', this)">
-      <i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i>
-      Dashboard
+    <button class="nav-item active" onclick="showPage('dashboard',this)">
+      <i data-lucide="layout-dashboard" style="width:16px;height:16px;"></i> Dashboard
     </button>
-    <button class="nav-item" onclick="showPage('cases', this)">
-      <i data-lucide="folder-open" style="width:16px;height:16px;"></i>
-      Cases
-      <span class="badge" id="nav-badge">…</span>
+    <button class="nav-item" onclick="showPage('cases',this)">
+      <i data-lucide="folder-open" style="width:16px;height:16px;"></i> Cases
+      <span class="nav-badge" id="nav-badge">…</span>
     </button>
-
-    <div class="nav-section" id="admin-section" style="display:none;">Team</div>
-    <button class="nav-item" onclick="showPage('team', this)" id="team-nav" style="display:none;">
-      <i data-lucide="users" style="width:16px;height:16px;"></i>
-      Team Members
+    <button class="nav-item" onclick="showPage('my-performance',this)">
+      <i data-lucide="user-check" style="width:16px;height:16px;"></i> My Performance
     </button>
-    <button class="nav-item" onclick="showPage('leaderboard', this)" id="lb-nav" style="display:none;">
-      <i data-lucide="trophy" style="width:16px;height:16px;"></i>
-      Leaderboard
+    <div class="nav-section" id="admin-section" style="display:none;">Analytics</div>
+    <button class="nav-item" onclick="showPage('analytics',this)" id="analytics-nav" style="display:none;">
+      <i data-lucide="bar-chart-2" style="width:16px;height:16px;"></i> Analytics
+    </button>
+    <div class="nav-section" id="team-section" style="display:none;">Team</div>
+    <button class="nav-item" onclick="showPage('team',this)" id="team-nav" style="display:none;">
+      <i data-lucide="users" style="width:16px;height:16px;"></i> Team Members
+    </button>
+    <button class="nav-item" onclick="showPage('leaderboard',this)" id="lb-nav" style="display:none;">
+      <i data-lucide="trophy" style="width:16px;height:16px;"></i> Leaderboard
     </button>
   </nav>
-
   <div class="sidebar-footer">
     <div class="user-card">
       <div class="user-avatar" id="user-avatar">?</div>
@@ -651,15 +315,13 @@
       </div>
     </div>
     <button class="nav-item" onclick="location='/logout'">
-      <i data-lucide="log-out" style="width:15px;height:15px;"></i>
-      Sign Out
+      <i data-lucide="log-out" style="width:15px;height:15px;"></i> Sign Out
     </button>
   </div>
 </aside>
 
-<!-- ═══════════════ MAIN ═══════════════════ -->
+<!-- MAIN -->
 <div class="main">
-  <!-- TOPBAR -->
   <div class="topbar">
     <div class="topbar-left">
       <button class="topbar-btn" id="menuBtn" onclick="toggleSidebar()" style="display:none;">
@@ -674,130 +336,78 @@
       <button class="topbar-btn" onclick="toggleTheme()" title="Toggle theme">
         <i data-lucide="moon" id="themeIcon" style="width:15px;height:15px;"></i>
       </button>
-      <button class="btn-accent" onclick="openCreateDrawer()">
-        <i data-lucide="plus" style="width:15px;height:15px;"></i>
-        New Case
-      </button>
     </div>
   </div>
 
-  <!-- CONTENT -->
   <div class="content">
 
-    <!-- ═══ DASHBOARD PAGE ═══ -->
-    <div id="page-dashboard">
-      <!-- Stats -->
-      <div class="stats-grid" id="stats-grid">
+    <!-- DASHBOARD -->
+    <div id="page-dashboard" class="page-anim">
+      <div class="stats-grid">
         <div class="stat">
-          <div class="stat-header">
-            <div class="stat-icon orange"><i data-lucide="folder-open" style="width:18px;height:18px;"></i></div>
-            <span class="stat-trend up" id="stat-today-trend">Today</span>
-          </div>
-          <div class="stat-value" id="stat-today">—</div>
-          <div class="stat-label">Cases Today</div>
+          <div class="stat-header"><div class="stat-icon orange"><i data-lucide="folder-open" style="width:18px;height:18px;"></i></div><span class="stat-trend neutral">Today</span></div>
+          <div class="stat-value" id="stat-today">—</div><div class="stat-label">Cases Today</div>
         </div>
         <div class="stat">
-          <div class="stat-header">
-            <div class="stat-icon blue"><i data-lucide="calendar-days" style="width:18px;height:18px;"></i></div>
-            <span class="stat-trend up" style="opacity:0;">W</span>
-          </div>
-          <div class="stat-value" id="stat-week">—</div>
-          <div class="stat-label">Cases This Week</div>
+          <div class="stat-header"><div class="stat-icon blue"><i data-lucide="calendar-days" style="width:18px;height:18px;"></i></div><span class="stat-trend neutral">Week</span></div>
+          <div class="stat-value" id="stat-week">—</div><div class="stat-label">Cases This Week</div>
         </div>
         <div class="stat">
-          <div class="stat-header">
-            <div class="stat-icon green"><i data-lucide="check-circle-2" style="width:18px;height:18px;"></i></div>
-            <span class="stat-trend up" style="opacity:0;">W</span>
-          </div>
-          <div class="stat-value" id="stat-resolved">—</div>
-          <div class="stat-label">Resolved (week)</div>
+          <div class="stat-header"><div class="stat-icon green"><i data-lucide="check-circle-2" style="width:18px;height:18px;"></i></div><span class="stat-trend up" id="stat-resolved-pct">—%</span></div>
+          <div class="stat-value" id="stat-resolved">—</div><div class="stat-label">Resolved (week)</div>
         </div>
         <div class="stat">
-          <div class="stat-header">
-            <div class="stat-icon yellow"><i data-lucide="database" style="width:18px;height:18px;"></i></div>
-            <span class="stat-trend up" style="opacity:0;">W</span>
-          </div>
-          <div class="stat-value" id="stat-total">—</div>
-          <div class="stat-label">Total Cases</div>
+          <div class="stat-header"><div class="stat-icon yellow"><i data-lucide="database" style="width:18px;height:18px;"></i></div><span class="stat-trend neutral">All</span></div>
+          <div class="stat-value" id="stat-total">—</div><div class="stat-label">Total Cases</div>
         </div>
       </div>
-
-      <!-- Recent + Leaderboard preview -->
       <div class="grid-3">
-        <!-- Recent Cases -->
         <div class="card">
           <div class="card-header">
-            <div>
-              <div class="card-title">Recent Cases</div>
-              <div class="card-sub">Last 10 across all agents</div>
-            </div>
-            <button class="filter-btn" onclick="showPage('cases', document.querySelector('.nav-item:nth-child(3)'))">
+            <div><div class="card-title">Recent Cases</div><div class="card-sub">Last 10 across all agents</div></div>
+            <button class="filter-btn" onclick="showPage('cases',document.querySelectorAll('.nav-item')[1])">
               <i data-lucide="arrow-right" style="width:13px;height:13px;"></i> View all
             </button>
           </div>
           <div class="table-wrap">
             <table>
-              <thead><tr>
-                <th>Driver</th>
-                <th>Status</th>
-                <th>Agent</th>
-                <th>Opened</th>
-              </tr></thead>
-              <tbody id="recent-cases-tbody">
-                <tr><td colspan="4" class="empty"><div style="padding:2rem;text-align:center;color:var(--text-muted);">Loading…</div></td></tr>
-              </tbody>
+              <thead><tr><th>Driver</th><th>Status</th><th>Agent</th><th>Opened</th></tr></thead>
+              <tbody id="recent-cases-tbody"><tr><td colspan="4"><div class="empty"><div class="spin"></div></div></td></tr></tbody>
             </table>
           </div>
         </div>
-
-        <!-- Leaderboard preview -->
         <div class="card">
-          <div class="card-header">
-            <div>
-              <div class="card-title">Top Agents</div>
-              <div class="card-sub">This week</div>
-            </div>
-          </div>
+          <div class="card-header"><div><div class="card-title">Top Agents</div><div class="card-sub">This week</div></div></div>
           <div id="lb-preview"></div>
         </div>
       </div>
     </div>
 
-    <!-- ═══ CASES PAGE ═══ -->
-    <div id="page-cases" style="display:none;">
+    <!-- CASES -->
+    <div id="page-cases" style="display:none;" class="page-anim">
       <div class="card">
+        <div class="export-bar">
+          <span class="export-label"><i data-lucide="download" style="width:12px;height:12px;display:inline-block;margin-right:3px;vertical-align:middle;"></i>Export:</span>
+          <button class="btn-outline" onclick="exportCases('csv')"><i data-lucide="file-text" style="width:13px;height:13px;"></i> CSV</button>
+          <button class="btn-outline" onclick="exportCases('excel')"><i data-lucide="table" style="width:13px;height:13px;"></i> Excel</button>
+        </div>
         <div class="toolbar">
           <div class="search-wrap">
             <i data-lucide="search" class="search-icon" style="width:14px;height:14px;"></i>
-            <input type="text" id="case-search" placeholder="Search driver, agent, ID…" oninput="debouncedLoad()">
+            <input type="text" id="case-search" placeholder="Search driver, agent, ID, group…" oninput="debouncedLoad()">
           </div>
-          <button class="filter-btn" id="filter-all" onclick="setFilter('all',this)">All</button>
-          <button class="filter-btn" id="filter-open" onclick="setFilter('open',this)">
-            <i data-lucide="circle" style="width:11px;height:11px;"></i> Open
-          </button>
-          <button class="filter-btn" id="filter-pending" onclick="setFilter('pending',this)">
-            <i data-lucide="clock" style="width:11px;height:11px;"></i> Pending
-          </button>
-          <button class="filter-btn" id="filter-done" onclick="setFilter('done',this)">
-            <i data-lucide="check-circle" style="width:11px;height:11px;"></i> Done
-          </button>
-          <button class="btn-accent" onclick="openCreateDrawer()">
-            <i data-lucide="plus" style="width:14px;height:14px;"></i> New Case
-          </button>
+          <input type="date" class="date-input" id="case-date-from" title="From date" onchange="loadCases(1)">
+          <input type="date" class="date-input" id="case-date-to" title="To date" onchange="loadCases(1)">
+          <button class="filter-btn active" id="filter-all" onclick="setFilter('all',this)">All</button>
+          <button class="filter-btn" id="filter-open" onclick="setFilter('open',this)"><i data-lucide="circle" style="width:10px;height:10px;"></i> Open</button>
+          <button class="filter-btn" id="filter-pending" onclick="setFilter('pending',this)"><i data-lucide="clock" style="width:10px;height:10px;"></i> Pending</button>
+          <button class="filter-btn" id="filter-done" onclick="setFilter('done',this)"><i data-lucide="check-circle" style="width:10px;height:10px;"></i> Done</button>
+          <button class="filter-btn" onclick="clearFilters()"><i data-lucide="x" style="width:10px;height:10px;"></i> Clear</button>
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr>
-              <th>Case ID</th>
-              <th>Driver</th>
-              <th>Group</th>
-              <th>Status</th>
-              <th>Agent</th>
-              <th>Opened</th>
-            </tr></thead>
-            <tbody id="cases-tbody">
-              <tr><td colspan="6" style="padding:3rem;text-align:center;color:var(--text-muted);">Loading…</td></tr>
-            </tbody>
+            <thead><tr><th>Case ID</th><th>Driver</th><th>Group</th><th>Status</th><th>Agent</th><th>Opened</th></tr></thead>
+            <tbody id="cases-tbody"><tr><td colspan="6"><div class="empty"><div class="spin"></div></div></td></tr></tbody>
           </table>
         </div>
         <div class="pagination">
@@ -807,463 +417,585 @@
       </div>
     </div>
 
-    <!-- ═══ TEAM PAGE ═══ -->
-    <div id="page-team" style="display:none;">
+    <!-- MY PERFORMANCE -->
+    <div id="page-my-performance" style="display:none;" class="page-anim">
+      <div class="perf-header">
+        <div class="perf-name" id="perf-name">—</div>
+        <div class="perf-role" id="perf-role">—</div>
+        <div class="perf-stats">
+          <div class="perf-stat"><div class="perf-stat-val" id="perf-total">—</div><div class="perf-stat-label">Total Cases</div></div>
+          <div class="perf-stat"><div class="perf-stat-val" id="perf-resolved">—</div><div class="perf-stat-label">Resolved</div></div>
+          <div class="perf-stat"><div class="perf-stat-val" id="perf-open">—</div><div class="perf-stat-label">Open / Pending</div></div>
+          <div class="perf-stat"><div class="perf-stat-val" id="perf-rate">—%</div><div class="perf-stat-label">Resolution Rate</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="toolbar">
+          <div class="search-wrap">
+            <i data-lucide="search" class="search-icon" style="width:14px;height:14px;"></i>
+            <input type="text" id="perf-search" placeholder="Search your cases…" oninput="debouncedLoadPerf()">
+          </div>
+          <input type="date" class="date-input" id="perf-date-from" title="From date" onchange="loadMyPerf(1)">
+          <input type="date" class="date-input" id="perf-date-to" title="To date" onchange="loadMyPerf(1)">
+          <button class="filter-btn active" id="pfilter-all" onclick="setPerfFilter('all',this)">All</button>
+          <button class="filter-btn" id="pfilter-open" onclick="setPerfFilter('open',this)">Open</button>
+          <button class="filter-btn" id="pfilter-pending" onclick="setPerfFilter('pending',this)">Pending</button>
+          <button class="filter-btn" id="pfilter-done" onclick="setPerfFilter('done',this)">Done</button>
+        </div>
+        <div id="perf-cases-list"><div class="empty"><div class="spin"></div></div></div>
+        <div class="pagination">
+          <div class="pagination-info" id="perf-info">—</div>
+          <div class="pagination-btns" id="perf-pages"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div id="page-analytics" style="display:none;" class="page-anim">
+      <div class="summary-cards">
+        <div class="summary-card">
+          <div class="stat-icon orange"><i data-lucide="folder-open" style="width:18px;height:18px;"></i></div>
+          <div><div class="stat-value" id="an-total" style="font-size:1.5rem;">—</div><div class="stat-label">Cases (30 days)</div></div>
+        </div>
+        <div class="summary-card">
+          <div class="stat-icon blue"><i data-lucide="clock" style="width:18px;height:18px;"></i></div>
+          <div><div class="stat-value" id="an-avg-res" style="font-size:1.5rem;">—</div><div class="stat-label">Avg. Resolution (min)</div></div>
+        </div>
+        <div class="summary-card">
+          <div class="stat-icon purple"><i data-lucide="image" style="width:18px;height:18px;"></i></div>
+          <div><div class="stat-value" id="an-pics" style="font-size:1.5rem;">—</div><div class="stat-label">Cases with Attachments</div></div>
+        </div>
+      </div>
+      <div class="analytics-grid">
+        <div class="chart-card"><div class="card-header"><div class="card-title">Status Breakdown</div></div><div class="chart-body"><canvas id="chart-status"></canvas></div></div>
+        <div class="chart-card"><div class="card-header"><div class="card-title">Cases by Agent</div></div><div class="chart-body"><canvas id="chart-agent"></canvas></div></div>
+        <div class="chart-card"><div class="card-header"><div class="card-title">Cases by Group</div></div><div class="chart-body"><canvas id="chart-group"></canvas></div></div>
+      </div>
       <div class="card">
         <div class="card-header">
-          <div>
-            <div class="card-title">Team Members</div>
-            <div class="card-sub">All registered agents and managers</div>
+          <div><div class="card-title">Agent Leaderboard (30 days)</div><div class="card-sub">Full performance breakdown</div></div>
+          <div style="display:flex;gap:.5rem;">
+            <button class="btn-outline" onclick="exportCases('csv')"><i data-lucide="download" style="width:13px;height:13px;"></i> CSV</button>
+            <button class="btn-outline" onclick="exportCases('excel')"><i data-lucide="download" style="width:13px;height:13px;"></i> Excel</button>
           </div>
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr>
-              <th>Name</th>
-              <th>Username</th>
-              <th>Role</th>
-              <th>Cases</th>
-              <th>Resolved</th>
-            </tr></thead>
-            <tbody id="team-tbody">
-              <tr><td colspan="5" style="padding:3rem;text-align:center;color:var(--text-muted);">Loading…</td></tr>
-            </tbody>
+            <thead><tr><th>#</th><th>Agent</th><th>Total</th><th>Resolved</th><th>Avg. Resolution</th><th>Rate</th></tr></thead>
+            <tbody id="analytics-lb-tbody"><tr><td colspan="6"><div class="empty"><div class="spin"></div></div></td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- ═══ LEADERBOARD PAGE ═══ -->
-    <div id="page-leaderboard" style="display:none;">
-      <div class="card" style="max-width:600px;">
+    <!-- TEAM -->
+    <div id="page-team" style="display:none;" class="page-anim">
+      <div class="card">
+        <div class="card-header"><div><div class="card-title">Team Members</div><div class="card-sub">All registered agents and managers</div></div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Cases</th><th>Resolved</th></tr></thead>
+            <tbody id="team-tbody"><tr><td colspan="5"><div class="empty"><div class="spin"></div></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div id="page-leaderboard" style="display:none;" class="page-anim">
+      <div class="card" style="max-width:640px;">
         <div class="card-header">
-          <div>
-            <div class="card-title">Weekly Leaderboard</div>
-            <div class="card-sub">Agent performance this week</div>
-          </div>
+          <div><div class="card-title">Weekly Leaderboard</div><div class="card-sub">Agent performance this week</div></div>
           <i data-lucide="trophy" style="width:20px;height:20px;color:var(--warning);"></i>
         </div>
         <div id="lb-full"></div>
       </div>
     </div>
 
-  </div><!-- /content -->
-</div><!-- /main -->
+  </div>
+</div>
 
-<!-- ═══ OVERLAYS ════════════════════════════════════════════ -->
+<!-- OVERLAYS -->
 <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="case-drawer">
   <div class="drawer-header">
     <div class="drawer-title" id="drawer-title">Case Details</div>
-    <button class="drawer-close" onclick="closeDrawer()">
-      <i data-lucide="x" style="width:14px;height:14px;"></i>
-    </button>
+    <button class="drawer-close" onclick="closeDrawer()"><i data-lucide="x" style="width:14px;height:14px;"></i></button>
   </div>
   <div class="drawer-body" id="drawer-body"></div>
 </div>
 
-<div class="overlay" id="create-overlay" onclick="closeCreateDrawer()"></div>
-<div class="drawer" id="create-drawer">
-  <div class="drawer-header">
-    <div class="drawer-title">New Case</div>
-    <button class="drawer-close" onclick="closeCreateDrawer()">
-      <i data-lucide="x" style="width:14px;height:14px;"></i>
-    </button>
-  </div>
-  <div class="drawer-body">
-    <div class="form-field">
-      <label class="form-label">Driver Name</label>
-      <input type="text" class="form-input" id="new-driver" placeholder="Full driver name">
-    </div>
-    <div class="form-field">
-      <label class="form-label">Telegram Username</label>
-      <input type="text" class="form-input" id="new-username" placeholder="@username">
-    </div>
-    <div class="form-field">
-      <label class="form-label">Group / Fleet</label>
-      <input type="text" class="form-input" id="new-group" placeholder="Fleet or group name">
-    </div>
-    <div class="form-field">
-      <label class="form-label">Description</label>
-      <textarea class="form-input" id="new-desc" placeholder="Describe the issue…" rows="4"></textarea>
-    </div>
-    <button class="btn-accent" onclick="createCase()" style="width:100%;justify-content:center;padding:0.8rem;">
-      <i data-lucide="plus" style="width:15px;height:15px;"></i>
-      Create Case
-    </button>
-  </div>
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()"><i data-lucide="x" style="width:16px;height:16px;"></i></button>
+  <img id="lightbox-img" src="" alt="attachment">
 </div>
 
 <script>
 lucide.createIcons();
 
-// ─── Theme ────────────────────────────────────────────────
-function toggleTheme() {
-  const html = document.documentElement;
-  const isDark = html.dataset.theme === 'dark';
-  html.dataset.theme = isDark ? 'light' : 'dark';
-  localStorage.setItem('kurtex-theme', html.dataset.theme);
-  document.getElementById('themeIcon').setAttribute('data-lucide', isDark ? 'moon' : 'sun');
+// ─── Theme ───────────────────────────────────────────────
+function toggleTheme(){
+  const html=document.documentElement,isDark=html.dataset.theme==='dark';
+  html.dataset.theme=isDark?'light':'dark';
+  localStorage.setItem('kurtex-theme',html.dataset.theme);
+  document.getElementById('themeIcon').setAttribute('data-lucide',isDark?'moon':'sun');
   lucide.createIcons();
+  if(document.getElementById('page-analytics').style.display!=='none')loadAnalytics();
 }
 (function(){
-  const s = localStorage.getItem('kurtex-theme');
-  if (s) {
-    document.documentElement.dataset.theme = s;
-    if (s === 'dark') { document.getElementById('themeIcon').setAttribute('data-lucide','sun'); lucide.createIcons(); }
-  }
+  const s=localStorage.getItem('kurtex-theme');
+  if(s){document.documentElement.dataset.theme=s;if(s==='dark'){document.getElementById('themeIcon').setAttribute('data-lucide','sun');lucide.createIcons();}}
 })();
 
-// ─── Mobile sidebar ───────────────────────────────────────
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('sidebarMask').classList.toggle('open');
-}
-function closeSidebar() {
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('sidebarMask').classList.remove('open');
-}
+// ─── Sidebar ─────────────────────────────────────────────
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sidebarMask').classList.toggle('open');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarMask').classList.remove('open');}
+if(window.innerWidth<=768)document.getElementById('menuBtn').style.display='flex';
+window.addEventListener('resize',()=>{document.getElementById('menuBtn').style.display=window.innerWidth<=768?'flex':'none';});
 
-// Show menu btn on small screens
-if (window.innerWidth <= 768) {
-  document.getElementById('menuBtn').style.display = 'flex';
-}
-window.addEventListener('resize', () => {
-  document.getElementById('menuBtn').style.display = window.innerWidth <= 768 ? 'flex' : 'none';
-});
-
-// ─── Page navigation ──────────────────────────────────────
-const PAGE_TITLES = {
-  dashboard: ['Dashboard', 'Welcome back'],
-  cases: ['Cases', 'Manage and track all cases'],
-  team: ['Team Members', 'All registered users'],
-  leaderboard: ['Leaderboard', 'Weekly agent performance'],
+// ─── Navigation ───────────────────────────────────────────
+const ALL_PAGES=['dashboard','cases','my-performance','analytics','team','leaderboard'];
+const PAGE_TITLES={
+  dashboard:['Dashboard','Welcome back'],
+  cases:['Cases','View and search all cases'],
+  'my-performance':['My Performance','Your cases, notes and attachments'],
+  analytics:['Analytics','Statistics for managers & team leaders'],
+  team:['Team Members','All registered users'],
+  leaderboard:['Leaderboard','Weekly agent performance'],
 };
 
-function showPage(name, navBtn) {
-  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-  if (navBtn) navBtn.classList.add('active');
-  ['dashboard','cases','team','leaderboard'].forEach(p => {
-    document.getElementById('page-'+p).style.display = p===name ? 'contents' : 'none';
+function showPage(name,navBtn){
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  if(navBtn)navBtn.classList.add('active');
+  ALL_PAGES.forEach(p=>{
+    const el=document.getElementById('page-'+p);
+    if(el)el.style.display=p===name?'':'none';
   });
-  document.getElementById('page-'+name).style.display = '';
-  const [title, sub] = PAGE_TITLES[name] || [name, ''];
-  document.getElementById('topbarTitle').textContent = title;
-  document.getElementById('topbarSub').textContent = sub;
+  const [title,sub]=PAGE_TITLES[name]||[name,''];
+  document.getElementById('topbarTitle').textContent=title;
+  document.getElementById('topbarSub').textContent=sub;
   closeSidebar();
-  if (name === 'cases') loadCases(1);
-  if (name === 'team') loadTeam();
-  if (name === 'leaderboard') loadLeaderboard();
+  if(name==='cases')loadCases(1);
+  if(name==='team')loadTeam();
+  if(name==='leaderboard')loadLeaderboard();
+  if(name==='analytics')loadAnalytics();
+  if(name==='my-performance')loadMyPerf(1);
 }
 
 // ─── State ────────────────────────────────────────────────
-const state = { page: 1, perPage: 25, status: 'all', search: '' };
+const state={page:1,perPage:25,status:'all',search:''};
+const perfState={page:1,perPage:20,status:'all',search:''};
+let currentUser=null;
 
-// ─── Helpers ──────────────────────────────────────────────
-function fmtDate(iso) {
-  if (!iso) return '—';
-  const d = new Date(iso);
-  return d.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'2-digit', hour:'2-digit', minute:'2-digit' });
+// ─── Helpers ─────────────────────────────────────────────
+function fmtDate(iso){if(!iso)return'—';const d=new Date(iso);return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit',hour:'2-digit',minute:'2-digit'});}
+function fmtDateShort(iso){if(!iso)return'—';const d=new Date(iso);return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});}
+
+function statusBadge(s){
+  const map={open:'badge-open',pending:'badge-pending',done:'badge-done',closed:'badge-closed'};
+  const icons={open:'circle',pending:'clock',done:'check-circle',closed:'x-circle'};
+  return`<span class="badge ${map[s]||'badge-closed'}"><i data-lucide="${icons[s]||'circle'}" style="width:10px;height:10px;"></i>${s||'—'}</span>`;
 }
 
-function statusBadge(s) {
-  const map = {
-    open: 'badge-open', pending: 'badge-pending', done: 'badge-done', closed: 'badge-closed'
-  };
-  const icons = { open: 'circle', pending: 'clock', done: 'check-circle', closed: 'x-circle' };
-  const cls = map[s] || 'badge-closed';
-  return `<span class="badge ${cls}"><i data-lucide="${icons[s]||'circle'}" style="width:10px;height:10px;"></i>${s||'—'}</span>`;
+function roleBadge(role,roleLabels){
+  const map={developer:'badge-role-dev',super_admin:'badge-role-dev',manager:'badge-role-mgr',team_leader:'badge-role-tl',agent:'badge-role-agt'};
+  const label=roleLabels?.[role]||role||'—';
+  return`<span class="badge ${map[role]||'badge-role-agt'}">${label}</span>`;
 }
 
-function roleBadge(role, roleLabels) {
-  const map = { developer:'badge-role-dev', super_admin:'badge-role-dev', manager:'badge-role-mgr', team_leader:'badge-role-tl', agent:'badge-role-agt' };
-  const label = roleLabels?.[role] || role || '—';
-  return `<span class="badge ${map[role]||'badge-role-agt'}">${label}</span>`;
+function extractImageUrls(text){
+  if(!text)return[];
+  const regex=/https?:\/\/[^\s"'<>]+\.(?:jpg|jpeg|png|gif|webp|bmp)(?:\?[^\s"'<>]*)?/gi;
+  return[...new Set(text.match(regex)||[])];
+}
+
+function renderPagination(prefix,total,page,perPage,fn){
+  const totalPages=Math.ceil(total/perPage);
+  const from=(page-1)*perPage+1,to=Math.min(page*perPage,total);
+  document.getElementById(prefix+'-info').textContent=`${from}–${to} of ${total}`;
+  const el=document.getElementById(prefix+'-pages');
+  let h=`<button class="pg-btn" onclick="${fn}(${page-1})" ${page<=1?'disabled':''}><i data-lucide="chevron-left" style="width:13px;height:13px;"></i></button>`;
+  for(let i=Math.max(1,page-2);i<=Math.min(totalPages,page+2);i++){h+=`<button class="pg-btn ${i===page?'active':''}" onclick="${fn}(${i})">${i}</button>`;}
+  h+=`<button class="pg-btn" onclick="${fn}(${page+1})" ${page>=totalPages?'disabled':''}><i data-lucide="chevron-right" style="width:13px;height:13px;"></i></button>`;
+  el.innerHTML=h;lucide.createIcons();
 }
 
 // ─── Load user ────────────────────────────────────────────
-async function loadMe() {
-  try {
-    const d = await fetch('/api/me').then(r=>r.json());
-    document.getElementById('user-name-el').textContent = d.name || 'User';
-    document.getElementById('user-role-el').textContent = d.role_label || d.role || 'Agent';
-    document.getElementById('user-avatar').textContent = (d.name||'?')[0].toUpperCase();
-    document.getElementById('topbarSub').textContent = `Welcome back, ${d.name||''}`;
-    const isAdmin = ['developer','super_admin','manager','team_leader'].includes(d.role);
-    if (isAdmin) {
-      document.getElementById('admin-section').style.display = '';
-      document.getElementById('team-nav').style.display = '';
-      document.getElementById('lb-nav').style.display = '';
+async function loadMe(){
+  try{
+    const d=await fetch('/api/me').then(r=>r.json());
+    currentUser=d;
+    document.getElementById('user-name-el').textContent=d.name||'User';
+    document.getElementById('user-role-el').textContent=d.role_label||d.role||'Agent';
+    document.getElementById('user-avatar').textContent=(d.name||'?')[0].toUpperCase();
+    document.getElementById('topbarSub').textContent=`Welcome back, ${d.name||''}`;
+    const isAdmin=['developer','super_admin','manager','team_leader'].includes(d.role);
+    if(isAdmin){
+      document.getElementById('admin-section').style.display='';
+      document.getElementById('team-section').style.display='';
+      document.getElementById('analytics-nav').style.display='';
+      document.getElementById('team-nav').style.display='';
+      document.getElementById('lb-nav').style.display='';
     }
-  } catch(e) {}
+  }catch(e){}
 }
 
-// ─── Load stats ───────────────────────────────────────────
-async function loadStats() {
-  try {
-    const d = await fetch('/api/stats').then(r=>r.json());
-    document.getElementById('stat-today').textContent = d.today?.total ?? 0;
-    document.getElementById('stat-week').textContent = d.week?.total ?? 0;
-    document.getElementById('stat-resolved').textContent = d.week?.done ?? 0;
-    document.getElementById('stat-total').textContent = d.all?.total ?? 0;
-    renderLbPreview(d.leaderboard || []);
+// ─── Stats ────────────────────────────────────────────────
+async function loadStats(){
+  try{
+    const d=await fetch('/api/stats').then(r=>r.json());
+    document.getElementById('stat-today').textContent=d.today?.total??0;
+    document.getElementById('stat-week').textContent=d.week?.total??0;
+    document.getElementById('stat-resolved').textContent=d.week?.done??0;
+    document.getElementById('stat-total').textContent=d.all?.total??0;
+    const t=d.week?.total||0,r=d.week?.done||0;
+    document.getElementById('stat-resolved-pct').textContent=(t?Math.round(r/t*100):0)+'%';
+    renderLbPreview(d.leaderboard||[]);
     lucide.createIcons();
-  } catch(e) {}
+  }catch(e){}
 }
 
-// ─── Recent cases ─────────────────────────────────────────
-async function loadRecentCases() {
-  try {
-    const d = await fetch('/api/cases?per_page=10').then(r=>r.json());
-    const tbody = document.getElementById('recent-cases-tbody');
-    if (!d.cases?.length) {
-      tbody.innerHTML = '<tr><td colspan="4" style="padding:2rem;text-align:center;color:var(--text-muted);">No cases yet</td></tr>';
-      return;
-    }
-    tbody.innerHTML = d.cases.map(c => `
+// ─── Recent Cases ─────────────────────────────────────────
+async function loadRecentCases(){
+  try{
+    const d=await fetch('/api/cases?per_page=10').then(r=>r.json());
+    const tbody=document.getElementById('recent-cases-tbody');
+    if(!d.cases?.length){tbody.innerHTML='<tr><td colspan="4"><div class="empty"><div class="empty-desc">No cases yet</div></div></td></tr>';return;}
+    tbody.innerHTML=d.cases.map(c=>`
       <tr onclick="openCaseDrawer('${c.id}')">
-        <td><div class="td-main">${c.driver_name||'—'}</div><div class="td-sub">@${c.driver_username||'?'}</div></td>
-        <td>${statusBadge(c.status)}</td>
-        <td><div style="font-size:0.82rem;font-weight:600;">${c.agent_name||'—'}</div></td>
-        <td><div style="font-size:0.78rem;color:var(--text-muted);font-family:'Geist Mono',monospace;">${fmtDate(c.opened_at)}</div></td>
-      </tr>
-    `).join('');
+        <td data-label="Driver"><div class="td-main">${c.driver_name||'—'}</div><div class="td-sub">@${c.driver_username||'?'}</div></td>
+        <td data-label="Status">${statusBadge(c.status)}</td>
+        <td data-label="Agent"><div style="font-size:.82rem;font-weight:600;">${c.agent_name||'—'}</div></td>
+        <td data-label="Opened"><div style="font-size:.78rem;color:var(--text-muted);font-family:var(--mono);">${fmtDate(c.opened_at)}</div></td>
+      </tr>`).join('');
     lucide.createIcons();
-  } catch(e) {}
+  }catch(e){}
 }
 
-// ─── Leaderboard preview ─────────────────────────────────
-function renderLbPreview(lb) {
-  const el = document.getElementById('lb-preview');
-  if (!lb.length) { el.innerHTML = '<div class="empty"><div class="empty-desc">No data yet</div></div>'; return; }
-  const rankCls = ['gold','silver','bronze'];
-  el.innerHTML = lb.slice(0,5).map((a,i) => `
+function renderLbPreview(lb){
+  const el=document.getElementById('lb-preview');
+  if(!lb.length){el.innerHTML='<div class="empty"><div class="empty-desc">No data yet</div></div>';return;}
+  const rc=['gold','silver','bronze'];
+  el.innerHTML=lb.slice(0,5).map((a,i)=>`
     <div class="lb-row">
-      <div class="lb-rank ${rankCls[i]||''}">${i+1}</div>
+      <div class="lb-rank ${rc[i]||''}">${i+1}</div>
       <div class="lb-name">${a.name}</div>
       <div class="lb-cases">${a.cases} cases</div>
       <div class="lb-resolved">✓ ${a.resolved}</div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
 // ─── Cases ────────────────────────────────────────────────
 let searchTimeout;
-function debouncedLoad() {
-  clearTimeout(searchTimeout);
-  searchTimeout = setTimeout(() => loadCases(1), 350);
-}
+function debouncedLoad(){clearTimeout(searchTimeout);searchTimeout=setTimeout(()=>loadCases(1),350);}
 
-function setFilter(s, btn) {
-  state.status = s;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+function setFilter(s,btn){
+  state.status=s;
+  document.querySelectorAll('#page-cases .filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   loadCases(1);
 }
 
-async function loadCases(page) {
-  state.page = page;
-  state.search = document.getElementById('case-search')?.value.trim() || '';
-  const params = new URLSearchParams({
-    page, per_page: state.perPage,
-    status: state.status === 'all' ? '' : state.status,
-    q: state.search,
-  });
-  const tbody = document.getElementById('cases-tbody');
-  tbody.innerHTML = '<tr><td colspan="6" style="padding:3rem;text-align:center;"><div class="spin" style="margin:auto;"></div></td></tr>';
-  try {
-    const d = await fetch('/api/cases?'+params).then(r=>r.json());
-    document.getElementById('nav-badge').textContent = d.total ?? 0;
-    if (!d.cases?.length) {
-      tbody.innerHTML = `<tr><td colspan="6"><div class="empty">
-        <i data-lucide="folder-open" style="width:40px;height:40px;"></i>
-        <div class="empty-title">No cases found</div>
-        <div class="empty-desc">Try adjusting your filters</div>
-      </div></td></tr>`;
-      document.getElementById('cases-info').textContent = '0 cases';
-      document.getElementById('cases-pages').innerHTML = '';
-      lucide.createIcons(); return;
+function clearFilters(){
+  document.getElementById('case-search').value='';
+  document.getElementById('case-date-from').value='';
+  document.getElementById('case-date-to').value='';
+  state.status='all';
+  document.querySelectorAll('#page-cases .filter-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('filter-all').classList.add('active');
+  loadCases(1);
+}
+
+async function loadCases(page){
+  state.page=page;
+  state.search=document.getElementById('case-search')?.value.trim()||'';
+  const df=document.getElementById('case-date-from')?.value||'';
+  const dt=document.getElementById('case-date-to')?.value||'';
+  const params=new URLSearchParams({page,per_page:state.perPage,status:state.status==='all'?'':state.status,q:state.search});
+  if(df)params.set('date_from',df);
+  if(dt)params.set('date_to',dt);
+  const tbody=document.getElementById('cases-tbody');
+  tbody.innerHTML='<tr><td colspan="6"><div class="empty"><div class="spin"></div></div></td></tr>';
+  try{
+    const d=await fetch('/api/cases?'+params).then(r=>r.json());
+    document.getElementById('nav-badge').textContent=d.total??0;
+    if(!d.cases?.length){
+      tbody.innerHTML=`<tr><td colspan="6"><div class="empty"><i data-lucide="folder-open" style="width:38px;height:38px;"></i><div class="empty-title">No cases found</div><div class="empty-desc">Try adjusting your filters</div></div></td></tr>`;
+      document.getElementById('cases-info').textContent='0 cases';
+      document.getElementById('cases-pages').innerHTML='';
+      lucide.createIcons();return;
     }
-    tbody.innerHTML = d.cases.map(c => `
+    tbody.innerHTML=d.cases.map(c=>`
       <tr onclick="openCaseDrawer('${c.id}')">
-        <td><div style="font-family:'Geist Mono',monospace;font-size:0.78rem;color:var(--text-muted);">${c.id||'—'}</div></td>
-        <td><div class="td-main">${c.driver_name||'—'}</div><div class="td-sub">@${c.driver_username||'?'}</div></td>
-        <td><div style="font-size:0.85rem;">${c.group_name||'—'}</div></td>
-        <td>${statusBadge(c.status)}</td>
-        <td><div style="font-size:0.85rem;font-weight:600;">${c.agent_name||'—'}</div></td>
-        <td><div style="font-size:0.78rem;color:var(--text-muted);font-family:'Geist Mono',monospace;">${fmtDate(c.opened_at)}</div></td>
-      </tr>
-    `).join('');
-
-    const total = d.total;
-    const totalPages = Math.ceil(total / state.perPage);
-    const from = (page-1)*state.perPage+1, to = Math.min(page*state.perPage, total);
-    document.getElementById('cases-info').textContent = `${from}–${to} of ${total} cases`;
-
-    const pagesEl = document.getElementById('cases-pages');
-    let pgHtml = `<button class="pg-btn" onclick="loadCases(${page-1})" ${page<=1?'disabled':''}><i data-lucide="chevron-left" style="width:13px;height:13px;"></i></button>`;
-    for (let i=Math.max(1,page-2); i<=Math.min(totalPages,page+2); i++) {
-      pgHtml += `<button class="pg-btn ${i===page?'active':''}" onclick="loadCases(${i})">${i}</button>`;
-    }
-    pgHtml += `<button class="pg-btn" onclick="loadCases(${page+1})" ${page>=totalPages?'disabled':''}><i data-lucide="chevron-right" style="width:13px;height:13px;"></i></button>`;
-    pagesEl.innerHTML = pgHtml;
+        <td data-label="Case ID"><div style="font-family:var(--mono);font-size:.78rem;color:var(--text-muted);">${c.id||'—'}</div></td>
+        <td data-label="Driver"><div class="td-main">${c.driver_name||'—'}</div><div class="td-sub">@${c.driver_username||'?'}</div></td>
+        <td data-label="Group"><div style="font-size:.85rem;">${c.group_name||'—'}</div></td>
+        <td data-label="Status">${statusBadge(c.status)}</td>
+        <td data-label="Agent"><div style="font-size:.85rem;font-weight:600;">${c.agent_name||'—'}</div></td>
+        <td data-label="Opened"><div style="font-size:.78rem;color:var(--text-muted);font-family:var(--mono);">${fmtDate(c.opened_at)}</div></td>
+      </tr>`).join('');
+    renderPagination('cases',d.total,page,state.perPage,'loadCases');
     lucide.createIcons();
-  } catch(e) {
-    tbody.innerHTML = '<tr><td colspan="6" style="padding:2rem;text-align:center;color:var(--text-muted);">Failed to load cases</td></tr>';
-  }
+  }catch(e){tbody.innerHTML='<tr><td colspan="6" style="padding:2rem;text-align:center;color:var(--text-muted);">Failed to load</td></tr>';}
 }
 
-// ─── Team ─────────────────────────────────────────────────
-async function loadTeam() {
-  const tbody = document.getElementById('team-tbody');
-  tbody.innerHTML = '<tr><td colspan="5" style="padding:3rem;text-align:center;"><div class="spin" style="margin:auto;"></div></td></tr>';
-  try {
-    const d = await fetch('/api/users').then(r=>r.json());
-    if (!d.users?.length) {
-      tbody.innerHTML = '<tr><td colspan="5" style="padding:2rem;text-align:center;color:var(--text-muted);">No users</td></tr>';
-      return;
+// ─── Export ───────────────────────────────────────────────
+function exportCases(fmt){
+  const search=document.getElementById('case-search')?.value.trim()||'';
+  const df=document.getElementById('case-date-from')?.value||'';
+  const dt=document.getElementById('case-date-to')?.value||'';
+  const params=new URLSearchParams({format:fmt});
+  if(state.status!=='all')params.set('status',state.status);
+  if(search)params.set('q',search);
+  if(df)params.set('date_from',df);
+  if(dt)params.set('date_to',dt);
+  window.location='/api/export?'+params;
+}
+
+// ─── My Performance ───────────────────────────────────────
+let perfSearchTimeout;
+function debouncedLoadPerf(){clearTimeout(perfSearchTimeout);perfSearchTimeout=setTimeout(()=>loadMyPerf(1),350);}
+
+function setPerfFilter(s,btn){
+  perfState.status=s;
+  document.querySelectorAll('#page-my-performance .filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  loadMyPerf(1);
+}
+
+async function loadMyPerf(page){
+  perfState.page=page;
+  perfState.search=document.getElementById('perf-search')?.value.trim()||'';
+  const df=document.getElementById('perf-date-from')?.value||'';
+  const dt=document.getElementById('perf-date-to')?.value||'';
+
+  if(currentUser){
+    document.getElementById('perf-name').textContent=currentUser.name||'Me';
+    document.getElementById('perf-role').textContent=currentUser.role_label||currentUser.role||'Agent';
+  }
+
+  const listEl=document.getElementById('perf-cases-list');
+  listEl.innerHTML='<div class="empty"><div class="spin"></div></div>';
+
+  try{
+    // Stats: all my cases
+    const allP=new URLSearchParams({per_page:9999});
+    if(currentUser?.telegram_id)allP.set('agent_id',currentUser.telegram_id);
+    const allData=await fetch('/api/cases?'+allP).then(r=>r.json());
+    const all=allData.cases||[];
+    const tot=all.length,res=all.filter(c=>c.status==='done').length;
+    const op=all.filter(c=>c.status==='open'||c.status==='pending').length;
+    document.getElementById('perf-total').textContent=tot;
+    document.getElementById('perf-resolved').textContent=res;
+    document.getElementById('perf-open').textContent=op;
+    document.getElementById('perf-rate').textContent=(tot?Math.round(res/tot*100):0)+'%';
+
+    // Filtered page
+    const params=new URLSearchParams({page,per_page:perfState.perPage,status:perfState.status==='all'?'':perfState.status,q:perfState.search});
+    if(df)params.set('date_from',df);
+    if(dt)params.set('date_to',dt);
+    if(currentUser?.telegram_id)params.set('agent_id',currentUser.telegram_id);
+    const d=await fetch('/api/cases?'+params).then(r=>r.json());
+
+    if(!d.cases?.length){
+      listEl.innerHTML='<div class="empty"><i data-lucide="folder-open" style="width:38px;height:38px;"></i><div class="empty-title">No cases found</div></div>';
+      document.getElementById('perf-info').textContent='0 cases';
+      document.getElementById('perf-pages').innerHTML='';
+      lucide.createIcons();return;
     }
-    tbody.innerHTML = d.users.map(u => `
+
+    listEl.innerHTML=d.cases.map(c=>{
+      const pics=extractImageUrls((c.notes||'')+' '+(c.description||''));
+      return`
+        <div class="case-row-full" onclick="openCaseDrawer('${c.id}')">
+          <div class="case-row-top">
+            <span class="case-row-id">${c.id||'—'}</span>
+            <span class="case-row-driver">${c.driver_name||'—'}</span>
+            ${statusBadge(c.status)}
+            ${pics.length?`<span class="badge" style="background:var(--purple-bg);color:var(--purple);">
+              <i data-lucide="image" style="width:10px;height:10px;"></i> ${pics.length}
+            </span>`:''}
+          </div>
+          <div class="case-row-meta">
+            <span>Group: ${c.group_name||'—'}</span>
+            <span>Opened: ${fmtDateShort(c.opened_at)}</span>
+            ${c.closed_at?`<span>Closed: ${fmtDateShort(c.closed_at)}</span>`:''}
+          </div>
+          ${c.notes
+            ?`<div class="case-row-note has-note"><strong>Note:</strong> ${c.notes.slice(0,240)}${c.notes.length>240?'…':''}</div>`
+            :'<div class="case-row-note">No resolution note yet</div>'}
+        </div>`;
+    }).join('');
+    renderPagination('perf',d.total,page,perfState.perPage,'loadMyPerf');
+    lucide.createIcons();
+  }catch(e){listEl.innerHTML='<div class="empty"><div class="empty-desc">Failed to load</div></div>';}
+}
+
+// ─── Team ──────────────────────────────────────────────────
+async function loadTeam(){
+  const tbody=document.getElementById('team-tbody');
+  tbody.innerHTML='<tr><td colspan="5"><div class="empty"><div class="spin"></div></div></td></tr>';
+  try{
+    const d=await fetch('/api/users').then(r=>r.json());
+    if(!d.users?.length){tbody.innerHTML='<tr><td colspan="5"><div class="empty"><div class="empty-desc">No users</div></div></td></tr>';return;}
+    tbody.innerHTML=d.users.map(u=>`
       <tr>
-        <td><div class="td-main">${u.name||'—'}</div></td>
-        <td><div style="font-family:'Geist Mono',monospace;font-size:0.82rem;color:var(--text-muted);">@${u.username||'?'}</div></td>
-        <td>${roleBadge(u.role, d.role_labels)}</td>
-        <td><div style="font-weight:700;">${u.case_count??0}</div></td>
-        <td><div style="font-weight:700;color:var(--success);">${u.resolved??0}</div></td>
-      </tr>
-    `).join('');
+        <td data-label="Name"><div class="td-main">${u.name||'—'}</div></td>
+        <td data-label="Username"><div style="font-family:var(--mono);font-size:.82rem;color:var(--text-muted);">@${u.username||'?'}</div></td>
+        <td data-label="Role">${roleBadge(u.role,d.role_labels)}</td>
+        <td data-label="Cases"><div style="font-weight:700;">${u.case_count??0}</div></td>
+        <td data-label="Resolved"><div style="font-weight:700;color:var(--success);">${u.resolved??0}</div></td>
+      </tr>`).join('');
     lucide.createIcons();
-  } catch(e) {
-    tbody.innerHTML = '<tr><td colspan="5" style="padding:2rem;text-align:center;color:var(--text-muted);">Failed to load</td></tr>';
-  }
+  }catch(e){}
 }
 
-// ─── Full Leaderboard ─────────────────────────────────────
-async function loadLeaderboard() {
-  const el = document.getElementById('lb-full');
-  el.innerHTML = '<div style="padding:2rem;text-align:center;"><div class="spin" style="margin:auto;"></div></div>';
-  try {
-    const d = await fetch('/api/stats').then(r=>r.json());
-    const lb = d.leaderboard || [];
-    if (!lb.length) { el.innerHTML = '<div class="empty"><div class="empty-desc">No data yet</div></div>'; return; }
-    const rankCls = ['gold','silver','bronze'];
-    el.innerHTML = lb.map((a,i) => `
+// ─── Leaderboard ─────────────────────────────────────────
+async function loadLeaderboard(){
+  const el=document.getElementById('lb-full');
+  el.innerHTML='<div class="empty"><div class="spin"></div></div>';
+  try{
+    const d=await fetch('/api/stats').then(r=>r.json());
+    const lb=d.leaderboard||[];
+    if(!lb.length){el.innerHTML='<div class="empty"><div class="empty-desc">No data yet</div></div>';return;}
+    const rc=['gold','silver','bronze'];
+    el.innerHTML=lb.map((a,i)=>`
       <div class="lb-row">
-        <div class="lb-rank ${rankCls[i]||''}">${i+1}</div>
+        <div class="lb-rank ${rc[i]||''}">${i+1}</div>
         <div style="flex:1;">
           <div class="lb-name">${a.name}</div>
-          ${a.avg_secs ? `<div style="font-size:0.72rem;color:var(--text-muted);">avg ${Math.round(a.avg_secs/60)}m resolution</div>` : ''}
+          ${a.avg_secs?`<div style="font-size:.72rem;color:var(--text-muted);">avg ${Math.round(a.avg_secs/60)}m resolution</div>`:''}
         </div>
         <div style="text-align:right;">
-          <div style="font-size:0.85rem;font-weight:700;">${a.cases} cases</div>
-          <div style="font-size:0.72rem;color:var(--success);font-weight:700;">✓ ${a.resolved} resolved</div>
+          <div style="font-size:.85rem;font-weight:700;">${a.cases} cases</div>
+          <div style="font-size:.72rem;color:var(--success);font-weight:700;">✓ ${a.resolved} resolved</div>
         </div>
-      </div>
-    `).join('');
-  } catch(e) {}
+      </div>`).join('');
+  }catch(e){}
+}
+
+// ─── Analytics ────────────────────────────────────────────
+let chartInstances={};
+function destroyCharts(){Object.values(chartInstances).forEach(c=>c.destroy());chartInstances={};}
+function getColors(n){const base=['#d14b0e','#1d4ed8','#15803d','#a16207','#7c3aed','#0891b2','#9f1239','#065f46'];return Array.from({length:n},(_,i)=>base[i%base.length]);}
+
+async function loadAnalytics(){
+  try{
+    const d=await fetch('/api/analytics').then(r=>r.json());
+    document.getElementById('an-total').textContent=d.summary?.total_30d??0;
+    document.getElementById('an-avg-res').textContent=d.summary?.avg_resolution_min??0;
+    document.getElementById('an-pics').textContent=d.summary?.cases_with_pics??0;
+    const isDark=document.documentElement.dataset.theme==='dark';
+    const tc=isDark?'#9c9490':'#78716c';
+    const gc=isDark?'#333230':'#e5e0d8';
+    Chart.defaults.color=tc;
+    destroyCharts();
+
+    // Status pie
+    const sd=d.charts?.status_pie||{};
+    if(Object.keys(sd).length){
+      const sColors={open:'#1d4ed8',pending:'#a16207',done:'#15803d',closed:'#78716c'};
+      chartInstances.status=new Chart(document.getElementById('chart-status'),{
+        type:'doughnut',
+        data:{labels:Object.keys(sd),datasets:[{data:Object.values(sd),backgroundColor:Object.keys(sd).map(k=>sColors[k]||'#888'),borderWidth:0,hoverOffset:4}]},
+        options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{position:'bottom',labels:{padding:12,usePointStyle:true,font:{family:"'Plus Jakarta Sans'"}}}}},
+      });
+    }
+    // Agent bar
+    const ad=d.charts?.agent_bar||{};
+    if(Object.keys(ad).length){
+      chartInstances.agent=new Chart(document.getElementById('chart-agent'),{
+        type:'bar',
+        data:{labels:Object.keys(ad),datasets:[{label:'Cases',data:Object.values(ad),backgroundColor:getColors(Object.keys(ad).length),borderRadius:6,borderSkipped:false}]},
+        options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:gc},ticks:{font:{family:"'Plus Jakarta Sans'",size:11}}},y:{grid:{display:false},ticks:{font:{family:"'Plus Jakarta Sans'",size:11}}}}},
+      });
+    }
+    // Group bar
+    const gd=d.charts?.group_bar||{};
+    if(Object.keys(gd).length){
+      chartInstances.group=new Chart(document.getElementById('chart-group'),{
+        type:'bar',
+        data:{labels:Object.keys(gd),datasets:[{label:'Cases',data:Object.values(gd),backgroundColor:getColors(Object.keys(gd).length),borderRadius:6}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{family:"'Plus Jakarta Sans'",size:11}}},y:{grid:{color:gc},ticks:{font:{family:"'Plus Jakarta Sans'",size:11}}}}},
+      });
+    }
+    // LB table
+    const stats=await fetch('/api/stats').then(r=>r.json());
+    const lb=stats.leaderboard||[];
+    const tbody=document.getElementById('analytics-lb-tbody');
+    if(!lb.length){tbody.innerHTML='<tr><td colspan="6"><div class="empty"><div class="empty-desc">No data</div></div></td></tr>';}
+    else{
+      const rc=['gold','silver','bronze'];
+      tbody.innerHTML=lb.map((a,i)=>{
+        const rate=a.cases?Math.round(a.resolved/a.cases*100):0;
+        const avg=a.avg_secs?Math.round(a.avg_secs/60)+'m':'—';
+        return`<tr>
+          <td><div class="lb-rank ${rc[i]||''}" style="margin:0;">${i+1}</div></td>
+          <td><div class="td-main">${a.name}</div></td>
+          <td><div style="font-weight:700;">${a.cases}</div></td>
+          <td><div style="font-weight:700;color:var(--success);">${a.resolved}</div></td>
+          <td><div style="font-family:var(--mono);font-size:.82rem;">${avg}</div></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:.5rem;">
+              <div style="flex:1;height:6px;background:var(--surface3);border-radius:100px;overflow:hidden;min-width:50px;">
+                <div style="width:${rate}%;height:100%;background:var(--success);border-radius:100px;"></div>
+              </div>
+              <span style="font-size:.75rem;font-weight:700;color:var(--success);">${rate}%</span>
+            </div>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+    lucide.createIcons();
+  }catch(e){console.error('Analytics error',e);}
 }
 
 // ─── Case Drawer ──────────────────────────────────────────
-let currentCaseId = '';
-
-async function openCaseDrawer(id) {
-  currentCaseId = id;
-  document.getElementById('drawer-title').textContent = `Case · ${id}`;
-  document.getElementById('drawer-body').innerHTML = '<div style="display:flex;justify-content:center;padding:3rem;"><div class="spin"></div></div>';
+async function openCaseDrawer(id){
+  document.getElementById('drawer-title').textContent='Case · '+id;
+  document.getElementById('drawer-body').innerHTML='<div style="display:flex;justify-content:center;padding:3rem;"><div class="spin"></div></div>';
   document.getElementById('overlay').classList.add('open');
   document.getElementById('case-drawer').classList.add('open');
-  try {
-    const c = await fetch(`/api/cases/${id}`).then(r=>r.json());
-    document.getElementById('drawer-body').innerHTML = `
+  try{
+    const c=await fetch(`/api/cases/${id}`).then(r=>r.json());
+    const pics=extractImageUrls((c.notes||'')+' '+(c.description||''));
+    document.getElementById('drawer-body').innerHTML=`
       <div class="detail-grid">
         <div class="detail-row"><div class="detail-label">Driver</div><div class="detail-val">${c.driver_name||'—'}</div></div>
-        <div class="detail-row"><div class="detail-label">Username</div><div class="detail-val" style="font-family:'Geist Mono',monospace;font-size:0.85rem;">@${c.driver_username||'?'}</div></div>
+        <div class="detail-row"><div class="detail-label">Username</div><div class="detail-val" style="font-family:var(--mono);font-size:.85rem;">@${c.driver_username||'?'}</div></div>
         <div class="detail-row"><div class="detail-label">Group</div><div class="detail-val">${c.group_name||'—'}</div></div>
         <div class="detail-row"><div class="detail-label">Agent</div><div class="detail-val">${c.agent_name||'—'}</div></div>
-        <div class="detail-row"><div class="detail-label">Opened</div><div class="detail-val" style="font-size:0.82rem;font-family:'Geist Mono',monospace;">${fmtDate(c.opened_at)}</div></div>
+        <div class="detail-row"><div class="detail-label">Opened</div><div class="detail-val" style="font-size:.82rem;font-family:var(--mono);">${fmtDate(c.opened_at)}</div></div>
         <div class="detail-row"><div class="detail-label">Status</div><div class="detail-val">${statusBadge(c.status)}</div></div>
+        ${c.closed_at?`<div class="detail-row"><div class="detail-label">Closed</div><div class="detail-val" style="font-size:.82rem;font-family:var(--mono);">${fmtDate(c.closed_at)}</div></div>`:''}
+        ${c.resolution_secs?`<div class="detail-row"><div class="detail-label">Resolution</div><div class="detail-val">${Math.round(c.resolution_secs/60)} min</div></div>`:''}
       </div>
-
-      ${c.description ? `<div class="drawer-section">
-        <div class="drawer-section-title">Description</div>
-        <div style="font-size:0.875rem;line-height:1.6;">${c.description}</div>
-      </div>` : ''}
-
+      ${c.description?`<div class="drawer-section"><div class="drawer-section-title">Description</div><div style="font-size:.875rem;line-height:1.65;">${c.description}</div></div>`:''}
       <div class="drawer-section">
-        <div class="drawer-section-title">Update Status</div>
-        <div style="display:flex;gap:6px;">
-          <button class="status-btn open-btn ${c.status==='open'?'sel':''}" onclick="updateStatus('open')">Open</button>
-          <button class="status-btn pending-btn ${c.status==='pending'?'sel':''}" onclick="updateStatus('pending')">Pending</button>
-          <button class="status-btn done-btn ${c.status==='done'?'sel':''}" onclick="updateStatus('done')">Done</button>
+        <div class="drawer-section-title"><i data-lucide="file-text" style="width:12px;height:12px;display:inline-block;margin-right:3px;vertical-align:middle;"></i>Resolution Note</div>
+        ${c.notes
+          ?`<div style="font-size:.875rem;line-height:1.65;white-space:pre-wrap;">${c.notes}</div>`
+          :`<div style="font-size:.85rem;color:var(--text-muted);">No resolution note yet.</div>`}
+      </div>
+      ${pics.length?`
+      <div class="drawer-section">
+        <div class="drawer-section-title"><i data-lucide="image" style="width:12px;height:12px;display:inline-block;margin-right:3px;vertical-align:middle;"></i>Attachments (${pics.length})</div>
+        <div class="pics-grid">
+          ${pics.map(url=>`<div class="pic-thumb" onclick="event.stopPropagation();openLightbox('${url}')"><img src="${url}" alt="attachment" onerror="this.parentElement.style.display='none'"></div>`).join('')}
         </div>
-      </div>
-
-      <div class="drawer-section">
-        <div class="drawer-section-title">Notes</div>
-        <textarea id="case-notes" placeholder="Add notes…" rows="3">${c.notes||''}</textarea>
-        <button class="btn-accent" onclick="saveNotes()" style="justify-content:center;">
-          <i data-lucide="save" style="width:14px;height:14px;"></i> Save Notes
-        </button>
-      </div>
+      </div>`:''}
     `;
     lucide.createIcons();
-  } catch(e) {
-    document.getElementById('drawer-body').innerHTML = '<div style="padding:2rem;text-align:center;color:var(--text-muted);">Failed to load case</div>';
-  }
+  }catch(e){document.getElementById('drawer-body').innerHTML='<div style="padding:2rem;text-align:center;color:var(--text-muted);">Failed to load case</div>';}
 }
 
-function closeDrawer() {
-  document.getElementById('overlay').classList.remove('open');
-  document.getElementById('case-drawer').classList.remove('open');
-}
+function closeDrawer(){document.getElementById('overlay').classList.remove('open');document.getElementById('case-drawer').classList.remove('open');}
 
-function updateStatus(status) {
-  fetch(`/api/cases/${currentCaseId}`, {
-    method:'PATCH', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({status})
-  }).then(() => {
-    openCaseDrawer(currentCaseId);
-    if (document.getElementById('page-cases').style.display !== 'none') loadCases(state.page);
-    loadStats();
-  });
-}
-
-function saveNotes() {
-  const notes = document.getElementById('case-notes')?.value || '';
-  fetch(`/api/cases/${currentCaseId}`, {
-    method:'PATCH', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({notes})
-  }).then(() => { /* saved */ });
-}
-
-// ─── Create Case ──────────────────────────────────────────
-function openCreateDrawer() {
-  document.getElementById('create-overlay').classList.add('open');
-  document.getElementById('create-drawer').classList.add('open');
-}
-function closeCreateDrawer() {
-  document.getElementById('create-overlay').classList.remove('open');
-  document.getElementById('create-drawer').classList.remove('open');
-}
-
-async function createCase() {
-  const data = {
-    driver_name: document.getElementById('new-driver').value.trim(),
-    driver_username: document.getElementById('new-username').value.trim().replace(/^@/,''),
-    group_name: document.getElementById('new-group').value.trim(),
-    description: document.getElementById('new-desc').value.trim(),
-  };
-  if (!data.driver_name) { alert('Driver name is required'); return; }
-  try {
-    const r = await fetch('/api/cases', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)});
-    if (r.ok) {
-      closeCreateDrawer();
-      ['new-driver','new-username','new-group','new-desc'].forEach(id => document.getElementById(id).value='');
-      loadStats(); loadRecentCases();
-      if (document.getElementById('page-cases').style.display !== 'none') loadCases(state.page);
-    }
-  } catch(e) { alert('Error creating case'); }
-}
+// ─── Lightbox ─────────────────────────────────────────────
+function openLightbox(url){document.getElementById('lightbox-img').src=url;document.getElementById('lightbox').classList.add('open');}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDrawer();closeLightbox();}});
 
 // ─── Init ─────────────────────────────────────────────────
 loadMe();

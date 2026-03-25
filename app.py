@@ -24,13 +24,16 @@ from functools import wraps
 
 from flask import (
     Flask, render_template, request, session,
-    redirect, url_for, jsonify, g
+    redirect, url_for, jsonify, g, Response
 )
+import io
 from pymongo import MongoClient, DESCENDING
 from bson import ObjectId
 import bcrypt
 import secrets
 import time
+import pandas as pd
+from dateutil import parser as date_parser
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -308,7 +311,119 @@ def dashboard():
     return render_template("dashboard.html", user=user,
                            role_labels=ROLE_LABELS, role_colors=ROLE_COLORS)
 
+@app.route("/api/analytics")
+@role_required(*CAN_VIEW_REPORTS)
+def api_analytics():
+    user = get_current_user()
+    role = user.get("role", "agent")
+    
+    # Time periods
+    now = datetime.now(timezone.utc)
+    today = now.date().isoformat()
+    week_start = (now - timedelta(days=now.weekday())).date().isoformat()
+    month_start = (now - timedelta(days=30)).date().isoformat()
+    
+    pipeline = [
+        {"$match": {"opened_at": {"$gte": month_start}}},
+        {"$group": {
+            "_id": None,
+            "total": {"$sum": 1},
+            "by_status": {"$push": "$status"},
+            "by_agent": {"$push": "$agent_name"},
+            "by_group": {"$push": "$group_name"},
+            "resolution_times": {"$push": "$resolution_secs"}
+        }}
+    ]
+    agg = list(cases_col().aggregate(pipeline))
+    data = agg[0] if agg else {"total": 0, "by_status": [], "by_agent": [], "by_group": [], "resolution_times": []}
+    
+    # Charts data
+    status_counts = defaultdict(int)
+    agent_cases = defaultdict(int)
+    group_cases = defaultdict(int)
+    valid_res_times = [t for t in data["resolution_times"] if t]
+    
+    for s in data["by_status"]:
+        status_counts[s or "open"] += 1
+    for a in data["by_agent"]:
+        if a: agent_cases[a] += 1
+    for g in data["by_group"]:
+        if g: group_cases[g] += 1
+    
+    avg_resolution = sum(valid_res_times) / len(valid_res_times) if valid_res_times else 0
+    
+    # Pic count (simple URL parse in notes)
+    pic_cases = 0
+    for case in cases_col().find({"notes": {"$regex": r"(https?://.*\.(jpg|png|gif|webp))", "$options": "i"}}, {"notes": 1}):
+        pic_cases += 1
+    
+    return jsonify({
+        "summary": {
+            "total_30d": data["total"],
+            "avg_resolution_min": round(avg_resolution / 60, 1) if avg_resolution else 0,
+            "cases_with_pics": pic_cases
+        },
+        "charts": {
+            "status_pie": dict(sorted(status_counts.items(), key=lambda x: -x[1])[:6]),
+            "agent_bar": dict(sorted(agent_cases.items(), key=lambda x: -x[1])[:10]),
+            "group_bar": dict(sorted(group_cases.items(), key=lambda x: -x[1])[:6])
+        },
+        "timeseries": {}  # Line chart data (extend if needed)
+    })
+
+@app.route("/api/export")
+@login_required
+def api_export():
+    format = request.args.get("format", "csv").lower()
+    if format not in ["csv", "excel"]:
+        return jsonify({"error": "Format must be csv or excel"}), 400
+    
+    # Reuse cases query logic
+    user = get_current_user()
+    role = user.get("role", "agent")
+    query = {}
+    if role == "agent":
+        query["agent_id"] = user["telegram_id"]
+    
+    status = request.args.get("status")
+    if status and status != "all":
+        query["status"] = status
+    search = request.args.get("q", "").strip()
+    if search:
+        query["$or"] = [
+            {"driver_name": {"$regex": search, "$options": "i"}},
+            {"description": {"$regex": search, "$options": "i"}},
+            {"group_name": {"$regex": search, "$options": "i"}},
+            {"agent_name": {"$regex": search, "$options": "i"}},
+            {"id": {"$regex": search, "$options": "i"}},
+        ]
+    date_from = request.args.get("date_from")
+    if date_from:
+        query.setdefault("opened_at", {})["$gte"] = date_from
+    date_to = request.args.get("date_to")
+    if date_to:
+        query.setdefault("opened_at", {})["$lte"] = date_to + "T23:59:59"
+    
+    cases = list(cases_col().find(query, {"_id": 0}).sort("opened_at", DESCENDING))
+    if not cases:
+        return jsonify({"error": "No cases found for export"}), 404
+    
+    df = pd.DataFrame(cases)
+    
+    if format == "csv":
+        csv_data = df.to_csv(index=False).encode('utf-8')
+        return Response(csv_data, mimetype="text/csv", headers={"Content-Disposition": f"attachment; filename=kurtex-cases-{datetime.now().strftime('%Y%m%d')}.csv"})
+    else:  # excel
+        output = io.BytesIO()
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False, sheet_name='Cases')
+        output.seek(0)
+        return Response(output.read(), mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-Disposition": f"attachment; filename=kurtex-cases-{datetime.now().strftime('%Y%m%d')}.xlsx"})
+
 # ── API: Stats ────────────────────────────────────────────────────────────────
+
+from flask import Response
+import io
 
 @app.route("/api/stats")
 @login_required
@@ -444,45 +559,12 @@ def api_me():
         **(user or {}),
     })
 
-@app.route("/api/cases", methods=["POST"])
-@login_required
-def api_create_case():
-    data = request.json or {}
-    case = {
-        "id": data.get("id") or f"case-{int(datetime.now().timestamp())}",
-        "driver_name": data.get("driver_name", ""),
-        "driver_username": data.get("driver_username", ""),
-        "group_name": data.get("group_name", ""),
-        "description": data.get("description", ""),
-        "status": data.get("status", "open"),
-        "agent_id": session.get("user_id"),
-        "agent_name": session.get("user_name"),
-        "opened_at": datetime.now(timezone.utc).isoformat(),
-        "notes": data.get("notes", "")
-    }
-    cases_col().insert_one(case)
-    return jsonify({"ok": True, "case": strip(case)})
+
 
 @app.route("/api/cases/<case_id>", methods=["PATCH"])
 @login_required
 def api_update_case(case_id):
-    data = request.json or {}
-    user = get_current_user()
-    if user["telegram_id"] != cases_col().find_one({"id": case_id}).get("agent_id"):
-        return jsonify({"error": "Not your case"}), 403
-    
-    update = {"$set": {}}
-    if "status" in data:
-        update["$set"]["status"] = data["status"]
-    if "notes" in data:
-        update["$set"]["notes"] = data["notes"]
-    if "closed_at" in data and data.get("status") == "done":
-        update["$set"]["closed_at"] = datetime.now(timezone.utc).isoformat()
-    
-    result = cases_col().update_one({"id": case_id}, update)
-    if result.modified_count:
-        return jsonify({"ok": True})
-    return jsonify({"error": "Not found"}), 404
+    return jsonify({"error": "Case updates disabled - view-only mode"}), 403
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 5000))
