@@ -39,7 +39,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY", "Kx9#mP2$vL8@nQ4w")
+app.secret_key = os.getenv("SECRET_KEY", "")
 
 # ── MongoDB ───────────────────────────────────────────────────────────────────
 
@@ -50,8 +50,8 @@ def get_db():
     global _client, _db
     if _db is not None:
         return _db
-    uri     = os.getenv("MONGODB_URI", "mongodb://${{MONGO_INITDB_ROOT_USERNAME}}:${{MONGO_INITDB_ROOT_PASSWORD}}@${{RAILWAY_PRIVATE_DOMAIN}}:27017")
-    db_name = os.getenv("MONGODB_DB", "kurtexdb")
+    uri     = os.getenv("MONGODB_URI", "")
+    db_name = os.getenv("MONGODB_DB", "")
     _client = MongoClient(uri, serverSelectionTimeoutMS=8000)
     _db     = _client[db_name]
     return _db
@@ -151,7 +151,7 @@ def role_required(*roles):
 
 @app.route("/login", methods=["GET"])
 def login():
-    bot_username = os.getenv("TELEGRAM_BOT_USERNAME", "your_bot")
+    bot_username = os.getenv("TELEGRAM_BOT_USERNAME", "")
     return render_template("login.html", bot_username=bot_username)
 
 @app.route("/auth/telegram", methods=["POST"])
