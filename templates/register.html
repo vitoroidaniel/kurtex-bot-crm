@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kurtex CRM — Set Password</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/heroicons@2.0.18/24/outline/truck.svg" onload="initIcons()"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+
+
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+<i class="fas fa-truck logo-icon" style="font-size: 40px; color: white;"></i>
+    <div>
+      <div class="logo-text">Kurtex</div>
+      <div class="logo-sub">CRM Panel</div>
+    </div>
+  </div>
+
+  <h1>Set your password</h1>
+  <p class="subtitle">Enter Telegram username and new password (min 6 chars)</p>
+
+  <div class="input-group">
+    <label>Telegram Username</label>
+    <input type="text" id="reg-username" placeholder="@username">
+  </div>
+  <div class="input-group">
+    <label>New Password</label>
+    <input type="password" id="reg-password" placeholder="At least 6 characters">
+  </div>
+  
+  <div id="reg-error" class="error-msg"></div>
+  <button class="btn" onclick="register()">Set Password</button>
+  
+  <a href="/login" class="back-link">
+    ← Back to login
+  </a>
+</div>
+
+<script>
+async function register() {
+  const username = document.getElementById('reg-username').value.trim();
+  const password = document.getElementById('reg-password').value;
+  
+  if (!username.startsWith('@')) username = '@' + username;
+  if (!username || password.length < 6) {
+    showError('Username and password (min 6 chars) required');
+    return;
+  }
+  
+  try {
+    const res = await fetch('/api/register', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({telegram_username: username, password})
+    });
+    const data = await res.json();
+    if (data.ok) {
+      alert('Password set! Return to login.');
+      window.location = '/login';
+    } else {
+      showError(data.error || 'Failed to set password');
+    }
+  } catch(e) {
+    showError('Network error');
+  }
+}
+
+function showError(msg) {
+  const el = document.getElementById('reg-error');
+  el.textContent = msg;
+  el.classList.add('visible');
+}
+</script>
+</body>
+</html>

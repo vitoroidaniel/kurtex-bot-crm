@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kurtex CRM — Sign In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f0ede8;
+    --surface: #ffffff;
+    --surface2: #f7f5f2;
+    --border: #e2ddd8;
+    --border-focus: #1a1a1a;
+    --text: #1a1a1a;
+    --text-muted: #6b6560;
+    --accent: #c8440c;
+    --accent-hover: #a33609;
+    --accent-light: #fdf0ea;
+    --success: #1a6b3c;
+    --error: #c82d2d;
+    --error-bg: #fef2f2;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 2px 8px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06);
+  }
+
+  [data-theme="dark"] {
+    --bg: #0f0e0d;
+    --surface: #1c1a18;
+    --surface2: #252220;
+    --border: #302d2a;
+    --border-focus: #e8e3dc;
+    --text: #e8e3dc;
+    --text-muted: #9a9087;
+    --accent: #e05a1f;
+    --accent-hover: #f06a2a;
+    --accent-light: #2a1a10;
+    --success: #3db870;
+    --error: #e05050;
+    --error-bg: #2a1515;
+    --shadow: 0 2px 8px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
+  }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    color: var(--text);
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2.5rem;
+    min-height: 100vh;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: background-image 0.8s ease;
+  }
+
+  .hero-bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: rgba(10, 8, 6, 0.6);
+  }
+
+  .hero-content, .hero-body, .hero-stats, .img-dots { position: relative; z-index: 1; }
+
+  .brand { display: flex; align-items: center; gap: 0.75rem; }
+
+  .brand-icon {
+    width: 42px; height: 42px;
+    background: var(--accent);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .brand-name { font-size: 1.4rem; font-weight: 800; color: white; letter-spacing: -0.02em; }
+  .brand-sub { font-size: 0.7rem; font-weight: 500; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.1em; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.8);
+    border-radius: 100px;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.75rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title {
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 800; color: white;
+    line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 1rem;
+  }
+  .hero-title span { color: #f09060; }
+
+  .hero-desc { color: rgba(255,255,255,0.65); font-size: 1rem; line-height: 1.6; max-width: 340px; font-weight: 400; }
+
+  .hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+
+  .stat-card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px; padding: 1rem;
+    backdrop-filter: blur(8px);
+  }
+
+  .stat-num { font-size: 1.5rem; font-weight: 800; color: white; letter-spacing: -0.03em; }
+  .stat-label { font-size: 0.7rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.2rem; }
+
+  .img-dots {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    z-index: 2; display: flex; gap: 6px;
+  }
+
+  .img-dot {
+    width: 6px; height: 6px; border-radius: 100px;
+    background: rgba(255,255,255,0.3); cursor: pointer; transition: all 0.3s;
+  }
+  .img-dot.active { width: 24px; background: white; }
+
+  /* FORM PANEL */
+  .form-panel {
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 2.5rem; overflow-y: auto; min-height: 100vh;
+    background: var(--surface);
+  }
+
+  .form-inner { width: 100%; max-width: 420px; animation: fadeUp 0.5s ease; }
+
+  .topbar { display: flex; justify-content: flex-end; margin-bottom: 2.5rem; }
+
+  .theme-toggle {
+    width: 38px; height: 38px; border-radius: 10px;
+    border: 1.5px solid var(--border); background: var(--surface2);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); transition: all 0.2s;
+  }
+  .theme-toggle:hover { border-color: var(--border-focus); color: var(--text); }
+
+  .form-header { margin-bottom: 2rem; }
+  .form-header h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.4rem; }
+  .form-header p { color: var(--text-muted); font-size: 0.9rem; }
+
+  /* TABS */
+  .tabs {
+    display: flex; background: var(--surface2);
+    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    padding: 4px; margin-bottom: 1.75rem; gap: 3px;
+  }
+
+  .tab {
+    flex: 1; padding: 0.6rem 0.5rem; border: none; border-radius: 8px;
+    background: transparent; color: var(--text-muted);
+    font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.78rem;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    gap: 0.35rem; transition: all 0.2s; white-space: nowrap;
+  }
+  .tab.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+  .tab:hover:not(.active) { color: var(--text); }
+
+  /* PANELS */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeUp 0.25s ease; }
+
+  /* TELEGRAM */
+  .tg-wrap {
+    background: var(--surface2); border: 1.5px solid var(--border);
+    border-radius: var(--radius); padding: 2rem; text-align: center;
+  }
+  .tg-icon-wrap {
+    width: 60px; height: 60px; background: #2AABEE; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;
+  }
+  .tg-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .tg-desc { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem; line-height: 1.5; }
+  #tg-widget { display: flex; justify-content: center; }
+
+  /* FIELDS */
+  .field { margin-bottom: 1.1rem; }
+
+  .field label {
+    display: flex; align-items: center; gap: 0.4rem;
+    font-size: 0.8rem; font-weight: 700; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem;
+  }
+
+  .input-wrap { position: relative; }
+
+  .input-icon {
+    position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%);
+    color: var(--text-muted); pointer-events: none; width: 16px; height: 16px;
+  }
+
+  input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 2.6rem;
+    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    font-size: 0.95rem; font-family: 'Geist Mono', monospace;
+    background: var(--surface2); color: var(--text);
+    transition: all 0.2s; outline: none; -webkit-appearance: none;
+  }
+
+  input:focus {
+    border-color: var(--border-focus); background: var(--surface);
+    box-shadow: 0 0 0 3px rgba(200, 68, 12, 0.1);
+  }
+
+  input::placeholder { color: var(--text-muted); opacity: 0.6; }
+
+  [data-theme="dark"] input:focus { box-shadow: 0 0 0 3px rgba(224, 90, 31, 0.15); }
+
+  input[readonly] {
+    background: var(--accent-light); border-color: var(--accent);
+    color: var(--accent); cursor: default;
+  }
+
+  /* BUTTONS */
+  .btn-primary {
+    width: 100%; padding: 0.9rem 1.5rem; background: var(--accent);
+    color: white; border: none; border-radius: var(--radius-sm);
+    font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    gap: 0.5rem; transition: all 0.2s; margin-top: 0.5rem;
+  }
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-secondary {
+    width: 100%; padding: 0.8rem 1.5rem; background: var(--surface2);
+    color: var(--text-muted); border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); font-family: 'Syne', sans-serif;
+    font-size: 0.9rem; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    gap: 0.5rem; transition: all 0.2s; margin-top: 0.5rem;
+  }
+  .btn-secondary:hover { border-color: var(--border-focus); color: var(--text); }
+
+  /* ALERTS */
+  .alert {
+    display: none; padding: 0.75rem 1rem; border-radius: var(--radius-sm);
+    font-size: 0.85rem; font-weight: 500; margin-top: 0.75rem;
+    align-items: center; gap: 0.5rem;
+  }
+  .alert.visible { display: flex; }
+  .alert-error { background: var(--error-bg); border: 1px solid rgba(200, 45, 45, 0.2); color: var(--error); }
+  .alert-success { background: #f0fdf4; border: 1px solid rgba(26, 107, 60, 0.2); color: var(--success); }
+  [data-theme="dark"] .alert-success { background: #0d2a18; border-color: rgba(61, 184, 112, 0.2); }
+
+  /* DIVIDER */
+  .divider {
+    display: flex; align-items: center; gap: 0.75rem; margin: 1.25rem 0;
+    color: var(--text-muted); font-size: 0.78rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* HINTS */
+  .step-hint {
+    background: var(--accent-light); border: 1px solid rgba(200, 68, 12, 0.15);
+    border-radius: var(--radius-sm); padding: 0.75rem 1rem;
+    color: var(--accent); font-size: 0.83rem; margin-bottom: 1rem;
+    display: flex; align-items: flex-start; gap: 0.5rem; line-height: 1.4;
+  }
+
+  /* LOADING */
+  .btn-primary.loading { opacity: 0.7; pointer-events: none; }
+  .spinner {
+    width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white; border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    body { grid-template-columns: 1fr; }
+    .hero { display: none; }
+    .form-panel { padding: 1.5rem; }
+  }
+  @media (max-width: 480px) {
+    .form-panel { padding: 1.25rem; }
+    .tab { font-size: 0.72rem; padding: 0.55rem 0.4rem; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg" id="heroBg" style="background-image:url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=1200&q=80')"></div>
+  <div class="hero-content">
+    <div class="brand">
+      <div class="brand-icon">
+        <i data-lucide="truck" style="width:20px;height:20px;color:white;"></i>
+      </div>
+      <div>
+        <div class="brand-name">Kurtex</div>
+        <div class="brand-sub">CRM Platform</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-body" style="padding-bottom:1rem;">
+    <div class="hero-badge">
+      <i data-lucide="zap" style="width:11px;height:11px;"></i>
+      Trucking Operations Platform
+    </div>
+    <h2 class="hero-title">Control Your<br><span>Fleet Intelligence</span><br>From One Place</h2>
+    <p class="hero-desc">Manage cases, track drivers, coordinate agents — all in real time. Built for the modern logistics team.</p>
+  </div>
+  <div class="hero-stats">
+    <div class="stat-card">
+      <div class="stat-num">2.4k+</div>
+      <div class="stat-label">Cases Resolved</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">98%</div>
+      <div class="stat-label">Uptime SLA</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">4 min</div>
+      <div class="stat-label">Avg. Response</div>
+    </div>
+  </div>
+  <div class="img-dots">
+    <div class="img-dot active" onclick="setImg(0)"></div>
+    <div class="img-dot" onclick="setImg(1)"></div>
+    <div class="img-dot" onclick="setImg(2)"></div>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="form-panel">
+  <div class="form-inner">
+    <div class="topbar">
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+        <i data-lucide="moon" id="themeIcon" style="width:16px;height:16px;"></i>
+      </button>
+    </div>
+    <div class="form-header">
+      <h1>Welcome back</h1>
+      <p>Sign in to access your Kurtex workspace</p>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs" role="tablist">
+      <button class="tab active" onclick="switchTab('telegram',this)" id="tab-tg">
+        <i data-lucide="send" style="width:13px;height:13px;"></i> Telegram
+      </button>
+      <button class="tab" onclick="switchTab('login',this)" id="tab-login">
+        <i data-lucide="key-round" style="width:13px;height:13px;"></i> Password
+      </button>
+      <button class="tab" onclick="switchTab('register',this)" id="tab-register">
+        <i data-lucide="user-plus" style="width:13px;height:13px;"></i> Register
+      </button>
+      <button class="tab" onclick="switchTab('reset',this)" id="tab-reset">
+        <i data-lucide="rotate-ccw" style="width:13px;height:13px;"></i> Reset
+      </button>
+    </div>
+
+    <!-- TELEGRAM -->
+    <div class="tab-panel active" id="panel-telegram">
+      <div class="tg-wrap">
+        <div class="tg-icon-wrap">
+          <i data-lucide="send" style="width:26px;height:26px;color:white;"></i>
+        </div>
+        <div class="tg-title">Continue with Telegram</div>
+        <div class="tg-desc">Click below to authenticate instantly via your Telegram account — no password needed.</div>
+        <div id="tg-widget">
+          <script async src="https://telegram.org/js/telegram-widget.js?22"
+            data-telegram-login="{{ bot_username }}"
+            data-size="large" data-radius="8"
+            data-onauth="onTelegramAuth(user)"
+            data-request-access="write">
+          </script>
+        </div>
+      </div>
+      <div class="divider">or use credentials</div>
+      <button class="btn-secondary" onclick="switchTab('login',document.getElementById('tab-login'))">
+        <i data-lucide="key-round" style="width:15px;height:15px;"></i>
+        Sign In with Password
+      </button>
+    </div>
+
+    <!-- PASSWORD LOGIN -->
+    <div class="tab-panel" id="panel-login">
+      <div class="field">
+        <label><i data-lucide="at-sign" style="width:13px;height:13px;"></i> Telegram Username</label>
+        <div class="input-wrap">
+          <i data-lucide="at-sign" class="input-icon"></i>
+          <input type="text" id="login-username" placeholder="username" autocomplete="username">
+        </div>
+      </div>
+      <div class="field">
+        <label><i data-lucide="lock" style="width:13px;height:13px;"></i> Password</label>
+        <div class="input-wrap">
+          <i data-lucide="lock" class="input-icon"></i>
+          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"
+            onkeydown="if(event.key==='Enter')loginWithPw()">
+        </div>
+      </div>
+      <div class="alert alert-error" id="login-error">
+        <i data-lucide="alert-circle" style="width:15px;height:15px;flex-shrink:0;"></i>
+        <span id="login-error-text"></span>
+      </div>
+      <button class="btn-primary" onclick="loginWithPw()" id="loginBtn">
+        <i data-lucide="log-in" style="width:16px;height:16px;"></i> Sign In
+      </button>
+      <button class="btn-secondary" onclick="switchTab('reset',document.getElementById('tab-reset'))">
+        <i data-lucide="rotate-ccw" style="width:14px;height:14px;"></i> Forgot password?
+      </button>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="tab-panel" id="panel-register">
+      <div class="step-hint">
+        <i data-lucide="info" style="width:14px;height:14px;flex-shrink:0;margin-top:1px;"></i>
+        <span>Your Telegram account must be added by an admin via the bot before you can register a password here.</span>
+      </div>
+      <div class="field">
+        <label><i data-lucide="at-sign" style="width:13px;height:13px;"></i> Telegram Username</label>
+        <div class="input-wrap">
+          <i data-lucide="at-sign" class="input-icon"></i>
+          <input type="text" id="reg-username" placeholder="username">
+        </div>
+      </div>
+      <div class="field">
+        <label><i data-lucide="lock" style="width:13px;height:13px;"></i> Password</label>
+        <div class="input-wrap">
+          <i data-lucide="lock" class="input-icon"></i>
+          <input type="password" id="reg-password" placeholder="Min 6 characters"
+            onkeydown="if(event.key==='Enter')registerUser()">
+        </div>
+      </div>
+      <div class="alert alert-error" id="reg-error">
+        <i data-lucide="alert-circle" style="width:15px;height:15px;flex-shrink:0;"></i>
+        <span id="reg-error-text"></span>
+      </div>
+      <div class="alert alert-success" id="reg-success">
+        <i data-lucide="check-circle" style="width:15px;height:15px;flex-shrink:0;"></i>
+        <span>Account created! You can now sign in.</span>
+      </div>
+      <button class="btn-primary" onclick="registerUser()" id="regBtn">
+        <i data-lucide="user-plus" style="width:16px;height:16px;"></i> Create Account
+      </button>
+    </div>
+
+    <!-- RESET -->
+    <div class="tab-panel" id="panel-reset">
+      <div id="reset-step1">
+        <div class="step-hint">
+          <i data-lucide="info" style="width:14px;height:14px;flex-shrink:0;margin-top:1px;"></i>
+          <span>Enter your Telegram username to generate a one-time reset token.</span>
+        </div>
+        <div class="field">
+          <label><i data-lucide="at-sign" style="width:13px;height:13px;"></i> Telegram Username</label>
+          <div class="input-wrap">
+            <i data-lucide="at-sign" class="input-icon"></i>
+            <input type="text" id="reset-username" placeholder="username">
+          </div>
+        </div>
+        <div class="alert alert-error" id="reset-error">
+          <i data-lucide="alert-circle" style="width:15px;height:15px;flex-shrink:0;"></i>
+          <span id="reset-error-text"></span>
+        </div>
+        <button class="btn-primary" onclick="resetPasswordStep1()" id="resetBtn1">
+          <i data-lucide="send" style="width:16px;height:16px;"></i> Generate Reset Token
+        </button>
+      </div>
+
+      <div id="reset-step2" style="display:none;">
+        <div class="step-hint">
+          <i data-lucide="check-circle" style="width:14px;height:14px;flex-shrink:0;margin-top:1px;"></i>
+          <span>Token generated. Copy it below and set your new password.</span>
+        </div>
+        <div class="field">
+          <label><i data-lucide="hash" style="width:13px;height:13px;"></i> Reset Token</label>
+          <div class="input-wrap">
+            <i data-lucide="hash" class="input-icon"></i>
+            <input type="text" id="reset-token" readonly>
+          </div>
+        </div>
+        <div class="field">
+          <label><i data-lucide="lock" style="width:13px;height:13px;"></i> New Password</label>
+          <div class="input-wrap">
+            <i data-lucide="lock" class="input-icon"></i>
+            <input type="password" id="reset-newpw" placeholder="Min 6 characters">
+          </div>
+        </div>
+        <div class="field">
+          <label><i data-lucide="shield-check" style="width:13px;height:13px;"></i> Confirm Password</label>
+          <div class="input-wrap">
+            <i data-lucide="shield-check" class="input-icon"></i>
+            <input type="password" id="reset-confirmpw" placeholder="Repeat password"
+              onkeydown="if(event.key==='Enter')resetPasswordStep2()">
+          </div>
+        </div>
+        <div class="alert alert-error" id="reset-error2">
+          <i data-lucide="alert-circle" style="width:15px;height:15px;flex-shrink:0;"></i>
+          <span id="reset-error2-text"></span>
+        </div>
+        <div class="alert alert-success" id="reset-success">
+          <i data-lucide="check-circle" style="width:15px;height:15px;flex-shrink:0;"></i>
+          <span>Password reset! Redirecting to sign in…</span>
+        </div>
+        <button class="btn-primary" onclick="resetPasswordStep2()" id="resetBtn2">
+          <i data-lucide="shield-check" style="width:16px;height:16px;"></i> Reset Password
+        </button>
+        <button class="btn-secondary" onclick="resetBack()">
+          <i data-lucide="arrow-left" style="width:14px;height:14px;"></i> Back
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+lucide.createIcons();
+
+// Background images
+const IMAGES = [
+  'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=1200&q=80',
+  'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1200&q=80',
+  'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=1200&q=80',
+];
+let currentImg = 0;
+
+function setImg(i) {
+  currentImg = i;
+  document.getElementById('heroBg').style.backgroundImage = `url('${IMAGES[i]}')`;
+  document.querySelectorAll('.img-dot').forEach((d,j) => d.classList.toggle('active', j===i));
+}
+setInterval(() => setImg((currentImg+1) % IMAGES.length), 6000);
+
+// Theme
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.dataset.theme === 'dark';
+  html.dataset.theme = isDark ? 'light' : 'dark';
+  localStorage.setItem('kurtex-theme', html.dataset.theme);
+  document.getElementById('themeIcon').setAttribute('data-lucide', isDark ? 'moon' : 'sun');
+  lucide.createIcons();
+}
+(function(){
+  const s = localStorage.getItem('kurtex-theme');
+  if (s) {
+    document.documentElement.dataset.theme = s;
+    if (s === 'dark') { document.getElementById('themeIcon').setAttribute('data-lucide','sun'); lucide.createIcons(); }
+  }
+})();
+
+// Tabs
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.getElementById('panel-'+name).classList.add('active');
+}
+
+// Helpers
+function showAlert(id, msg, type='error') {
+  const el = document.getElementById(id);
+  const tx = document.getElementById(id+'-text');
+  if (tx) tx.textContent = msg;
+  el.className = `alert alert-${type} visible`;
+}
+function hideAlert(id) { const el = document.getElementById(id); if(el) el.classList.remove('visible'); }
+function setLoading(id, on) { const b = document.getElementById(id); if(!b) return; b.classList.toggle('loading', on); }
+
+// Telegram
+window.onTelegramAuth = async function(user) {
+  try {
+    const r = await fetch('/auth/telegram', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(user)});
+    const d = await r.json();
+    if (d.ok) window.location = d.redirect;
+    else alert(d.error || 'Authentication failed');
+  } catch(e) { alert('Network error. Please try again.'); }
+};
+
+// Login
+async function loginWithPw() {
+  const u = document.getElementById('login-username').value.trim().replace(/^@/,'');
+  const p = document.getElementById('login-password').value;
+  hideAlert('login-error');
+  if (!u||!p) { showAlert('login-error','Username and password are required.'); return; }
+  setLoading('loginBtn', true);
+  try {
+    const r = await fetch('/login-password', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({telegram_username:u, password:p})});
+    const d = await r.json();
+    if (d.ok) { window.location = d.redirect; return; }
+    showAlert('login-error', d.error||'Invalid credentials.');
+  } catch(e) { showAlert('login-error','Network error. Please try again.'); }
+  setLoading('loginBtn', false);
+  document.getElementById('loginBtn').innerHTML = '<i data-lucide="log-in" style="width:16px;height:16px;"></i> Sign In';
+  lucide.createIcons();
+}
+
+// Register
+async function registerUser() {
+  const u = document.getElementById('reg-username').value.trim().replace(/^@/,'');
+  const p = document.getElementById('reg-password').value;
+  hideAlert('reg-error'); hideAlert('reg-success');
+  if (!u||!p||p.length<6) { showAlert('reg-error','Valid username and password (min 6 chars) required.'); return; }
+  setLoading('regBtn', true);
+  try {
+    const r = await fetch('/api/register', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({telegram_username:u, password:p})});
+    const d = await r.json();
+    if (d.ok) { document.getElementById('reg-success').classList.add('visible'); document.getElementById('reg-username').value=''; document.getElementById('reg-password').value=''; }
+    else showAlert('reg-error', d.error||'Registration failed.');
+  } catch(e) { showAlert('reg-error','Network error.'); }
+  setLoading('regBtn', false);
+  document.getElementById('regBtn').innerHTML = '<i data-lucide="user-plus" style="width:16px;height:16px;"></i> Create Account';
+  lucide.createIcons();
+}
+
+// Reset Step 1
+async function resetPasswordStep1() {
+  const u = document.getElementById('reset-username').value.trim().replace(/^@/,'');
+  hideAlert('reset-error');
+  if (!u) { showAlert('reset-error','Please enter your Telegram username.'); return; }
+  setLoading('resetBtn1', true);
+  try {
+    const r = await fetch('/reset-password', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({telegram_username:u})});
+    const d = await r.json();
+    if (d.ok) {
+      document.getElementById('reset-token').value = d.token;
+      document.getElementById('reset-step1').style.display = 'none';
+      document.getElementById('reset-step2').style.display = 'block';
+    } else showAlert('reset-error', d.error||'User not found.');
+  } catch(e) { showAlert('reset-error','Network error.'); }
+  setLoading('resetBtn1', false);
+  const b1 = document.getElementById('resetBtn1');
+  if(b1) { b1.innerHTML = '<i data-lucide="send" style="width:16px;height:16px;"></i> Generate Reset Token'; lucide.createIcons(); }
+}
+
+// Reset Step 2
+async function resetPasswordStep2() {
+  const u = document.getElementById('reset-username').value.trim().replace(/^@/,'');
+  const token = document.getElementById('reset-token').value.trim();
+  const np = document.getElementById('reset-newpw').value;
+  const cp = document.getElementById('reset-confirmpw').value;
+  hideAlert('reset-error2'); hideAlert('reset-success');
+  if (!np||np.length<6) { showAlert('reset-error2','Password must be at least 6 characters.'); return; }
+  if (np!==cp) { showAlert('reset-error2','Passwords do not match.'); return; }
+  setLoading('resetBtn2', true);
+  try {
+    const r = await fetch('/verify-reset', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({telegram_username:u, token, password:np})});
+    const d = await r.json();
+    if (d.ok) {
+      document.getElementById('reset-success').classList.add('visible');
+      setTimeout(() => switchTab('login', document.getElementById('tab-login')), 2000);
+    } else showAlert('reset-error2', d.error||'Reset failed.');
+  } catch(e) { showAlert('reset-error2','Network error.'); }
+  setLoading('resetBtn2', false);
+  const b2 = document.getElementById('resetBtn2');
+  if(b2) { b2.innerHTML = '<i data-lucide="shield-check" style="width:16px;height:16px;"></i> Reset Password'; lucide.createIcons(); }
+}
+
+function resetBack() {
+  document.getElementById('reset-step1').style.display = 'block';
+  document.getElementById('reset-step2').style.display = 'none';
+  ['reset-token','reset-newpw','reset-confirmpw'].forEach(id => document.getElementById(id).value='');
+  ['reset-error','reset-error2','reset-success'].forEach(hideAlert);
+}
+</script>
+</body>
+</html>
