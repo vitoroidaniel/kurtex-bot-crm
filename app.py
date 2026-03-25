@@ -570,3 +570,7 @@ if __name__ == "__main__":
     port = int(os.getenv("PORT", 5000))
     debug = not os.getenv("TELEGRAM_BOT_TOKEN")
     app.run(host="0.0.0.0", port=port, debug=debug)
+
+# railway fix
+from werkzeug.middleware.proxy_fix import ProxyFix
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
