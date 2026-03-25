@@ -14,13 +14,12 @@ Run:
 """
 import random
 import time
-from flask import request, jsonify, session, url_for
-
 import os
 import hashlib
 import hmac
 import json
 import logging
+import requests as http_requests
 from collections import defaultdict
 from datetime import datetime, timezone, timedelta
 from functools import wraps
@@ -34,7 +33,6 @@ from pymongo import MongoClient, DESCENDING
 from bson import ObjectId
 import bcrypt
 import secrets
-import time
 import pandas as pd
 from dateutil import parser as date_parser
 
@@ -94,13 +92,22 @@ ROLE_COLORS = {
 
 telegram_otp_store = {}
 
-from telegram import Bot
-bot = Bot(token=os.environ.get("TELEGRAM_BOT_TOKEN", ""))
-
 def send_telegram_otp(telegram_id, code):
-    try:
-        bot.send_message(chat_id=telegram_id, text=f"Your login code: {code}")
+    """Send OTP via Telegram Bot API using requests (sync-safe)."""
+    token = os.getenv("TELEGRAM_BOT_TOKEN", "")
+    if not token:
+        logger.info(f"[DEV MODE] OTP for {telegram_id}: {code}")
         return True
+    try:
+        url = f"https://api.telegram.org/bot{token}/sendMessage"
+        resp = http_requests.post(url, json={
+            "chat_id": telegram_id,
+            "text": f"🔐 Your Kurtex login code: *{code}*\n\nExpires in 5 minutes.",
+            "parse_mode": "Markdown"
+        }, timeout=10)
+        if not resp.ok:
+            logger.error(f"Telegram API error: {resp.text}")
+        return resp.ok
     except Exception as e:
         logger.error(f"Failed to send OTP to {telegram_id}: {e}")
         return False
@@ -176,6 +183,13 @@ def role_required(*roles):
     return decorator
 
 # ── Routes: Auth ──────────────────────────────────────────────────────────────
+
+@app.route("/login")
+def login():
+    if "user_id" in session:
+        return redirect(url_for("dashboard"))
+    bot_username = os.getenv("TELEGRAM_BOT_USERNAME", "")
+    return render_template("login.html", bot_username=bot_username)
 
 # 1️⃣ Telegram login
 @app.route("/auth/telegram", methods=["POST"])
@@ -624,11 +638,11 @@ def api_me():
 def api_update_case(case_id):
     return jsonify({"error": "Case updates disabled - view-only mode"}), 403
 
+# Railway / reverse proxy fix — must be before app.run
+from werkzeug.middleware.proxy_fix import ProxyFix
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 5000))
     debug = not os.getenv("TELEGRAM_BOT_TOKEN")
     app.run(host="0.0.0.0", port=port, debug=debug)
-
-# railway fix
-from werkzeug.middleware.proxy_fix import ProxyFix
-app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)

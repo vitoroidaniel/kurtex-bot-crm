@@ -3,6 +3,7 @@ pymongo
 python-dotenv
 bcrypt
 pandas
-python-telegram-bot==20.3
 openpyxl
 python-dateutil
+requests
+werkzeug
