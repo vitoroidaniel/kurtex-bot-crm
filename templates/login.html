@@ -103,28 +103,29 @@ html,body{height:100%;overflow:hidden;}
 /* ── RIGHT PANEL LAYOUT ── */
 .center{
   position:fixed;top:0;right:0;bottom:0;z-index:40;
-  width:480px;
+  /* sits from 50% of screen width to right edge, centers card within that zone */
+  left:50%;
   display:flex;align-items:center;justify-content:center;
-  padding:2rem 2rem 2rem 0;
+  padding:2rem;
   pointer-events:none;
 }
 
 /* ── FLOATING WHITE CARD ── */
 .card{
   pointer-events:all;
-  width:100%;max-height:calc(100vh - 4rem);
+  width:520px;max-width:100%;max-height:calc(100vh - 4rem);
   overflow-y:auto;
   background:#ffffff;
-  border:1px solid rgba(0,0,0,.08);
+  border:1px solid rgba(0,0,0,.07);
   border-radius:24px;
   box-shadow:
-    0 4px 6px rgba(0,0,0,.04),
-    0 12px 40px rgba(0,0,0,.14),
-    0 32px 80px rgba(0,0,0,.12);
-  padding:2.25rem 2rem;
+    0 2px 4px rgba(0,0,0,.04),
+    0 8px 24px rgba(0,0,0,.1),
+    0 24px 64px rgba(0,0,0,.16);
+  padding:2.75rem 2.5rem;
   animation:floatIn .45s cubic-bezier(.22,1,.36,1);
 }
-@keyframes floatIn{from{opacity:0;transform:translateX(28px);}to{opacity:1;transform:translateX(0);}}
+@keyframes floatIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
 @keyframes cardIn{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
 
 .card-header{margin-bottom:1.75rem;}
@@ -134,7 +135,7 @@ html,body{height:100%;overflow:hidden;}
   display:flex;align-items:center;gap:.4rem;
 }
 .card-eyebrow::before{content:'';width:14px;height:2px;background:var(--accent);border-radius:2px;}
-.card-title{font-size:1.65rem;font-weight:700;color:var(--pt);letter-spacing:-.02em;line-height:1.1;margin-bottom:.3rem;}
+.card-title{font-size:2rem;font-weight:700;color:var(--pt);letter-spacing:-.02em;line-height:1.1;margin-bottom:.3rem;}
 .card-sub{font-size:.82rem;color:var(--pt-muted);font-weight:400;}
 
 /* ── TABS ── */
@@ -249,12 +250,21 @@ input[readonly]{background:#eff6ff;border-color:#bfdbfe;color:var(--accent);curs
 
 <!-- BACKGROUND SLIDESHOW -->
 <div class="bg">
-  <!-- Reefer/flatbed/highway truck photos from Unsplash (free) -->
-  <div class="slide active" id="sl0" style="background-image:url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=1920&q=90')"></div>
-  <div class="slide" id="sl1" style="background-image:url('https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=1920&q=90')"></div>
-  <div class="slide" id="sl2" style="background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=90')"></div>
-  <div class="slide" id="sl3" style="background-image:url('https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1920&q=90')"></div>
-  <div class="slide" id="sl4" style="background-image:url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1920&q=90')"></div>
+  <!-- Real truck & highway logistics photos from Unsplash (all verified free) -->
+  <!-- 1: Mountain road semi truck -->
+  <div class="slide active" id="sl0" style="background-image:url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=1920&q=90&fit=crop')"></div>
+  <!-- 2: Flatbed / reefer open desert highway -->
+  <div class="slide" id="sl1" style="background-image:url('https://images.unsplash.com/photo-1504276048855-f3d60e69632f?w=1920&q=90&fit=crop')"></div>
+  <!-- 3: Semi truck at dusk highway -->
+  <div class="slide" id="sl2" style="background-image:url('https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=1920&q=90&fit=crop')"></div>
+  <!-- 4: Night road / road issue scene -->
+  <div class="slide" id="sl3" style="background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=90&fit=crop')"></div>
+  <!-- 5: Logistics truck rear highway -->
+  <div class="slide" id="sl4" style="background-image:url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1920&q=90&fit=crop')"></div>
+  <!-- 6: Truck cab POV driver view road -->
+  <div class="slide" id="sl5" style="background-image:url('https://images.unsplash.com/photo-1473042904451-00171c69419d?w=1920&q=90&fit=crop')"></div>
+  <!-- 7: Flatbed truck winding countryside road -->
+  <div class="slide" id="sl6" style="background-image:url('https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1920&q=90&fit=crop')"></div>
   <div class="bg-overlay"></div>
   <div class="bg-noise"></div>
 </div>
@@ -285,6 +295,8 @@ input[readonly]{background:#eff6ff;border-color:#bfdbfe;color:var(--accent);curs
   <div class="sdot" onclick="goSlide(2)"></div>
   <div class="sdot" onclick="goSlide(3)"></div>
   <div class="sdot" onclick="goSlide(4)"></div>
+  <div class="sdot" onclick="goSlide(5)"></div>
+  <div class="sdot" onclick="goSlide(6)"></div>
 </div>
 
 <!-- STAT PILLS -->
@@ -437,7 +449,8 @@ input[readonly]{background:#eff6ff;border-color:#bfdbfe;color:var(--accent);curs
 lucide.createIcons();
 
 // Slideshow
-const CAPS=['Long-haul freight','Reefer operations','Flatbed dispatch','Highway logistics','Fleet coordination'];
+const CAPS=['Mountain pass haul','Reefer on the open road','Long-haul night run','Flatbed cargo run','Freight highway ops','Truck stop operations','Cross-country logistics'];
+const TOTAL=7;
 let cur=0,stimer;
 function goSlide(i){
   document.getElementById('sl'+cur).classList.remove('active');
@@ -447,9 +460,9 @@ function goSlide(i){
   s.classList.add('active');s.style.animation='none';s.offsetHeight;s.style.animation='';
   document.querySelectorAll('.sdot')[cur].classList.add('active');
   document.getElementById('slideCaption').textContent=CAPS[cur];
-  clearInterval(stimer);stimer=setInterval(()=>goSlide((cur+1)%5),8000);
+  clearInterval(stimer);stimer=setInterval(()=>goSlide((cur+1)%TOTAL),8000);
 }
-stimer=setInterval(()=>goSlide((cur+1)%5),8000);
+stimer=setInterval(()=>goSlide((cur+1)%TOTAL),8000);
 
 // Theme toggle — switches background overlay intensity
 let isLight=false;
