@@ -154,26 +154,24 @@ def login():
     bot_username = os.getenv("TELEGRAM_BOT_USERNAME", "")
     return render_template("login.html", bot_username=bot_username)
 
-@app.route("/auth/telegram", methods=["POST"])
-def auth_telegram():
-    data = request.json or {}
-    tg_data = dict(data)
-
-    if not verify_telegram_login(tg_data):
-        return jsonify({"error": "Invalid Telegram login"}), 401
+@app.route("/auth/telegram")
+def telegram_auth_redirect():
+    data = request.args.to_dict()
+    if not verify_telegram_login(data):
+        return "Invalid Telegram login", 401
 
     telegram_id = int(data.get("id", 0))
     user = strip(users_col().find_one({"telegram_id": telegram_id}))
 
     if not user:
-        return jsonify({"error": "You are not registered in the system. Ask an admin to add you."}), 403
+        return "You are not registered. Ask admin.", 403
 
     role = user.get("role", "agent")
     session["user_id"]   = telegram_id
     session["user_name"] = user.get("name", data.get("first_name", "User"))
     session["user_role"] = role
 
-    return jsonify({"ok": True, "redirect": url_for("dashboard")})
+    return redirect(url_for("dashboard"))
 
 @app.route("/logout")
 def logout():
